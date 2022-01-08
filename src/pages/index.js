@@ -4,98 +4,87 @@ import './index.css';
 
 class ServisePage extends React.Component {
 	constructor(props) {
-		super(props)
+		super(props);
 		this.state = {
-		  data: [],
-		  isLoading: false,
-		}
-	  }
-
+			error: null,
+			isLoaded: false,
+			items: []
+		};
+	}
+  
 	componentDidMount() {
-		const xhr = new XMLHttpRequest();
-		xhr.open('GET', 'http://192.168.50.106:80/api/animevost/genres', true); // замените адрес
-		xhr.send();
-		this.setState({ isLoading: true })
-	
-		xhr.onreadystatechange = () => {
-			if (xhr.readyState !== 4) {
-				return false
-			}
-	
-			if (xhr.status !== 200) {
-				console.log(xhr.status + ': ' + xhr.statusText)
-			} else {
+	  fetch("http://192.168.50.106:80/api/animevost")
+		.then(res => res.json())
+		.then(
+			(result) => {
 				this.setState({
-					data: JSON.parse(xhr.responseText),
-			 		isLoading: false,
-				})
-			}
-		}
+					isLoaded: true,
+					items: result.items
+				});
+			},
+			// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+			// чтобы не перехватывать исключения из ошибок в самих компонентах.
+			(error) => {
+				this.setState({
+					isLoaded: true,
+					error
+					});
+				}
+			)
 	}
-	renderProducts() {
-		const { data, isLoading } = this.state
-		if (isLoading) {
-			return <Loading/>
-		} else {
-			console.log(data);
-			if (data.constructor === Object){
-				return data['genre']['links'].map((item ,i)  => {
-					return <div key={i}>{item[0]}</div>
-				})
-			
-			}
-			return <div>a</div>
-			
-		}
-	}
+  
 	render() {
-		return (
-		  <div className='App'>
-			<div className='container'>
-				{this.renderProducts()}
-			</div>
-		  </div>
-		)
+		const { error, isLoaded, items } = this.state;
+		if (error) {
+			return <div>Ошибка: {error.message}</div>;
+		} else if (!isLoaded) {
+			return <Loading/>;
+		} else {
+			return (
+				<ul>
+					
+				</ul>
+			);
 	  }
-	// render() {
-	// 	// 
-		
-	// 	const { project, error } = this.state;
-
-	// 	if (error)
-	// 		return <div className='container'>Что-то пошло не так...</div>;
-
-	// 	if (!project) return <div className='container'>Loading...</div>;
-	// 	document.title = project.title;
-	// 	// console.log(project);
-	// 	return (
-	// 		<div className='project'>
-	// 			<div className='container'>
-	// 				<img
-	// 					className='project__screenshot'
-	// 					src={project.icon}
-	// 					alt={project.title}
-	// 				/>
-
-	// 				<h1 className='project__title'>{project.title}</h1>
-
-	// 				<p className='project__description'>
-	// 					{project.description}
-	// 				</p>
-
-	// 				<div className='project__stack'>
-	// 					{project.stack.join(', ')}
-	// 				</div>
-
-	// 				<div>
-	// 					<a href={project.link} className='project__link'>
-	// 						Ссылка на проект
-	// 					</a>
-	// 				</div>
-	// 			</div>
-	// 		</div>
-	// 	);
-	// }
+	}
 }
+// class ServisePage extends React.Component {
+// 	constructor(props) {
+// 		super(props);
+// 		this.state = {
+// 			error: null,
+// 			isLoaded: false,
+// 			items: []
+// 		};
+// 	}
+// 	componentDidMount() {
+// 		fetch("http://192.168.50.106:80/api/animevost/genres")
+// 		  .then(res => res.json())
+// 		  .then(
+// 			(result) => {
+// 				this.setState({
+// 					isLoaded: true,
+// 					items: result.items
+// 				});
+// 			},
+// 			// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+// 			// чтобы не перехватывать исключения из ошибок в самих компонентах.
+// 			(error) => {
+// 				this.setState({
+// 					isLoaded: true,
+// 					error
+// 				});
+// 			}
+// 		  )
+// 	  }
+	
+// 	render() {
+// 		return (
+// 		  <div className='App'>
+			
+// 		  </div>
+// 		)
+// 	  }
+// }
 
 export default ServisePage;

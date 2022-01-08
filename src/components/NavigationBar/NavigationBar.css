@@ -69,7 +69,7 @@
 	margin: 8px 0;
 	list-style: none;
 }
-.sidebar li .tooltip{
+/* .sidebar li .tooltip{
 	position: absolute;
 	top: -20px;
 	right: calc(100% + 15px);
@@ -94,7 +94,7 @@
 }
 .sidebar.open li .tooltip{
 	display: none;
-}
+} */
 
 .sidebar li a{
 	display: flex;
