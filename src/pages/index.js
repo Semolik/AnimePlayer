@@ -1,5 +1,4 @@
 import React from 'react';
-import services from '../services';
 import Loading from '../components/Loading/Loading';
 import './index.css';
 
@@ -39,7 +38,7 @@ class ServisePage extends React.Component {
 			return <Loading/>
 		} else {
 			console.log(data);
-			if (data.constructor == Object){
+			if (data.constructor === Object){
 				return data['genre']['links'].map((item ,i)  => {
 					return <div key={i}>{item[0]}</div>
 				})
