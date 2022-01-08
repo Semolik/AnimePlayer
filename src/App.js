@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import NavigationBar from './components/NavigationBar/NavigationBar';
 import Header from './components/Header/Header';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
@@ -12,12 +11,11 @@ class App extends React.Component {
         return (
             <div className='app'>
                 <Header brand='Anime Player'></Header>
-                <NavigationBar/>
                 <main className='main'>
                     <Switch>
-                        <Route path='/:id' render={
+                        <Route path='/:servise/:page?' render={
                             (props) => (
-                                <ServisePage key={props.match.params.id} {...props} /> 
+                                <ServisePage key={props.match.params.servise} {...props} /> 
                             )
                         }/>
                         <Route exact path='/' component={HomePage} />
