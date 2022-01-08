@@ -79,7 +79,7 @@ class Header extends React.Component {
                             ))}
                         </ul>
                     </div>
-                    <div className='container'>
+                    <div className='header-container'>
                         <Link to='/' className='header-brand'>{this.props.brand}</Link>
                     </div>
                 </header>

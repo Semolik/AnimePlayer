@@ -1,0 +1,38 @@
+:root {
+	--card-margin: 10px;
+}
+.card {
+	display: flex;
+	flex-direction: column;
+	border-radius: 0.5rem;
+	height: auto;
+	margin: var(--card-margin);
+}
+.card:hover {
+	background-color: whitesmoke;
+	color: black;
+	transition: .4s;
+}
+.card img {
+	border-radius: 0.5rem;
+	height: 85%;
+	object-fit: cover;
+}
+.card .title {
+	padding: 0.5rem;
+}
+@media screen and (min-width: 1200px){
+	.card {
+		width: calc(100% / 5 - var(--card-margin) * 2);
+	}
+}
+@media screen and (max-width: 1200px) and (min-width: 768px){
+	.card {
+		width: calc(100% / 4 - var(--card-margin) * 2);
+	}
+}
+@media screen and (max-width: 768px){
+	.card {
+		width: calc(100% / 3 - var(--card-margin) * 2);
+	}
+}

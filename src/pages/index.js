@@ -10,12 +10,13 @@ class ServisePage extends React.Component {
 			error: null,
 			isLoaded: false,
 			items: [],
-			page: parseInt(this.props.match.params.page)
+			page: parseInt(this.props.match.params.page),
+			api: `http://127.0.0.1/api/${this.props.match.params.servise}/`
 		};
 	}
   
 	componentDidMount() {;
-		fetch("http://127.0.0.1/api/animevost/",{
+		fetch(this.state.api,{
 			method: 'post',
 			headers: {
 				'Accept': 'application/json, text/plain, */*',
@@ -51,13 +52,13 @@ class ServisePage extends React.Component {
 		} else {
 			console.log(items);
 			return (
-				<div>
+				<div className='cards-container'>
 					{items.map((item, i) => (
 						<Card key={i} data={item}></Card>
-					))}
+						))}
 				</div>
+			)
 				
-			);
 	  }
 	}
 }

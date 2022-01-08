@@ -6,12 +6,14 @@
 	font-family: "Poppins" , sans-serif;
 }
 .header {
+	position: fixed;
+	width: 100%;
     height: 60px;
     background-color: darkcyan;
     color: white;
 }
 
-.header .container {
+.header .header-container {
     height: 100%;
     width: 100%;
     display: flex;

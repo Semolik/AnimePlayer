@@ -6,7 +6,7 @@ function Card(item){
     return (
         <div className="card">
             <img src={data.poster} alt={data.ru_title}></img>
-            <div>{data.ru_title}</div>
+            <div className="title">{data.ru_title}</div>
         </div>
     )
 }

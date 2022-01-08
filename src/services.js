@@ -8,7 +8,6 @@ export default [
         title: 'Animevost',
         icon: animevostIcon,
         description: 'Animevost',
-        link: '#',
         stack: ['react', 'redux', 'scss']
     },
     {
