@@ -11,20 +11,22 @@ class ServisePage extends React.Component {
 			error: null,
 			isLoaded: false,
 			items: [],
-			page: parseInt(this.props.match.params.page),
+			page: this.props.match.params.page,
+			id: this.props.match.params.id,
 			api: `http://127.0.0.1/api/${this.props.match.params.servise}/`
 		};
 	}
   
-	componentDidMount() {;
-		fetch(this.state.api,{
-			method: 'post',
-			headers: {
-				'Accept': 'application/json, text/plain, */*',
-				'Content-Type': 'application/json'
-			  },
-			body: JSON.stringify( {page: this.state.page} ),
-		})
+	componentDidMount() {
+		if (this.state.page===undefined| (this.state.page==='page' && !isNaN(this.state.id))){
+			fetch(this.state.api,{
+				method: 'post',
+				headers: {
+					'Accept': 'application/json, text/plain, */*',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify( {page: this.state.id} ),
+			})
 			.then(res => res.json())
 			.then(
 				(result) => {
@@ -42,10 +44,20 @@ class ServisePage extends React.Component {
 						error
 						});
 					}
-				)
+			)
+		} else if (this.state.page!=undefined){
+			//Обработка страницы отдельного аниме
+		} else {
+			this.setState({
+				isLoaded: true,
+				error: {
+					message:'asdasd'
+				}
+			});
+		}
 	}
 	render() {
-		const { error, isLoaded, items } = this.state;
+		const { error, isLoaded, items} = this.state;
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -57,7 +69,7 @@ class ServisePage extends React.Component {
 					{items.map((item, i) => (
 						<Card key={i} data={item}></Card>
 						))}
-						<Link to='/animevost/2'>fsdfsdfs</Link>
+						<Link to='/animevost/page/2'>fsdfsdfs</Link>
 				</div>
 			)
 				
