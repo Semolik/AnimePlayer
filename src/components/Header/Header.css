@@ -11,6 +11,7 @@
     height: 60px;
     background-color: darkcyan;
     color: white;
+	z-index: 99;
 }
 
 .header .header-container {

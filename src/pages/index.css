@@ -7,3 +7,19 @@
 	justify-content: center;
 	/* align-items: center; */
 }
+@media screen and (min-width: 1200px){
+	.cards-container {
+		width: 1216px;
+		margin: 0 auto;
+	}
+}
+/* @media screen and (max-width: 1200px) and (min-width: 768px){
+	.cards-container {
+		width: ;
+	}
+}
+@media screen and (max-width: 768px){
+	.cards-container {
+		width: ;
+	}
+} */
