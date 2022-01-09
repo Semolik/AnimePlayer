@@ -1,6 +1,7 @@
 import React from 'react';
 import Loading from '../components/Loading/Loading';
 import Card from '../components/card/card';
+import Pagination from '../components/Pagination/Pagination';
 import './index.css';
 import { Link } from 'react-router-dom';  
 
@@ -45,7 +46,7 @@ class ServisePage extends React.Component {
 						});
 					}
 			)
-		} else if (this.state.page!=undefined){
+		} else if (this.state.page!==undefined){
 			//Обработка страницы отдельного аниме
 		} else {
 			this.setState({
@@ -69,7 +70,8 @@ class ServisePage extends React.Component {
 					{items.map((item, i) => (
 						<Card key={i} data={item}></Card>
 						))}
-						<Link to='/animevost/page/2'>fsdfsdfs</Link>
+						{/* <Link to='/animevost/page/2'>fsdfsdfs</Link> */}
+						<Pagination totalPages={3} page={2} url={'asdasdd'}/>
 				</div>
 			)
 				
