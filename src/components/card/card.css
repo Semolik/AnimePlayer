@@ -6,7 +6,7 @@
 	flex-direction: column;
 	border-radius: 0.5rem;
 	/* height: auto; */
-	
+	text-decoration: none;
 	margin: var(--card-margin);
 	/* transition: .4s; */
 }
@@ -40,7 +40,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-
+	color: #d9d7e0;
 }
 .card:hover .title {
 	color: white;

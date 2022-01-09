@@ -1,11 +1,12 @@
 import React from 'react';
 import Loading from '../components/Loading/Loading';
 import Card from '../components/card/card';
-import Pagination from '../components/Pagination/Pagination';
+import Pagination_ from '../components/Pagination/Pagination';
 import './index.css';
+// import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from 'react-router-dom';  
 
-class ServisePage extends React.Component {
+class ServicePage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -14,7 +15,8 @@ class ServisePage extends React.Component {
 			items: [],
 			page: this.props.match.params.page,
 			id: this.props.match.params.id,
-			api: `http://127.0.0.1/api/${this.props.match.params.servise}/`
+			service: this.props.match.params.service,
+			api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
 		};
 	}
   
@@ -58,7 +60,7 @@ class ServisePage extends React.Component {
 		}
 	}
 	render() {
-		const { error, isLoaded, items} = this.state;
+		const { error, isLoaded, items, service} = this.state;
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -68,14 +70,14 @@ class ServisePage extends React.Component {
 			return (
 				<div className='cards-container'>
 					{items.map((item, i) => (
-						<Card key={i} data={item}></Card>
+						<Card key={i} data={item} service={service}></Card>
 						))}
 						{/* <Link to='/animevost/page/2'>fsdfsdfs</Link> */}
-						<Pagination totalPages={3} page={2} url={'asdasdd'}/>
+						{/* <Pagination_ totalPages={3} page={2} url={'asdasdd'}/> */}
 				</div>
 			)
 				
 	  }
 	}
 }
-export default ServisePage;
+export default ServicePage;
