@@ -68,7 +68,7 @@ class Header extends React.Component {
                         <ul className="nav-list" onLoad={this.test}>
                             {services.map((service, i) => (
                                 <li key={i}>
-                                    <Link to={service.id} className='sidebar-item'>
+                                    <Link to={"/"+service.id} className='sidebar-item'>
                                         <img
                                             src={service.icon}
                                             alt={service.title}

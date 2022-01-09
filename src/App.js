@@ -13,7 +13,7 @@ class App extends React.Component {
                 <Switch>
                     <Route path='/:servise/:page?' render={
                         (props) => (
-                            <ServisePage key={props.match.params.servise} {...props} /> 
+                            <ServisePage key={props.match.params} {...props} /> 
                         )
                     }/>
                     <Route exact path='/' component={HomePage} />
