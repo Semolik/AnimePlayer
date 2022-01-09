@@ -1,13 +1,21 @@
+.pagination-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #20B2AA;
+	padding: 10px;
+	width: 100%;
+}
 .pagination ul{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    background: #fff;
-    padding: 8px;
-    border-radius: 50px;
-    box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	background: #fff;
+	padding: 8px;
+	border-radius: 50px;
+	box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
   }
-.pagination ul a{
+  .pagination ul li{
 	color: #20B2AA;
 	list-style: none;
 	line-height: 45px;
@@ -17,33 +25,34 @@
 	cursor: pointer;
 	user-select: none;
 	transition: all 0.3s ease;
-}
-.pagination ul a.numb{
+  }
+  .pagination ul li.numb{
 	list-style: none;
 	height: 45px;
 	width: 45px;
 	margin: 0 3px;
 	line-height: 45px;
 	border-radius: 50%;
-}
-.pagination ul a.numb.first{
+  }
+  .pagination ul li.numb.first{
 	margin: 0px 3px 0 -5px;
-}
-.pagination ul a.numb.last{
+  }
+  .pagination ul li.numb.last{
 	margin: 0px -5px 0 3px;
-}
-.pagination ul a.dots{
+  }
+  .pagination ul li.dots{
 	font-size: 22px;
 	cursor: default;
-}
-.pagination ul a.btn{
+  }
+  .pagination ul li.btn{
 	padding: 0 20px;
 	border-radius: 50px;
-}
-.pagination a.active,
-.pagination ul a.numb:hover,
-.pagination ul a:first-child:hover,
-.pagination ul a:last-child:hover{
+  }
+  .pagination li.active,
+  .pagination ul li.numb:hover,
+  .pagination ul li:first-child:hover,
+  .pagination ul li:last-child:hover{
 	color: #fff;
 	background: #20B2AA;
-}
+  }
+  

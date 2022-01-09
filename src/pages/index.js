@@ -1,7 +1,7 @@
 import React from 'react';
 import Loading from '../components/Loading/Loading';
 import Card from '../components/card/card';
-import Pagination_ from '../components/Pagination/Pagination';
+import Pagination from '../components/Pagination/Pagination';
 import './index.css';
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from 'react-router-dom';  
@@ -73,7 +73,7 @@ class ServicePage extends React.Component {
 						<Card key={i} data={item} service={service}></Card>
 						))}
 						{/* <Link to='/animevost/page/2'>fsdfsdfs</Link> */}
-						{/* <Pagination_ totalPages={3} page={2} url={'asdasdd'}/> */}
+						<Pagination totalPages={10} page={4} url={'asdasdd'}/>
 				</div>
 			)
 				
