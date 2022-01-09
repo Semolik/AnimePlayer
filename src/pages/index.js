@@ -2,6 +2,7 @@ import React from 'react';
 import Loading from '../components/Loading/Loading';
 import Card from '../components/card/card';
 import './index.css';
+import { Link } from 'react-router-dom';  
 
 class ServisePage extends React.Component {
 	constructor(props) {
@@ -56,6 +57,7 @@ class ServisePage extends React.Component {
 					{items.map((item, i) => (
 						<Card key={i} data={item}></Card>
 						))}
+						<Link to='/animevost/2'>fsdfsdfs</Link>
 				</div>
 			)
 				

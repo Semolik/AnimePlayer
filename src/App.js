@@ -11,9 +11,9 @@ class App extends React.Component {
         return (
             <div className='container'>
                 <Switch>
-                    <Route path='/:servise/:page?' render={
+                    <Route path='/:servise/:page?/:id?' render={
                         (props) => (
-                            <ServisePage key={props.match.params} {...props} /> 
+                            <ServisePage key={[props.match.params.servise,props.match.params.page,props.match.params.id]} {...props} /> 
                         )
                     }/>
                     <Route exact path='/' component={HomePage} />
