@@ -12,7 +12,7 @@ class ServicePage extends React.Component {
 		this.state = {
 			error: null,
 			isLoaded: false,
-			items: [],
+			data: {},
 			page: this.props.match.params.page,
 			id: this.props.match.params.id,
 			service: this.props.match.params.service,
@@ -21,33 +21,41 @@ class ServicePage extends React.Component {
 	}
   
 	componentDidMount() {
-		if (this.state.page===undefined| (this.state.page==='page' && !isNaN(this.state.id))){
-			fetch(this.state.api,{
-				method: 'post',
-				headers: {
-					'Accept': 'application/json, text/plain, */*',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify( {page: this.state.id} ),
-			})
-			.then(res => res.json())
-			.then(
-				(result) => {
-					// console.log(result);
+		if (this.state.page===undefined| this.state.page==='page'){
+		fetch(this.state.api,{
+			method: 'post',
+			headers: {
+				'Accept': 'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify( {page: this.state.id} ),
+		})
+		.then(res => res.json())
+		.then(
+			(result) => {
+				console.log(result);
+				if (result.status===200){
 					this.setState({
 						isLoaded: true,
-						items: result.data
+						data: result.data
 					});
-				},
-				// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-				// чтобы не перехватывать исключения из ошибок в самих компонентах.
-				(error) => {
+				} else {
 					this.setState({
-						isLoaded: true,
-						error
-						});
-					}
-			)
+						isLoaded: false,
+						error: {
+							message: result.message
+						}
+					});
+				}
+			},
+			(error) => {
+				console.log(3);
+				this.setState({
+					isLoaded: false,
+					error
+					});
+				}
+		)
 		} else if (this.state.page!==undefined){
 			//Обработка страницы отдельного аниме
 		} else {
@@ -60,20 +68,23 @@ class ServicePage extends React.Component {
 		}
 	}
 	render() {
-		const { error, isLoaded, items, service} = this.state;
+		const { error, isLoaded, data, service, id} = this.state;
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
 			return <Loading/>;
 		} else {
-			console.log(items);
+			console.log(data);
 			return (
-				<div className='cards-container'>
-					{items.map((item, i) => (
-						<Card key={i} data={item} service={service}></Card>
-						))}
-						{/* <Link to='/animevost/page/2'>fsdfsdfs</Link> */}
-						<Pagination totalPages={10} page={4} url={'asdasdd'}/>
+				<div className='wrapper'>
+					<div className='cards-container'>
+						{data.data.map((item, i) => (
+							<Card key={i} data={item} service={service}></Card>
+							))}
+							{/* <Link to='/animevost/page/2'>fsdfsdfs</Link> */}
+							
+					</div>
+					<Pagination totalPages={data.pages} page={id===undefined ? 1 : id} url={`/${service}/page/`}/>
 				</div>
 			)
 				

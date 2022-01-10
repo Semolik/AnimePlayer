@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 function Card(item){
     var data = item.data;
     var service = item.service;
+    var title = data.ru_title.substr(0,90);
     return (
         <Link to={`/${service}/${data.id}`} className="card">
             <div className="poster-container">
@@ -13,7 +14,8 @@ function Card(item){
 
                 </div>
             </div>
-            <div className="title">{data.ru_title}</div>
+            {/* <div className="title">{data.ru_title}</div> */}
+            <div className="title">{title+(title.Lenght==90 ? '...': '')}</div>
         </Link>
     )
 }

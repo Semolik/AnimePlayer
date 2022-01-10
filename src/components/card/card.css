@@ -12,9 +12,9 @@
 }
 .poster-container {
 	display: flex;
-	/* width: 100%; */
+	width: 100%;
 	height: 80%;
-	/* aspect-ratio: 0.7; */
+	/* aspect-ratio: 0.8; */
 	/* height: 80%; */
 }
 
@@ -35,21 +35,12 @@
 .card .title {
 	padding-top: 0.5rem;
 	padding-left: 0.5rem;
-	overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
 	color: #d9d7e0;
 }
 .card:hover .title {
 	color: white;
 }
-.card {
-	width: calc(100% / 5 - var(--card-margin) * 2);
-	aspect-ratio: 0.54;
-}
-/* @media screen and (min-width: 1200px){
+@media screen and (min-width: 1200px){
 	.card {
 		width: calc(100% / 5 - var(--card-margin) * 2);
 	}
@@ -59,8 +50,16 @@
 		width: calc(100% / 4 - var(--card-margin) * 2);
 	}
 }
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px )and (min-width: 576px){
 	.card {
 		width: calc(100% / 3 - var(--card-margin) * 2);
 	}
-} */
+}
+@media screen and (max-width: 576px){
+	.card {
+		width: calc(100% / 2 - var(--card-margin) * 2);
+	}
+	.card .title {
+		line-height: 1;
+	}
+}

@@ -55,7 +55,6 @@ class Header extends React.Component {
 		} else if (!isLoaded) {
 			return <Loading/>;
 		} else {
-			
 			return (
                 <header className='header'>
                     <div className="sidebar">
