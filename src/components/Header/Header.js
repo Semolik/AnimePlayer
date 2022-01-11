@@ -41,12 +41,6 @@ class Header extends React.Component {
 	menuBtnChange() {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
-		var closeBtn = document.querySelector("#btn");
-		if(sidebar.classList.contains("open")){
-			closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-		} else {
-			closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-		}
 	}
 	render() {
 		const { error, isLoaded, items } = this.state;
@@ -57,14 +51,17 @@ class Header extends React.Component {
 		} else {
 			return (
                 <header className='header'>
+					<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
+					<i 
+						className='bx bx-menu'
+						onClick={this.menuBtnChange}
+						onLoad={document.getElementById('main').addEventListener('click',()=>{
+							document.querySelector(".sidebar").classList.remove("open");
+						})}
+						id="btn">
+					</i>
                     <div className="sidebar">
-                        <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
-                        <div className="logo-details">
-                            <i className='bx bxl-c-plus-plus icon'></i>
-                            <div className="logo_name">CodingLab</div>
-                            <i className='bx bx-menu' onClick={this.menuBtnChange} id="btn"></i>
-                        </div>
-                        <ul className="nav-list" onLoad={this.test}>
+                        <div className="nav-list" onLoad={this.test}>
                             {services.map((service, i) => (
                                 <li key={i}>
                                     <Link to={"/"+service.id} className='sidebar-item'>
@@ -76,7 +73,7 @@ class Header extends React.Component {
                                     </Link>
                                 </li>
                             ))}
-                        </ul>
+                        </div>
                     </div>
                     <div className='header-container'>
                         <Link to='/' className='header-brand'>{this.props.brand}</Link>

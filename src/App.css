@@ -6,7 +6,7 @@ body {
     padding: 0;
     width: 100%;
     color: white;
-    background-color: var( --main-bg);
+    background-color: var(--background-root);
 }
 .container {
     padding-top: 60px;

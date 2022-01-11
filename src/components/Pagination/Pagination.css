@@ -46,6 +46,7 @@
 .pagination ul a:first-child:hover,
 .pagination ul a:last-child:hover{
 	color: #fff;
-	background: #20B2AA;
+	/* background: #20B2AA; */
+	background: var(--outline-default);
 }
   

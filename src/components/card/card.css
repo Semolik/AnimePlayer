@@ -8,25 +8,45 @@
 	/* height: auto; */
 	text-decoration: none;
 	margin: var(--card-margin);
-	/* transition: .4s; */
+	
+	transition: .4s;
+}
+.card .poster-container .blocks {
+	position: absolute;
+	padding: 0.5rem;
+	color: white;
+	margin-top: -0.3rem;
+}
+.card .poster-container .block {
+	margin-top: 0.3rem;
+}
+.card .poster-container .block::before{
+	
+	padding: 1px 5px;
+	border-radius: 0.3rem;
+}
+.card .poster-container .announce::before{
+	content: 'Анонс';
+	background: #01c03a;
 }
 .poster-container {
+	position: relative;
 	display: flex;
 	width: 100%;
 	height: 80%;
-	/* aspect-ratio: 0.8; */
-	/* height: 80%; */
+	aspect-ratio: 0.7;
+	transition: .2s;
 }
 
 .card .poster-container img {
 	border-radius: 0.5rem;
 	height: 100%;
 	object-fit: cover;
-	transition: .2s;
+	
 	
 	width: 100%;
 }
-.card:hover .poster-container img {
+.card:hover .poster-container {
 	/* background-color: whitesmoke;
 	color: black; */
 	/* transform: scale(1.05); */
