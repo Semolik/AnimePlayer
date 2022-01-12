@@ -13,7 +13,6 @@
 	padding-right: 1rem;
 }
 .info-block .column .name {
-
 	width: 100%;
 }
 .info-block .column .name.ru-name {
@@ -26,6 +25,26 @@
 	color: #d9d7e0;
 	font-size: 14px;
 	line-height: 30px;
+}
+.info-block .column .genres {
+	display: flex;
+	margin-top: 1rem;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	flex-wrap: wrap;
+}
+.info-block .column .genres .genre {
+	text-decoration: none;
+	color: white;
+	padding: 1px 3px;
+	height: min-content;
+	/* background: #d9d7e0; */
+	border: 2px solid white;
+	border-radius: 0.5rem;
+	margin-left: 5px;
+	margin-top: 5px;
+	/* border: #d9d7e0; */
 }
 .title-container .info-block .poster {
 	object-fit: cover;

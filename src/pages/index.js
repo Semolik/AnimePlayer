@@ -16,8 +16,8 @@ class ServicePage extends React.Component {
 			page: this.props.match.params.page,
 			id: this.props.match.params.id,
 			service: this.props.match.params.service,
-			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
-			api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
+			api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
+			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 		};
 	}
@@ -124,7 +124,7 @@ class ServicePage extends React.Component {
 			console.log(data);
 			return (
 				<div className='wrapper'>
-					<Title data={data}></Title>
+					<Title data={data} service={service}></Title>
 				</div>
 			)
 		}
