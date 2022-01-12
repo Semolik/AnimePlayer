@@ -2,9 +2,9 @@ import React from 'react';
 import Loading from '../components/Loading/Loading';
 import Card from '../components/card/card';
 import Pagination from '../components/Pagination/Pagination';
+import Title from '../components/Title/Title';
 import './index.css';
-// import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from 'react-router-dom';  
+
 
 class ServicePage extends React.Component {
 	constructor(props) {
@@ -16,7 +16,8 @@ class ServicePage extends React.Component {
 			page: this.props.match.params.page,
 			id: this.props.match.params.id,
 			service: this.props.match.params.service,
-			api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
+			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
+			api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 		};
 	}
@@ -107,27 +108,23 @@ class ServicePage extends React.Component {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
 			return <Loading/>;
-		} else if (page_type=='page'){
+		} else if (page_type==='page'){
 			
 			return (
 				<div className='wrapper'>
 					<div className='cards-container'>
 						{data.data.map((item, i) => (
 							<Card key={i} data={item} service={service}></Card>
-							))}
-							{/* <Link to='/animevost/page/2'>fsdfsdfs</Link> */}
-							
+						))}
 					</div>
 					<Pagination totalPages={data.pages} page={id===undefined ? 1 : id} url={`/${service}/page/`}/>
 				</div>
 			)		
-		} else if (page_type=='title'){
+		} else if (page_type==='title'){
 			console.log(data);
 			return (
 				<div className='wrapper'>
-					<div className='title-container'>
-						
-					</div>
+					<Title data={data}></Title>
 				</div>
 			)
 		}

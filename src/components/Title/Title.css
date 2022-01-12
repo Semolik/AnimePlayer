@@ -1,0 +1,82 @@
+.title-container {
+	margin-top: 10px;
+	display: flex;
+}
+.info-block {
+	display: flex;
+	width: 100%;
+}
+.info-block .column {
+	text-align: center;
+	width: 100%;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+.info-block .column .name {
+
+	width: 100%;
+}
+.info-block .column .name.ru-name {
+	/* font-size: 35px; */
+    line-height: 44px;
+    font-weight: 900;
+    font-style: normal;
+}
+.info-block .column .name.en-name {
+	color: #d9d7e0;
+	font-size: 14px;
+	line-height: 30px;
+}
+.title-container .info-block .poster {
+	object-fit: cover;
+	width: 30%;
+	border-radius: 0.5rem;
+}
+@media screen and (min-width: 1300px){
+	.title-container {
+		width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.info-block .column .name.ru-name {
+		font-size: 40px;
+	}
+}
+@media screen and (min-width: 600px) and (max-width: 1300px){
+	.title-container {
+		width: 100%;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+@media screen and (min-width: 750px)and (max-width: 1300px){
+	.info-block .column .name.ru-name {
+		font-size: 30px;
+	}
+}
+@media screen and (max-width: 600px){
+	.info-block .column .name.ru-name {
+		font-size: 23px;
+		line-height: normal;
+		font-weight: 700;
+	}
+	.info-block .column .name.en-name{
+		font-size: 12px;
+	} 
+	.title-container {
+		width: 100%;
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	.title-container .info-block {
+		flex-direction: column;
+	}
+	.title-container .info-block .poster {
+		width: 100%;
+		max-height: 70vh;
+	}
+	
+}
+/* @media screen and (max-width: 450px){
+	
+} */

@@ -1,5 +1,6 @@
 
 .wrapper {
+	margin-top: 1rem;
 	display: flex;
 	width: 100%;
 	flex-direction: column;
@@ -7,27 +8,15 @@
 	align-items: center;
 }
 .cards-container {
-	padding-top: 1rem;
 	display: flex;
 	width: 100%;
 	flex-wrap: wrap;
-	/* flex-direction: column; */
 	justify-content: center;
-	/* align-items: center; */
 }
 @media screen and (min-width: 1200px){
-	.cards-container {
-		width: 1216px;
-		margin: 0 auto;
+	.cards-container{
+		width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
 	}
 }
-/* @media screen and (max-width: 1200px) and (min-width: 768px){
-	.cards-container {
-		width: ;
-	}
-}
-@media screen and (max-width: 768px){
-	.cards-container {
-		width: ;
-	}
-} */
