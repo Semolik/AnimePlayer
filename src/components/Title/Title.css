@@ -1,10 +1,18 @@
 .title-container {
 	margin-top: 10px;
 	display: flex;
+	max-width: 1400px;
+	margin: 0 auto;
 }
 .info-block {
 	display: flex;
 	width: 100%;
+	flex-direction: column;
+	
+}
+.info-block .box {
+	display: flex;
+	margin-top: 2rem;
 }
 .info-block .column {
 	text-align: center;
@@ -12,14 +20,18 @@
 	padding-left: 1rem;
 	padding-right: 1rem;
 }
-.info-block .column .name {
+.info-block .name {
 	width: 100%;
+	text-align: center;
 }
-.info-block .column .name.ru-name {
-	/* font-size: 35px; */
+.info-block .name.ru-name {
+	/* font-size: 35px;
     line-height: 44px;
     font-weight: 900;
-    font-style: normal;
+    font-style: normal; */
+	font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 .info-block .column .name.en-name {
 	color: #d9d7e0;
@@ -46,6 +58,37 @@
 	margin-top: 5px;
 	/* border: #d9d7e0; */
 }
+.info-block .column ul{
+	list-style-type: none;
+}
+.info-block .column ul li.info-item{
+	position: relative;
+	padding-left: 180px;
+	text-align: left;
+	display: flex;
+	flex-wrap: wrap;
+}
+.info-block .column ul li.info-item span{
+	position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 500;
+}
+.info-block .column ul li.info-item .genre {
+	text-decoration: none;
+	color: #297fd7;
+	border-bottom: 1px dotted #297fd7;
+}
+.info-block .column ul li.info-item .genre:hover{
+	border-bottom:none;
+}
+/* 
+.info-block .column ul li.info-item .genre:not(.info-block .column ul li.info-item .genre.last)::after{
+	content: ', ';
+	text-decoration: none;
+	border: none;
+	color: white;
+} */
 .title-container .info-block .poster {
 	object-fit: cover;
 	width: 30%;
@@ -57,9 +100,9 @@
 		margin-left: auto;
 		margin-right: auto;
 	}
-	.info-block .column .name.ru-name {
+	/* .info-block .column .name.ru-name {
 		font-size: 40px;
-	}
+	} */
 }
 @media screen and (min-width: 600px) and (max-width: 1300px){
 	.title-container {
@@ -69,16 +112,21 @@
 	}
 }
 @media screen and (min-width: 750px)and (max-width: 1300px){
-	.info-block .column .name.ru-name {
+	/* .info-block .column .name.ru-name {
 		font-size: 30px;
+	} */
+}
+@media screen and (min-width: 600px){
+	.info-block .column{
+		padding-left: 2rem;
 	}
 }
 @media screen and (max-width: 600px){
-	.info-block .column .name.ru-name {
+	/* .info-block .column .name.ru-name {
 		font-size: 23px;
 		line-height: normal;
 		font-weight: 700;
-	}
+	} */
 	.info-block .column .name.en-name{
 		font-size: 12px;
 	} 
