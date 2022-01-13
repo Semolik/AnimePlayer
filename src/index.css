@@ -11,6 +11,8 @@
 	--background-default: #1C2333;
 	--background-highest: #3C445C;
 	--outline-default: #70788C;
+	--foreground-default: #F5F9FC;
+	--font-size-subhead-default: 16px;
 }
 body {
 	margin: 0;

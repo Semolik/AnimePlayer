@@ -53,14 +53,6 @@ class Header extends React.Component {
 			return (
                 <header className='header'>
 					<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
-					<i 
-						className='bx bx-menu'
-						onClick={this.menuBtnChange}
-						onLoad={document.getElementById('main').addEventListener('click',()=>{
-							document.querySelector(".sidebar").classList.remove("open");
-						})}
-						id="btn">
-					</i>
                     <div className="sidebar">
                         <div className="nav-list" onLoad={this.test}>
                             {services.map((service, i) => (
@@ -77,7 +69,17 @@ class Header extends React.Component {
                         </div>
                     </div>
                     <div className='header-container'>
-                        <Link to='/' className='header-brand'>{this.props.brand}</Link>
+						<i 
+							className='bx bx-menu'
+							onClick={this.menuBtnChange}
+							onLoad={document.getElementById('main').addEventListener('click',()=>{
+								document.querySelector(".sidebar").classList.remove("open");
+							})}
+							id="btn">
+						</i>
+                        {/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
+						<div className='input-container'><input></input></div>
+						
                     </div>
                 </header>
 			);
