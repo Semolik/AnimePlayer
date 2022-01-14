@@ -1,11 +1,6 @@
 import React from 'react';
 import './Title.css';
 import { Link } from 'react-router-dom';
-function merge(a, b) {
-	for (var i = 0; a.length;)
-	  b.splice(i++ * 2, 0, a.shift());
-	return b;
-  }
 function Title(event) {
 	var data = event.data;
 	var service = event.service;
@@ -13,9 +8,9 @@ function Title(event) {
 		return <Link className="genre" to={`/${service}/genre/${element[1]}`} key={key}>{element[0]}</Link>
 	})
 	var genres = new Array();
-	for (var iterator of genre) {
-		genres.push(iterator);
-		genres.push(<p>,&nbsp;</p>);
+	for (var i = 0; i<genre.length; i++){
+		genres.push(genre[i]);
+		genres.push(<p key={i*-1-1}>,&nbsp;</p>);
 	}
 	genres.pop();
 	return (
@@ -26,16 +21,25 @@ function Title(event) {
 				<div className='box'>
 					<img className='poster' src={data.poster}></img>
 					<div className='column'>
-						
 						<ul>
 							{data.series && data.series.info &&
 								<li className='info-item'>
 									<span>Количество серий:</span>{data.series.info[0]}
 								</li>
 							}
+							{data.series && data.series.info.length>1 &&
+								<li className='info-item'>
+									<span>Следующий эпизод:</span>{data.series.info[1]}
+								</li>
+							}
 							{data.genre &&
 								<li className='info-item'>
-									<span>Количество серий:</span>{genres}
+									<span>Жанры:</span>{genres}
+								</li>
+							}
+							{data.type &&
+								<li className='info-item'>
+									<span>Тип:</span>{data.type}
 								</li>
 							}
 							{data.director &&
@@ -43,11 +47,11 @@ function Title(event) {
 									<span>Режиссёр:</span>{data.director}
 								</li>
 							}
-							{data.shikimori &&
+							{/* {data.shikimori &&
 								<li className='info-item'>
 									<span>Режиссёр:</span>{data.director}
 								</li>
-							}
+							} */}
 						</ul>
 					</div>
 				</div>
