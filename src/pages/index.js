@@ -18,8 +18,8 @@ class ServicePage extends React.Component {
 			service: this.props.match.params.service,
 			PageType: this.props.match.params.PageType,
 			PageNumber: this.props.match.params.PageNumber,
-			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
-			api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
+			api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
+			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 			
 		};

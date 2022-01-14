@@ -13,6 +13,15 @@ function Title(event) {
 		genres.push(<p key={i*-1-1}>,&nbsp;</p>);
 	}
 	genres.pop();
+	var type;
+	if (data.type){
+		if (data.type.length>1){
+			type = <Link className="genre" to={`/${service}/genre/${data.type[1]}`}>{data.type[0]}</Link>
+		} else {
+			type = data.type[0]
+		}
+		
+	}
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -37,9 +46,9 @@ function Title(event) {
 									<span>Жанры:</span>{genres}
 								</li>
 							}
-							{data.type &&
+							{type &&
 								<li className='info-item'>
-									<span>Тип:</span>{data.type}
+									<span>Тип:</span>{type}
 								</li>
 							}
 							{data.director &&
