@@ -5,6 +5,7 @@ import './App.css';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import HomePage from './pages/home';
 import ServicePage from './pages';
+import Header from './components/Header/Header';
 
 class App extends React.Component {
     render() {

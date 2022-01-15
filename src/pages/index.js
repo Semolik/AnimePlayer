@@ -18,8 +18,8 @@ class ServicePage extends React.Component {
 			service: this.props.match.params.service,
 			PageType: this.props.match.params.PageType,
 			PageNumber: this.props.match.params.PageNumber,
-			api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
-			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
+			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
+			api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 			
 		};
@@ -96,6 +96,8 @@ class ServicePage extends React.Component {
 						});
 					}
 			)
+		} else if (this.state.page==='search') {
+			alert(this.getParameterByName('text'));
 		} else if (this.state.page!==undefined){
 			fetch(this.state.api+'title',{
 				method: 'post',
@@ -139,7 +141,13 @@ class ServicePage extends React.Component {
 				}
 			});
 		}
-	} 
+	}
+	getParameterByName(name) {
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		return urlParams.get(name);
+	}
+	
 	render() {
 		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber} = this.state;
 		if (error) {

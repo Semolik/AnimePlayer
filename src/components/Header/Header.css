@@ -24,14 +24,13 @@
 	align-items: center;
 	justify-content: center;
 }
-.header .header-container .input-container input{
+.header .header-container .input-container .search{
 	background-color: var(--background-highest);
     border-color: transparent;
     color: var(--foreground-default);
     font-size: var(--font-size-subhead-default);
-    padding-right: 4px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding: 4px;
+	padding-left: 2px;
     display: block;
     line-height: 1.4;
 	border-radius: 0.5rem;
@@ -40,12 +39,12 @@
 	/* max-width: ; */
 }
 @media screen and (min-width: 750px) {
-	.header .header-container .input-container input {
+	.header .header-container .input-container .search {
 		width: 650px;
 	}
 }
 @media screen and (max-width: 750px){
-	.header .header-container .input-container input {
+	.header .header-container .input-container .search {
 		width: 90%;
 	}
 }

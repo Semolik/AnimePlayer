@@ -18,12 +18,12 @@ class Header extends React.Component {
 	}
   
 	componentDidMount() {
-		fetch("http://127.0.0.1/api/services")
-		// fetch("http://192.168.50.106:80/api/services")
+		// fetch("http://127.0.0.1/api/services")
+		fetch("http://192.168.50.106:80/api/services")
 			.then(res => res.json())
 			.then(
 				(result) => {
-					console.log(result);
+					
 					this.setState({
 						isLoaded: true,
 						items: result
@@ -43,32 +43,52 @@ class Header extends React.Component {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
 	}
+	LoadGenres(service_id){
+		var buttons = document.getElementsByClassName('sidebar-item');
+		if(this.state.items.hasOwnProperty(service_id)){
+			var genres_list = document.getElementById('genres');
+			var genres = this.state.items[service_id].genres;
+			for (var genre_name in genres){
+				for (var genre_key in genres[genre_name].links){
+					var genre = genres[genre_name].links[genre_key];
+					genres_list.appendChild(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
+				}
+			}
+		}
+		// for (var button in buttons) {
+		// 	button.addEventListener('click', (e)=>{
+		// 		var genres_list = document.getElementById('genres');
+		// 		console.log(this.state.items);
+		// 	});
+		// }
+	}
 	render() {
 		const { error, isLoaded, items } = this.state;
+		console.log(items);
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
 			return <Loading/>;
 		} else {
 			return (
-                <header className='header'>
+				<header className='header'>
 					<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
-                    <div className="sidebar">
-                        <div className="nav-list" onLoad={this.test}>
-                            {services.map((service, i) => (
-                                <li key={i}>
-                                    <Link to={"/"+service.id} className='sidebar-item'>
-                                        <img
-                                            src={service.icon}
-                                            alt={service.title}
-                                        />
-                                        <span className="links_name">{service.title}</span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </div>
-                    </div>
-                    <div className='header-container'>
+					<div className="sidebar">
+						<div className="nav-list" >
+							{services.map((service, i) => (
+								<li key={i}>
+									<Link to={"/"+service.id} className='sidebar-item'>
+										<img
+											src={service.icon}
+											alt={service.title}
+										/>
+										<span className="links_name">{service.title}</span>{}
+									</Link>
+								</li>
+							))}
+						</div>
+					</div>
+					<div className='header-container'>
 						<i 
 							className='bx bx-menu'
 							onClick={this.menuBtnChange}
@@ -77,11 +97,14 @@ class Header extends React.Component {
 							})}
 							id="btn">
 						</i>
-                        {/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
-						<div className='input-container'><input></input></div>
+						{/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
+						<form className='input-container' action={`/animevost/search`}>
+							<input type="text" name="text" className='search'></input>
+							<input type="submit" value="Submit"></input>
+						</form>
 						
-                    </div>
-                </header>
+					</div>
+				</header>
 			);
 	  }
 	}

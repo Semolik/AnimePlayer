@@ -56,11 +56,11 @@ function Title(event) {
 									<span>Режиссёр:</span>{data.director}
 								</li>
 							}
-							{/* {data.shikimori &&
+							{data.shikimori && data.shikimori.licensors.length>0 &&
 								<li className='info-item'>
-									<span>Режиссёр:</span>{data.director}
+									<span>Лицензировано:</span>{data.shikimori.licensors.join(' ')}
 								</li>
-							} */}
+							}
 						</ul>
 					</div>
 				</div>
