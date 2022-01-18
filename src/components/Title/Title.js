@@ -13,15 +13,6 @@ function spliting(elements){
 function Title(event) {
 	var data = event.data;
 	var service = event.service;
-	var type;
-	if (data.type){
-		if (data.type.length>1){
-			type = <Link className="genre" to={`/${service}/genre/${data.type[1]}`}>{data.type[0]}</Link>
-		} else {
-			type = data.type[0]
-		}
-		
-	}
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -30,7 +21,7 @@ function Title(event) {
 				<div className='box'>
 					<div className='flex w-100'>
 						<div className='column'>
-							<img className='poster' src={data.poster}></img>
+							<img className='poster' src={data.poster} alt={data.ru_title}></img>
 							<div className='blocks'>
 								{data.series && data.series.info &&
 									<div className='block'>
@@ -52,10 +43,9 @@ function Title(event) {
 										</div>
 									</div>
 								}
-								{type &&
-									<div className='block'>
-										<span>Тип</span>{type}
-									</div>
+								{data.type && (data.type.length>1 ?
+									<Link className="block" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
+								)
 								}
 								{data.director &&
 									<div className='block'>

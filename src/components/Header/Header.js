@@ -100,7 +100,6 @@ class Header extends React.Component {
 						{/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
 						<form className='input-container' action={`/animevost/search`}>
 							<input type="text" name="text" className='search' placeholder='Введите название...'></input>
-							<input type="submit" value="Submit" ></input>
 						</form>
 						
 					</div>
