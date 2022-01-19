@@ -43,25 +43,25 @@ class Header extends React.Component {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
 	}
-	LoadGenres(service_id){
-		var buttons = document.getElementsByClassName('sidebar-item');
-		if(this.state.items.hasOwnProperty(service_id)){
-			var genres_list = document.getElementById('genres');
-			var genres = this.state.items[service_id].genres;
-			for (var genre_name in genres){
-				for (var genre_key in genres[genre_name].links){
-					var genre = genres[genre_name].links[genre_key];
-					genres_list.appendChild(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
-				}
-			}
-		}
-		// for (var button in buttons) {
-		// 	button.addEventListener('click', (e)=>{
-		// 		var genres_list = document.getElementById('genres');
-		// 		console.log(this.state.items);
-		// 	});
-		// }
-	}
+	// LoadGenres(service_id){
+	// 	var buttons = document.getElementsByClassName('sidebar-item');
+	// 	if(this.state.items.hasOwnProperty(service_id)){
+	// 		var genres_list = document.getElementById('genres');
+	// 		var genres = this.state.items[service_id].genres;
+	// 		for (var genre_name in genres){
+	// 			for (var genre_key in genres[genre_name].links){
+	// 				var genre = genres[genre_name].links[genre_key];
+	// 				genres_list.appendChild(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
+	// 			}
+	// 		}
+	// 	}
+	// 	// for (var button in buttons) {
+	// 	// 	button.addEventListener('click', (e)=>{
+	// 	// 		var genres_list = document.getElementById('genres');
+	// 	// 		console.log(this.state.items);
+	// 	// 	});
+	// 	// }
+	// }
 	render() {
 		const { error, isLoaded, items } = this.state;
 		console.log(items);

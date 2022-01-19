@@ -158,9 +158,6 @@ class ServicePage extends React.Component {
 			
 			return (
 				<div className='wrapper'>
-					{/* {page_type==='genre' &&
-						<h1>Заголовок жанра</h1>
-					} */}
 					<div className='cards-container'>
 						{data.data.map((item, i) => (
 							<Card key={i} data={item} service={service}></Card>

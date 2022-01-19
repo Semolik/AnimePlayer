@@ -1,3 +1,6 @@
+:root {
+	--first-col-width: 250px;
+}
 .title-container {
 	margin-top: 10px;
 	display: flex;
@@ -24,7 +27,10 @@
 .info-block .column {
 	text-align: center;
 	width: 100%;
-	display: flex;
+	display: grid;
+	grid-template-columns: var(--first-col-width) repeat(3, 1fr);
+	gap: 10px;
+	grid-auto-rows: min-content;
 }
 .info-block .name {
 	width: 100%;
@@ -45,20 +51,18 @@
 	line-height: 30px;
 }
 
-.info-block .column .blocks {
-	display: flex;
-	flex-wrap: wrap;
+/* .info-block .column .blocks {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+	grid-auto-rows: min-content;
 	height: min-content;
 	width: 100%;
-	/* justify-content: center; */
-	margin-top: -0.5%;
 	margin-left: 0.5rem;
-}
-.info-block .column .blocks .block {
+} */
+.info-block .column .block {
 	padding: 10px 1rem;
 	border-radius: 0.5rem;
-	margin: 1%;
-	width: calc((100%/3) - 2%);
 	transition: .4s;
 	display: flex;
 	flex-direction: column;
@@ -73,29 +77,28 @@
 	background: rgba(255, 255, 255, 0.2);
 }
 @media screen and (max-width: 1000px) {
-	.info-block .column .blocks .block {
-		width: calc((100%/2) - 2%);
+	.info-block .column {
+		grid-template-columns: var(--first-col-width) repeat(2, 1fr);
 	}
 }
 @media screen and (max-width: 800px) {
-	.info-block .column .blocks .block {
-		width: 100%;
-		height: 100%;
+	.info-block .column{
+		grid-template-columns: var(--first-col-width) repeat(1, 1fr);
 	}
 }
-.info-block .column .blocks .block .elements {
+.info-block .column .block .elements {
 	display: flex;
 	justify-content: center;
 	/* margin-right: -10px; */
 	flex-wrap: wrap;
 }
-.info-block .column .blocks .block .elements > * {
+.info-block .column  .block .elements > * {
 	margin: 0px 5px;
 }
-.info-block .column .blocks .block span {
+.info-block .column  .block span {
 	white-space: nowrap;
 }
-.info-block .column .blocks .block a {
+.info-block .column  .block a {
 	text-decoration: none;
 	/* text-decoration: underline; */
 	text-underline-position: under; 
@@ -103,14 +106,14 @@
 	display: flex;
 	flex-direction: column;
 }
-.info-block .column .blocks .block a::after{
+.info-block .column  .block a::after{
 	content: "";
 	width: 100%;
 	border-bottom: 1px dotted #297fd7;
 	opacity: 1;
 	height: 1px;
 }
-.info-block .column .blocks .block a::after{
+.info-block .column .block a::after{
 	opacity: 0;
 }
 /* .info-block .column .blocks .block a:hover{
@@ -126,18 +129,22 @@
 }*/
 .title-container .info-block .column .poster {
 	object-fit: cover;
-	/* height: 100%; */
+	height: 100%;
+	width: 100%;
+	grid-column: 1;
+   	grid-row: 1 / 6;
 	border-radius: 0.5rem;
 }
 .star-ratings {
+	grid-column: 1;
+   	grid-row: 7;
 	unicode-bidi: bidi-override;
 	color: #ccc;
 	font-size: 64px;
 	position: relative;
 	margin: 0;
 	padding: 0;
-
-  }
+}
 .star-ratings .fill-ratings {
 	color: #e7711b;
 	padding: 0;
@@ -156,11 +163,11 @@
 	display: block;
 	z-index: 0;
   }
-@media screen and (min-width: 960px){
+/* @media screen and (min-width: 960px){
 	.title-container .info-block .poster {
 		max-height: 400px;
 	}
-}
+} */
 /* @media screen and (max-width: 960px){
 	.title-container .info-block .poster {
 		max-height: 300px;
@@ -187,25 +194,25 @@
 
 	
 @media screen and (max-width: 600px){
-	.title-container .info-block .poster {
+	/* .title-container .info-block .poster {
 		width: 100%;
-	}
-	.info-block .column .blocks {
+	} */
+	/* .info-block .column .blocks {
 		margin-top: 1rem;
-	}
+	} */
 	.info-block .column .blocks .block {
 		height: min-content;
 	}
 	.info-block .box .flex {
 		flex-direction: column;
 	}
-	.info-block .box .flex .column {
+	.info-block .box .flex .column{
 		padding: 0px;
 		padding-top: 2rem;
-		
-		justify-content: center;
+		grid-template-columns: 1fr;
+		/* justify-content: center;
 		align-items: center;
-		flex-direction: column;
+		flex-direction: column; */
 	}
 	
 	.info-block .column .name.en-name{
@@ -220,9 +227,9 @@
 		flex-direction: column;
 	}
 	
-	/* .title-container .info-block .poster {
+	.title-container .info-block .poster {
 		width: 100%;
-		max-height: 70vh;
-	} */
+		height: auto !important;
+	}
 	
 }
