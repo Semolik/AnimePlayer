@@ -22,6 +22,11 @@ function Title(event) {
 					<div className='flex w-100'>
 						<div className='column'>
 							<img className='poster' src={data.poster} alt={data.ru_title}></img>
+							{data.genre && 
+								<div className='genres'>{data.genre.map((element, key) =>{
+									return <Link className="genre" to={`/${service}/genre/${element[1]}`} key={key}>{element[0]}</Link>
+								})}</div>
+							}
 							{data.series && data.series.info &&
 								<div className='block'>
 									<span>Количество серий</span>{data.series.info[0]}
@@ -32,7 +37,7 @@ function Title(event) {
 									<span>Следующий эпизод</span>{data.series.info[1]}
 								</div>
 							}
-							{data.genre &&
+							{/* {data.genre &&
 								<div className='block'>
 									<span>Жанры</span>
 									<div className='elements'>
@@ -41,7 +46,7 @@ function Title(event) {
 										})}
 									</div>
 								</div>
-							}
+							} */}
 							{data.type && (data.type.length>1 ?
 								<Link className="block" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
 							)
@@ -56,6 +61,7 @@ function Title(event) {
 									<span>Лицензировано</span>{data.shikimori.licensors.join(', ')}
 								</div>
 							}
+							
 							{data.shikimori && data.shikimori.score &&
 								// <div className="star-ratings">
 								// 	<div className="fill-ratings" style={{width: data.shikimori.score*10 +'%'}}>
