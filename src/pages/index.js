@@ -18,8 +18,8 @@ class ServicePage extends React.Component {
 			service: this.props.match.params.service,
 			PageType: this.props.match.params.PageType,
 			PageNumber: this.props.match.params.PageNumber,
-			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
-			api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
+			api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
+			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 			
 		};
@@ -97,7 +97,85 @@ class ServicePage extends React.Component {
 					}
 			)
 		} else if (this.state.page==='search') {
-			alert(this.getParameterByName('text'));
+			var text = this.getParameterByName('text');
+			if (text===null){
+				this.setState({
+					isLoaded: false,
+					error: {
+						message: 'Пустой запрос',
+					}
+				});
+				return;
+			}
+			fetch(this.state.api+'search',{
+				method: 'post',
+				headers: {
+					'Accept': 'application/json, text/plain, */*',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify( {name: text} ),
+			})
+			.then(res => res.json())
+			.then(
+				(result) => {
+					console.log(result);
+					if (result.status===200){
+						this.setState({
+							isLoaded: true,
+							data: result.data,
+							page_type: 'page',
+						});
+					} else {
+						this.setState({
+							isLoaded: false,
+							error: {
+								message: result.message
+							}
+						});
+					}
+				},
+				(error) => {
+					this.setState({
+						isLoaded: false,
+						error
+						});
+					}
+			)
+		} else if (this.state.page==='genre'){
+			fetch(this.state.api+'genre',{
+				method: 'post',
+				headers: {
+					'Accept': 'application/json, text/plain, */*',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify( {genre: this.state.id, page: this.state.PageNumber} ),
+			})
+			.then(res => res.json())
+			.then(
+				(result) => {
+					console.log(result);
+					if (result.status===200){
+						this.setState({
+							isLoaded: true,
+							data: result.data,
+							page_type: 'genre',
+						});
+					} else {
+						this.setState({
+							isLoaded: false,
+							error: {
+								message: result.message
+							}
+						});
+					}
+				},
+				(error) => {
+					this.setState({
+						isLoaded: false,
+						error
+						});
+					}
+			)
 		} else if (this.state.page!==undefined){
 			fetch(this.state.api+'title',{
 				method: 'post',
@@ -155,7 +233,6 @@ class ServicePage extends React.Component {
 		} else if (!isLoaded) {
 			return <Loading/>;
 		} else if (page_type==='page' || page_type==='genre'){
-			
 			return (
 				<div className='wrapper'>
 					<div className='cards-container'>

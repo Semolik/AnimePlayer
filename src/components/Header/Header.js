@@ -18,8 +18,8 @@ class Header extends React.Component {
 	}
   
 	componentDidMount() {
-		// fetch("http://127.0.0.1/api/services")
-		fetch("http://192.168.50.106:80/api/services")
+		fetch("http://127.0.0.1/api/services")
+		// fetch("http://192.168.50.106:80/api/services")
 			.then(res => res.json())
 			.then(
 				(result) => {
@@ -77,7 +77,7 @@ class Header extends React.Component {
 						<div className="nav-list" >
 							{services.map((service, i) => (
 								<li key={i}>
-									<Link to={"/"+service.id} className='sidebar-item'>
+									<Link to={"/"+service.id} className='sidebar-item' onClick={this.menuBtnChange}>
 										<img
 											src={service.icon}
 											alt={service.title}

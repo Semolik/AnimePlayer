@@ -73,6 +73,14 @@
 	text-decoration: none;
 	color: white;
 }
+.info-block .column .block .elements {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.info-block .column .block .elements > * {
+	margin: 2px;
+}
 .info-block .column .blocks a.block{
 	background: rgba(255, 255, 255, 0.2);
 }
@@ -86,9 +94,10 @@
 		grid-template-columns: var(--first-col-width) repeat(1, 1fr);
 	}
 }
+
 .info-block .column .genres {
-	grid-column: 1;
-   	grid-row: 7;
+	/* grid-column: 1;
+   	grid-row: 7; */
 	display: flex;
 	/* justify-content: center; */
 	flex-wrap: wrap;
@@ -144,7 +153,7 @@
 	height: 100%;
 	width: 100%;
 	grid-column: 1;
-   	grid-row: 1 / 6;
+   	grid-row: 1 / 5;
 	border-radius: 0.5rem;
 }
 .star-ratings {
