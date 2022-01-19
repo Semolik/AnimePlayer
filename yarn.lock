@@ -2976,10 +2976,10 @@
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.11.tgz"
   "version" "2.6.11"
 
-"core-js@^3.4.1":
-  "integrity" "sha512-hIE5dXkRzRvnZ5vhkRfQxUvDxQZmD9oueA08jDYRBKJHx+VIl/Pne/e0A4x9LObEEthC/TqiZybUoNM4tRgnKg=="
-  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.6.2.tgz"
-  "version" "3.6.2"
+"core-js@^3.20.0", "core-js@^3.4.1":
+  "integrity" "sha512-vVl8j8ph6tRS3B8qir40H7yw7voy17xL0piAjlbBUsH7WIfzoedL/ZOr1OV9FyZQLWXsayOJyV4tnRyXR85/ag=="
+  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.20.3.tgz"
+  "version" "3.20.3"
 
 "core-util-is@~1.0.0", "core-util-is@1.0.2":
   "integrity" "sha1-tf1UIgqivFq1eqtxQMlAdUUDwac="
@@ -3288,6 +3288,11 @@
   "integrity" "sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA=="
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.0.10.tgz"
   "version" "3.0.10"
+
+"custom-event-polyfill@^1.0.7":
+  "integrity" "sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w=="
+  "resolved" "https://registry.npmjs.org/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz"
+  "version" "1.0.7"
 
 "cyclist@^1.0.1":
   "integrity" "sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk="
@@ -6301,6 +6306,11 @@
     "emojis-list" "^2.0.0"
     "json5" "^1.0.1"
 
+"loadjs@^4.2.0":
+  "integrity" "sha512-AgQGZisAlTPbTEzrHPb6q+NYBMD+DP9uvGSIjSUM5uG+0jG15cb8axWpxuOIqrmQjn6scaaH8JwloiP27b2KXA=="
+  "resolved" "https://registry.npmjs.org/loadjs/-/loadjs-4.2.0.tgz"
+  "version" "4.2.0"
+
 "locate-path@^2.0.0":
   "integrity" "sha1-K1aLJl7slExtnA3pw9u7ygNUzY4="
   "resolved" "https://registry.npmjs.org/locate-path/-/locate-path-2.0.0.tgz"
@@ -7568,6 +7578,24 @@
   dependencies:
     "find-up" "^2.1.0"
 
+"plyr-react@^3.2.1":
+  "integrity" "sha512-ZXMA+d837mZCkb68oTXso6rH8O+B2+A7t8ux1fdU+kFSUh1NZa1/iuItItFgScmVC6FoO3DNj+FkZP2aikxoKg=="
+  "resolved" "https://registry.npmjs.org/plyr-react/-/plyr-react-3.2.1.tgz"
+  "version" "3.2.1"
+  dependencies:
+    "plyr" "^3.6.8"
+
+"plyr@^3.6.8":
+  "integrity" "sha512-42WhYpMS/FEyX2unSEvhYtj1RvJgWvOsjZQFDongOQHA4eVzsyr7b06bzVpinMAOVC9e5H7RCbK+6CCAFIl2VQ=="
+  "resolved" "https://registry.npmjs.org/plyr/-/plyr-3.6.12.tgz"
+  "version" "3.6.12"
+  dependencies:
+    "core-js" "^3.20.0"
+    "custom-event-polyfill" "^1.0.7"
+    "loadjs" "^4.2.0"
+    "rangetouch" "^2.0.1"
+    "url-polyfill" "^1.1.12"
+
 "pn@^1.1.0":
   "integrity" "sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpROA0ztTMqxROKSb/nA=="
   "resolved" "https://registry.npmjs.org/pn/-/pn-1.1.0.tgz"
@@ -8501,6 +8529,11 @@
   "resolved" "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   "version" "1.2.1"
 
+"rangetouch@^2.0.1":
+  "integrity" "sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA=="
+  "resolved" "https://registry.npmjs.org/rangetouch/-/rangetouch-2.0.1.tgz"
+  "version" "2.0.1"
+
 "raw-body@2.4.0":
   "integrity" "sha512-4Oz8DUIwdvoa5qMJelxipzi/iJIi40O5cGV1wNYp5hvZP8ZN0T+jiNkL0QepXs+EsQ9XJ8ipEDoiH70ySUJP3Q=="
   "resolved" "https://registry.npmjs.org/raw-body/-/raw-body-2.4.0.tgz"
@@ -8563,7 +8596,7 @@
     "strip-ansi" "5.2.0"
     "text-table" "0.2.0"
 
-"react-dom@^16.12.0":
+"react-dom@^16.12.0", "react-dom@^16.13.0  || ^17.0.0":
   "integrity" "sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-16.14.0.tgz"
   "version" "16.14.0"
@@ -8672,7 +8705,7 @@
   optionalDependencies:
     "fsevents" "2.1.2"
 
-"react@^16.12.0", "react@^16.14.0":
+"react@^16.12.0", "react@^16.13.0  || ^17.0.0", "react@^16.14.0":
   "integrity" "sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.14.0.tgz"
   "version" "16.14.0"
@@ -10427,6 +10460,11 @@
   dependencies:
     "querystringify" "^2.1.1"
     "requires-port" "^1.0.0"
+
+"url-polyfill@^1.1.12":
+  "integrity" "sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A=="
+  "resolved" "https://registry.npmjs.org/url-polyfill/-/url-polyfill-1.1.12.tgz"
+  "version" "1.1.12"
 
 "url@^0.11.0":
   "integrity" "sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE="

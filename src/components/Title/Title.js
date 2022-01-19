@@ -1,6 +1,8 @@
 import React from 'react';
 import './Title.css';
 import { Link } from 'react-router-dom';
+import Plyr from 'plyr-react'
+import 'plyr-react/dist/plyr.css'
 // function spliting(elements){
 // 	var out = new Array();
 // 	for (var i = 0; i<elements.length; i++){
@@ -38,6 +40,7 @@ function Title(event) {
 								</div>
 							}
 							{data.shikimori && data.shikimori.duration &&
+							{data.shikimori && data.shikimori.duration!==0 &&
 								<div className='block'>
 									<span>Длительность эпизода</span>{data.shikimori.duration} мин.
 								</div>
@@ -54,8 +57,7 @@ function Title(event) {
 							}
 							{data.type && (data.type.length>1 ?
 								<Link className="block link" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
-							)
-							}
+							)}
 							{data.director &&
 								<div className='block'>
 									<span>Режиссёр</span>{data.director}
@@ -67,7 +69,7 @@ function Title(event) {
 								</div>
 							}
 							
-							{data.shikimori && data.shikimori.score &&
+							{data.shikimori && data.shikimori.score!==0 &&
 								// <div className="star-ratings">
 								// 	<div className="fill-ratings" style={{width: data.shikimori.score*10 +'%'}}>
 								// 		<span>★★★★★</span>
@@ -87,7 +89,9 @@ function Title(event) {
 						}
 					</div>
 					<div className='flex w-100'>
-						
+						{/* {data.series && data.series.data &&
+							
+						} */}
 					</div>
 				</div>
 			</div>
