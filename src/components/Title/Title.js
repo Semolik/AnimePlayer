@@ -39,7 +39,6 @@ function Title(event) {
 									<span>Следующий эпизод</span>{data.series.info[1]}
 								</div>
 							}
-							{data.shikimori && data.shikimori.duration &&
 							{data.shikimori && data.shikimori.duration!==0 &&
 								<div className='block'>
 									<span>Длительность эпизода</span>{data.shikimori.duration} мин.
