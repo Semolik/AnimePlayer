@@ -53,7 +53,7 @@ function Title(event) {
 								</div>
 							}
 							{data.type && (data.type.length>1 ?
-								<Link className="block" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
+								<Link className="block link" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
 							)
 							}
 							{data.director &&
@@ -76,7 +76,7 @@ function Title(event) {
 								// 		<span>★★★★★</span>
 								// 	</div>
 								// </div>
-								<a href={"https://shikimori.one"+data.shikimori.url} className='block' target="_blank" rel="noopener noreferrer">
+								<a href={"https://shikimori.one"+data.shikimori.url} className='block link' target="_blank" rel="noopener noreferrer">
 									<span>Рейтинг</span>{data.shikimori.score}
 								</a>
 							}
