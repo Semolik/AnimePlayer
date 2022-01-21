@@ -28,9 +28,10 @@
 	text-align: center;
 	width: 100%;
 	display: grid;
-	grid-template-columns: var(--first-col-width) repeat(3, 1fr);
+	/* grid-template-columns: 1fr repeat(auto-fill, 1fr); */
+	grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
 	gap: 10px;
-	grid-auto-rows: min-content;
+
 }
 .info-block .name {
 	width: 100%;
@@ -51,15 +52,6 @@
 	line-height: 30px;
 }
 
-/* .info-block .column .blocks {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 10px;
-	grid-auto-rows: min-content;
-	height: min-content;
-	width: 100%;
-	margin-left: 0.5rem;
-} */
 .info-block .column .block {
 	padding: 10px 1rem;
 	border-radius: 0.5rem;
@@ -80,6 +72,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
 }
 .info-block .column .block .elements > * {
 	margin: 2px;
@@ -98,16 +91,6 @@
 }
 .info-block .column .block .elements a:hover::after{
 	opacity: 0;
-}
-@media screen and (max-width: 1000px) {
-	.info-block .column {
-		grid-template-columns: var(--first-col-width) repeat(2, 1fr);
-	}
-}
-@media screen and (max-width: 800px) {
-	.info-block .column{
-		grid-template-columns: var(--first-col-width) repeat(1, 1fr);
-	}
 }
 .info-block .column .block span {
 	white-space: nowrap;
@@ -166,17 +149,7 @@
 	padding: 0;
 	display: block;
 	z-index: 0;
-  }
-/* @media screen and (min-width: 960px){
-	.title-container .info-block .poster {
-		max-height: 400px;
-	}
-} */
-/* @media screen and (max-width: 960px){
-	.title-container .info-block .poster {
-		max-height: 300px;
-	}
-} */
+}
 .info-block  .description {
 	padding-top: 2rem;
 	text-align: justify;
@@ -198,15 +171,9 @@
 
 	
 @media screen and (max-width: 600px){
-	/* .title-container .info-block .poster {
-		width: 100%;
-	} */
-	/* .info-block .column .blocks {
-		margin-top: 1rem;
-	} */
-	/* .info-block .column .genres {
-		grid-row: initial;
-	} */
+	.info-block .box {
+		margin-top: 0;
+	}
 	.info-block .column .blocks .block {
 		height: min-content;
 	}
@@ -227,8 +194,8 @@
 	} 
 	.title-container {
 		width: 100%;
-		padding-left: 16px;
-		padding-right: 16px;
+		padding-left: 1%;
+		padding-right: 1%;
 	}
 	.title-container .info-block {
 		flex-direction: column;
@@ -239,4 +206,7 @@
 		height: auto !important;
 	}
 	
+}
+.plyr {
+	border-radius: 0.5rem;
 }

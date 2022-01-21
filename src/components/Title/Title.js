@@ -15,13 +15,23 @@ import 'plyr-react/dist/plyr.css'
 function Title(event) {
 	var data = event.data;
 	var service = event.service;
+	
+	const videoSrc = {
+		type: "video",
+		sources: [
+		{
+			src: "yWtFb9LJs3o",
+			provider: "youtube"
+		}
+		]
+	};
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
 				<h1 className='name ru-name'>{data.ru_title}</h1>
 				<h3 className='name en-name'>{data.en_title}</h3>
 				<div className='box'>
-					<div className='flex w-100'>
+					<div className='flex w-100 margin-bottom'>
 						<div className='column'>
 							<img className='poster' src={data.poster} alt={data.ru_title}></img>
 							{/* {data.genre && 
@@ -87,10 +97,10 @@ function Title(event) {
 							<div className='description'>{data.description}</div>
 						}
 					</div>
-					<div className='flex w-100'>
-						{/* {data.series && data.series.data &&
-							
-						} */}
+					<div className='flex w-100 margin-bottom'>
+						{data.series && data.series.data &&
+							<Plyr source={videoSrc} />
+						}
 					</div>
 				</div>
 			</div>
