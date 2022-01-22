@@ -16,7 +16,6 @@ class Header extends React.Component {
 			items: {}
 		};
 	}
-  
 	componentDidMount() {
 		// fetch("http://127.0.0.1/api/services")
 		fetch("http://192.168.50.106:80/api/services")
@@ -43,25 +42,32 @@ class Header extends React.Component {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
 	}
-	// LoadGenres(service_id){
-	// 	var buttons = document.getElementsByClassName('sidebar-item');
-	// 	if(this.state.items.hasOwnProperty(service_id)){
-	// 		var genres_list = document.getElementById('genres');
-	// 		var genres = this.state.items[service_id].genres;
-	// 		for (var genre_name in genres){
-	// 			for (var genre_key in genres[genre_name].links){
-	// 				var genre = genres[genre_name].links[genre_key];
-	// 				genres_list.appendChild(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
-	// 			}
-	// 		}
-	// 	}
-	// 	// for (var button in buttons) {
-	// 	// 	button.addEventListener('click', (e)=>{
-	// 	// 		var genres_list = document.getElementById('genres');
-	// 	// 		console.log(this.state.items);
-	// 	// 	});
-	// 	// }
-	// }
+	LoadGenres(service_id){
+		var buttons = document.getElementsByClassName('sidebar-item');
+		var list = new Array();
+		if(this.state.items.hasOwnProperty(service_id)){
+			var genres_list = document.getElementById('genres');
+			var genres = this.state.items[service_id].genres;
+			for (var genre_name in genres){
+				for (var genre_key in genres[genre_name].links){
+					var genre = genres[genre_name].links[genre_key];
+					list.push(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
+				}
+			}
+		}
+		// for (var button in buttons) {
+		// 	button.addEventListener('click', (e)=>{
+		// 		var genres_list = document.getElementById('genres');
+		// 		console.log(this.state.items);
+		// 	});
+		// }
+		return (
+			<div className='genres'>
+				<h3 className='title'>Доступные жанры</h3>
+				{list}
+			</div>
+		)
+	}
 	render() {
 		const { error, isLoaded, items } = this.state;
 		console.log(items);
@@ -86,6 +92,7 @@ class Header extends React.Component {
 									</Link>
 								</li>
 							))}
+							{this.LoadGenres('animevost')}
 						</div>
 					</div>
 					<div className='header-container'>

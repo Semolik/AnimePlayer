@@ -62,10 +62,10 @@
 }
 .sidebar{
 	position: fixed;
-	left: -78px;
+	left: -250px;
 	top: var(--header-height);
 	height: 100%;
-	width: 78px;
+	width: 250px;
 	background: var(--background-default);
 	border-right: 0.5px solid var(--background-highest);
 	padding: 0 14px;
@@ -75,6 +75,7 @@
 .sidebar.open{
 	width: 250px;
 	left: 0;
+	z-index: 99;
 }
 .sidebar .logo-details{
 	height: 60px;
@@ -116,6 +117,7 @@
 .sidebar .nav-list{
 	margin-top: 20px;
 	height: 100%;
+	overflow-y: scroll;
 }
 .sidebar.open .nav-list {
 	display: block;
@@ -182,4 +184,38 @@
 }
 .sidebar:not(.sidebar.open){
 	background: none;
+}
+.sidebar .nav-list .genres {
+	display: flex;
+	flex-direction: column;
+	opacity: 0;
+	text-align: center;
+	padding-bottom: 10rem;
+}
+.sidebar .nav-list .genres .title{
+	margin: 1rem 0;
+}
+.sidebar.open .nav-list .genres {
+	opacity: 1;
+}
+.sidebar .nav-list .genres .genre {
+	width: 100%;
+	padding: 2px 3px;
+	color: white;
+	border: 2px solid white;
+	border-radius: 1rem;
+	margin-bottom: 10px;
+	text-decoration: none;
+	min-width: 100%;
+	transition: .1s;
+}
+.sidebar .nav-list .genres .genre:hover{
+	background: crimson;
+}
+.sidebar .nav-list{
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+.sidebar .nav-list::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
