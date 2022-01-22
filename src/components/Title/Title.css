@@ -209,4 +209,47 @@
 }
 .plyr {
 	border-radius: 0.5rem;
+	aspect-ratio: 16/9;
 }
+.series {
+	margin-top: 1rem;
+	display: grid;
+	gap: 10px;
+	width: 100%;
+	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+.series .button {
+	/* min-width: ; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	border-radius: 1rem;
+	transition: .4s;
+	background-color: rgba(255, 255, 255, 0.3);
+	padding: 0.5rem;
+	/* border: 1px solid rgba(255, 255, 255, 0.60); */
+}
+.series .button:hover:not(.series .button.active){
+	background: crimson;
+}
+/* @media screen and (min-width: 1320px){
+	.series {
+		grid-template-columns: repeat(6, 1fr);
+	}
+}
+@media screen and (max-width: 1320px) and (min-width: 1200px) {
+	.series {
+		grid-template-columns: repeat(5, 1fr);
+	}
+}
+@media screen and (max-width: 1200px) and (min-width: 768px){
+	.series {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+@media screen and (max-width: 768px){
+	.series {
+		grid-template-columns: repeat(3, 1fr);
+	}
+} */

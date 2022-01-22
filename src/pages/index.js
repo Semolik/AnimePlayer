@@ -119,6 +119,7 @@ class ServicePage extends React.Component {
 			.then(
 				(result) => {
 					console.log(result);
+					console.log(result.status);
 					if (result.status===200){
 						this.setState({
 							isLoaded: true,

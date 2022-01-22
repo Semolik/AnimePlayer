@@ -15,16 +15,6 @@ import 'plyr-react/dist/plyr.css'
 function Title(event) {
 	var data = event.data;
 	var service = event.service;
-	
-	const videoSrc = {
-		type: "video",
-		sources: [
-		{
-			src: "yWtFb9LJs3o",
-			provider: "youtube"
-		}
-		]
-	};
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -97,11 +87,30 @@ function Title(event) {
 							<div className='description'>{data.description}</div>
 						}
 					</div>
-					<div className='flex w-100 margin-bottom'>
-						{data.series && data.series.data &&
-							<Plyr source={videoSrc} />
-						}
-					</div>
+					{data.series && data.series.data &&
+						<div className='flex w-100 margin-bottom'>
+							<Plyr source={{
+								type: "video",
+								sources: [
+									{
+										src: data.series.data[0]['hd'],
+										poster: data.series.data[0]['preview'],
+										size: 720,
+									},
+									{
+										src: data.series.data[0]['std'],
+										poster: data.series.data[0]['preview'],
+										size: 480,
+									}
+								]
+							}} id='player'/>
+							<div className='series'>
+								{data.series.data.map((element, key) => {
+									return (<div className='button' key={key}>{element['name']}</div>)
+								})}
+							</div>
+						</div>
+					}
 				</div>
 			</div>
 		</div>
