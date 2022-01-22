@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 // import './NavigationBar.css';
 import services from '../../services';
 import Loading from '../../components/Loading/Loading';
+import { Route, Switch, Redirect } from 'react-router-dom';
 class Header extends React.Component {
 	
 	constructor(props) {
@@ -42,19 +43,22 @@ class Header extends React.Component {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
 	}
-	LoadGenres(service_id){
+	LoadGenres(event){
+		var service_id = event.match.params.service;
+		console.log(service_id);
 		var buttons = document.getElementsByClassName('sidebar-item');
 		var list = new Array();
-		if(this.state.items.hasOwnProperty(service_id)){
-			var genres_list = document.getElementById('genres');
-			var genres = this.state.items[service_id].genres;
-			for (var genre_name in genres){
-				for (var genre_key in genres[genre_name].links){
-					var genre = genres[genre_name].links[genre_key];
-					list.push(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
-				}
-			}
-		}
+		// console.log(this);
+		// if(this.state.items.hasOwnProperty(service_id)){
+		// 	var genres_list = document.getElementById('genres');
+		// 	var genres = this.state.items[service_id].genres;
+		// 	for (var genre_name in genres){
+		// 		for (var genre_key in genres[genre_name].links){
+		// 			var genre = genres[genre_name].links[genre_key];
+		// 			list.push(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
+		// 		}
+		// 	}
+		// }
 		// for (var button in buttons) {
 		// 	button.addEventListener('click', (e)=>{
 		// 		var genres_list = document.getElementById('genres');
@@ -64,7 +68,7 @@ class Header extends React.Component {
 		return (
 			<div className='genres'>
 				<h3 className='title'>Доступные жанры</h3>
-				{list}
+				{/* {list} */}
 			</div>
 		)
 	}
@@ -92,7 +96,10 @@ class Header extends React.Component {
 									</Link>
 								</li>
 							))}
-							{this.LoadGenres('animevost')}
+							<Switch>
+                    			<Route path='/:service' component={this.LoadGenres}/>
+							</Switch>
+							{/* {this.LoadGenres('animevost')} */}
 						</div>
 					</div>
 					<div className='header-container'>
