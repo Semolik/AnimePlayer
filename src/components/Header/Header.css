@@ -84,26 +84,19 @@
 	position: relative;
 }
 .sidebar .logo-details .icon{
-	opacity: 0;
 	transition: all 0.5s ease;
 }
 .sidebar .logo-details .logo_name{
 	color: #fff;
 	font-size: 20px;
 	font-weight: 600;
-	opacity: 0;
 	transition: all 0.5s ease;
 }
-.sidebar.open .logo-details .icon,
-.sidebar.open .logo-details .logo_name{
-	opacity: 1;
-}
+
 .header #btn{
 	z-index: 100;
-	/* position: absolute; */
 	height: 100%;
 	aspect-ratio: 1;
-	/* left: 0; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -136,11 +129,9 @@
 	align-items: center;
 	text-decoration: none;
 	transition: all 0.4s ease;
-	/* background: #11101D; */
 	background: var(--background-root);
 }
 .sidebar li a:hover{
-	/* background: #FFF; */
 	background: var(--outline-default);
 }
 .sidebar li a .links_name{
@@ -148,7 +139,6 @@
 	font-size: 15px;
 	font-weight: 400;
 	white-space: nowrap;
-	opacity: 0;
 	pointer-events: none;
 	transition: 0.4s;
 }
@@ -159,7 +149,6 @@
 .sidebar li a:hover .links_name,
 .sidebar li a:hover i{
 	transition: all 0.5s ease;
-	/* color: #11101D; */
 }
 .sidebar li i{
 	height: 50px;
@@ -188,15 +177,8 @@
 .sidebar .nav-list .genres {
 	display: flex;
 	flex-direction: column;
-	opacity: 0;
 	text-align: center;
 	padding-bottom: 10rem;
-}
-.sidebar .nav-list .genres .title{
-	margin: 1rem 0;
-}
-.sidebar.open .nav-list .genres {
-	opacity: 1;
 }
 .sidebar .nav-list .genres .genre {
 	width: 100%;
@@ -211,6 +193,9 @@
 }
 .sidebar .nav-list .genres .genre:hover{
 	background: crimson;
+}
+.sidebar .nav-list .genres .genrename {
+	padding: 10px 0;
 }
 .sidebar .nav-list{
     -ms-overflow-style: none;  /* Internet Explorer 10+ */

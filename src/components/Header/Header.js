@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 // import './NavigationBar.css';
 import services from '../../services';
 import Loading from '../../components/Loading/Loading';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 class Header extends React.Component {
 	
 	constructor(props) {
@@ -43,34 +43,28 @@ class Header extends React.Component {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
 	}
-	LoadGenres(event){
+	LoadGenres(event, state){
 		var service_id = event.match.params.service;
 		console.log(service_id);
-		var buttons = document.getElementsByClassName('sidebar-item');
 		var list = new Array();
-		// console.log(this);
-		// if(this.state.items.hasOwnProperty(service_id)){
-		// 	var genres_list = document.getElementById('genres');
-		// 	var genres = this.state.items[service_id].genres;
-		// 	for (var genre_name in genres){
-		// 		for (var genre_key in genres[genre_name].links){
-		// 			var genre = genres[genre_name].links[genre_key];
-		// 			list.push(<Link className="genre" to={`/${service_id}/genre/${genre[1]}`}>{genre[0]}</Link>)
-		// 		}
-		// 	}
-		// }
+		if(this.state.items.hasOwnProperty(service_id)){
+			var genres = this.state.items[service_id].genres;
+			for (var genre_name in genres){
+				list.push(<div className='genrename' key={genre_name}>{genres[genre_name].name}</div>);
+				for (var genre_key in genres[genre_name].links){
+					var genre = genres[genre_name].links[genre_key];
+					var url = `/${service_id}/genre/${genre[1]}`;
+					list.push(<Link className="genre" to={url} key={url}>{genre[0]}</Link>);
+				}
+			}
+		}
 		// for (var button in buttons) {
 		// 	button.addEventListener('click', (e)=>{
 		// 		var genres_list = document.getElementById('genres');
 		// 		console.log(this.state.items);
 		// 	});
 		// }
-		return (
-			<div className='genres'>
-				<h3 className='title'>Доступные жанры</h3>
-				{/* {list} */}
-			</div>
-		)
+		return <div className='genres'>{list}</div>;
 	}
 	render() {
 		const { error, isLoaded, items } = this.state;
@@ -97,9 +91,8 @@ class Header extends React.Component {
 								</li>
 							))}
 							<Switch>
-                    			<Route path='/:service' component={this.LoadGenres}/>
+                    			<Route path='/:service' component={(event)=> this.LoadGenres(event, this.state)}/>
 							</Switch>
-							{/* {this.LoadGenres('animevost')} */}
 						</div>
 					</div>
 					<div className='header-container'>
