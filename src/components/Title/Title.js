@@ -58,6 +58,9 @@ function Title(event) {
 							{data.type && (data.type.length>1 ?
 								<Link className="block link" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
 							)}
+							{data.year && (data.year.length>1 ?
+								<Link className="block link" to={`/${service}/genre/${data.year[1]}`}><span>Год</span>{data.year[0]}</Link> : <div className='block'><span>Год</span>{data.year[0]}</div>
+							)}
 							{data.director &&
 								<div className='block'>
 									<span>Режиссёр</span>{data.director}
@@ -130,7 +133,7 @@ function Title(event) {
 													}
 												]
 											};
-									return (<div className={element = data.series.data[0] ? 'button active':'button'} key={key} onClick={(e)=>{
+									return (<div className={element == data.series.data[0] ? 'button active':'button'} key={key} onClick={(e)=>{
 										if (player.plyr.source!==source){
 											[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
 												el.classList.remove("active");
