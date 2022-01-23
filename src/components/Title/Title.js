@@ -15,6 +15,7 @@ import 'plyr-react/dist/plyr.css'
 function Title(event) {
 	var data = event.data;
 	var service = event.service;
+	var player;
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -89,6 +90,7 @@ function Title(event) {
 					</div>
 					{data.series && data.series.data &&
 						<div className='flex w-100 margin-bottom'>
+							{/* {localStorage.saved!==undefined && } */}
 							<Plyr source={{
 								type: "video",
 								sources: [
@@ -103,10 +105,41 @@ function Title(event) {
 										size: 480,
 									}
 								]
-							}} id='player'/>
+							}} id='player' ref={(player_) => (player = player_)}/>
 							<div className='series'>
 								{data.series.data.map((element, key) => {
-									return (<div className='button' key={key}>{element['name']}</div>)
+									// if (localStorage.saved!==undefined){
+									// 	var saved_data = JSON.parse(localStorage.saved);
+									// 	if (element)
+									// } 
+									// if(!(button_flag)){
+									// 	
+									// }
+									var source = {
+												type: "video",
+												sources: [
+													{
+														src: element['hd'],
+														poster: element['preview'],
+														size: 720,
+													},
+													{
+														src: element['std'],
+														poster: element['preview'],
+														size: 480,
+													}
+												]
+											};
+									return (<div className={element = data.series.data[0] ? 'button active':'button'} key={key} onClick={(e)=>{
+										if (player.plyr.source!==source){
+											[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
+												el.classList.remove("active");
+											});
+											player.plyr.source = source;
+											localStorage.saved = source;
+											e.target.classList.add("active");
+										}
+									}}>{element['name']}</div>)
 								})}
 							</div>
 						</div>
