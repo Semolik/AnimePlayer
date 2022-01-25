@@ -142,8 +142,15 @@
 	pointer-events: none;
 	transition: 0.4s;
 }
+.sidebar li a .index{
+	color: #fff;
+	height: 45px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
 .sidebar.open li a .links_name{
-	opacity: 1;
 	pointer-events: auto;
 }
 .sidebar li a:hover .links_name,
@@ -171,9 +178,6 @@
 		display: none;
 	}
 }
-.sidebar:not(.sidebar.open){
-	background: none;
-}
 .sidebar .nav-list .genres {
 	display: flex;
 	flex-direction: column;
@@ -184,7 +188,7 @@
 	width: 100%;
 	padding: 2px 3px;
 	color: white;
-	border: 2px solid white;
+	border: 1px solid white;
 	border-radius: 1rem;
 	margin-bottom: 10px;
 	text-decoration: none;

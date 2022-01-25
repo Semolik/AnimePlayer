@@ -79,6 +79,11 @@ class Header extends React.Component {
 					<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
 					<div className="sidebar">
 						<div className="nav-list" >
+							<li key={-1}>
+									<Link to={"/"} className='sidebar-item' onClick={this.menuBtnChange}>
+										<div className="index"><span >Главная</span></div>
+									</Link>
+							</li>
 							{services.map((service, i) => (
 								<li key={i}>
 									<Link to={"/"+service.id} className='sidebar-item' onClick={this.menuBtnChange}>
@@ -86,7 +91,7 @@ class Header extends React.Component {
 											src={service.icon}
 											alt={service.title}
 										/>
-										<span className="links_name">{service.title}</span>{}
+										<span className="links_name">{service.title}</span>
 									</Link>
 								</li>
 							))}

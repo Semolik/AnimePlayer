@@ -12,10 +12,37 @@ import 'plyr-react/dist/plyr.css'
 // 	out.pop();
 // 	return out;
 // }
+function Sourse(data){
+	return {
+		type: "video",
+		sources: [
+			{
+				src: data['hd'],
+				size: 720,
+			},
+			{
+				src: data['std'],
+				size: 480,
+			}
+		],
+		poster: data['preview'],
+	}
+}
 function Title(event) {
+	var ShikimoriLink = 'https://shikimori.one';
 	var data = event.data;
 	var service = event.service;
 	var player;
+	var saved = localStorage.saved;
+	var saved_data;
+	if (saved!==undefined){
+		try {
+			saved = JSON.parse(saved);
+			saved_data = saved[data.id];
+		} catch {
+			console.log('Ошибка чтения сохраненных серий.')
+		}
+	}
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -93,53 +120,45 @@ function Title(event) {
 					</div>
 					{data.series && data.series.data &&
 						<div className='flex w-100 margin-bottom'>
-							{/* {localStorage.saved!==undefined && } */}
-							<Plyr source={{
-								type: "video",
-								sources: [
-									{
-										src: data.series.data[0]['hd'],
-										poster: data.series.data[0]['preview'],
-										size: 720,
-									},
-									{
-										src: data.series.data[0]['std'],
-										poster: data.series.data[0]['preview'],
-										size: 480,
-									}
-								]
-							}} id='player' ref={(player_) => (player = player_)}/>
+							<Plyr source={saved_data!==undefined ? saved_data : Sourse(data.series.data[0])} id='player' ref={(player_) => (player = player_)} options={{
+								controls: ['play', 'progress','current-time','duration','mute','volume','captions','settings','pip','fullscreen'],
+								i18n: {
+									speed: 'Скорость',
+									normal: 'Нормальная',
+									quality: 'Качество',
+								}
+							}}/>
 							<div className='series'>
 								{data.series.data.map((element, key) => {
-									// if (localStorage.saved!==undefined){
-									// 	var saved_data = JSON.parse(localStorage.saved);
-									// 	if (element)
-									// } 
-									// if(!(button_flag)){
-									// 	
-									// }
-									var source = {
-												type: "video",
-												sources: [
-													{
-														src: element['hd'],
-														poster: element['preview'],
-														size: 720,
-													},
-													{
-														src: element['std'],
-														poster: element['preview'],
-														size: 480,
-													}
-												]
-											};
-									return (<div className={element == data.series.data[0] ? 'button active':'button'} key={key} onClick={(e)=>{
+									var source = Sourse(element);
+									var flag = false;
+									if (saved_data!==undefined){
+										if (source['sources'][0]['src']===saved_data['sources'][0]['src'] && source['sources'][1]['src']===saved_data['sources'][1]['src']){
+											flag = true;
+										}
+									} else {
+										if (element === data.series.data[0]){
+											flag = true;
+										}
+									}
+									return (<div className={flag ? 'button active':'button'} key={key} onClick={(e)=>{
+										var saving_data;
 										if (player.plyr.source!==source){
 											[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
 												el.classList.remove("active");
 											});
 											player.plyr.source = source;
-											localStorage.saved = source;
+											if (localStorage.saved===undefined){
+												saving_data = {};
+											} else {
+												try {
+													saving_data = JSON.parse(localStorage.saved);
+												} catch {
+													saving_data = {};
+												}
+											}
+											saving_data[data.id] = source;
+											localStorage.saved = JSON.stringify(saving_data);
 											e.target.classList.add("active");
 										}
 									}}>{element['name']}</div>)
@@ -147,6 +166,13 @@ function Title(event) {
 							</div>
 						</div>
 					}
+					{/* {data.shikimori && data.shikimori.screenshots &&
+						<div className='screenshots'>
+							{data.shikimori.screenshots.map((element, index)=>{
+								return <img src={ShikimoriLink+element['original']}></img>
+							})}
+						</div>
+					} */}
 				</div>
 			</div>
 		</div>
