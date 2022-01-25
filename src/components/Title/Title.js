@@ -31,6 +31,7 @@ function Sourse(data){
 function Title(event) {
 	var ShikimoriLink = 'https://shikimori.one';
 	var data = event.data;
+	document.title = data.ru_title;
 	var service = event.service;
 	var player;
 	var saved = localStorage.saved;
@@ -129,40 +130,46 @@ function Title(event) {
 								}
 							}}/>
 							<div className='series'>
-								{data.series.data.map((element, key) => {
-									var source = Sourse(element);
-									var flag = false;
-									if (saved_data!==undefined){
-										if (source['sources'][0]['src']===saved_data['sources'][0]['src'] && source['sources'][1]['src']===saved_data['sources'][1]['src']){
-											flag = true;
-										}
-									} else {
-										if (element === data.series.data[0]){
-											flag = true;
-										}
-									}
-									return (<div className={flag ? 'button active':'button'} key={key} onClick={(e)=>{
-										var saving_data;
-										if (player.plyr.source!==source){
-											[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
-												el.classList.remove("active");
-											});
-											player.plyr.source = source;
-											if (localStorage.saved===undefined){
-												saving_data = {};
-											} else {
-												try {
-													saving_data = JSON.parse(localStorage.saved);
-												} catch {
-													saving_data = {};
-												}
+								{/* <div className='button-box-1'>
+									<div className='button' id='prev'>Прошлая серия</div>
+									<div className='button' id='next'>Следущая серия</div>
+								</div> */}
+								<div className='button-box-2'>
+									{data.series.data.map((element, key) => {
+										var source = Sourse(element);
+										var flag = false;
+										if (saved_data!==undefined){
+											if (source['sources'][0]['src']===saved_data['sources'][0]['src'] && source['sources'][1]['src']===saved_data['sources'][1]['src']){
+												flag = true;
 											}
-											saving_data[data.id] = source;
-											localStorage.saved = JSON.stringify(saving_data);
-											e.target.classList.add("active");
+										} else {
+											if (element === data.series.data[0]){
+												flag = true;
+											}
 										}
-									}}>{element['name']}</div>)
-								})}
+										return (<div className={flag ? 'button active':'button'} key={key} onClick={(e)=>{
+											var saving_data;
+											if (player.plyr.source!==source){
+												[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
+													el.classList.remove("active");
+												});
+												player.plyr.source = source;
+												if (localStorage.saved===undefined){
+													saving_data = {};
+												} else {
+													try {
+														saving_data = JSON.parse(localStorage.saved);
+													} catch {
+														saving_data = {};
+													}
+												}
+												saving_data[data.id] = source;
+												localStorage.saved = JSON.stringify(saving_data);
+												e.target.classList.add("active");
+											}
+										}}>{element['name']}</div>)
+									})}
+								</div>
 							</div>
 						</div>
 					}

@@ -212,11 +212,28 @@
 	aspect-ratio: 16/9;
 }
 .series {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
 	margin-top: 1rem;
+}
+
+.series .button-box-1 .button {
+	width: 30%;
+	margin: 0 1rem;
+}
+.series .button-box-1 {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-bottom: 1rem;
+}
+.series .button-box-2 {
 	display: grid;
 	gap: 10px;
 	width: 100%;
-	/* grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); */
+	padding-bottom: 1rem;
 }
 .series .button {
 	/* min-width: ; */
@@ -237,32 +254,32 @@
 	background: #e7711b;
 }
 @media screen and (min-width: 1320px){
-	.series {
+	.series .button-box-2{
 		grid-template-columns: repeat(6, 1fr);
 	}
 }
 @media screen and (max-width: 1320px) and (min-width: 1200px) {
-	.series {
+	.series .button-box-2{
 		grid-template-columns: repeat(5, 1fr);
 	}
 }
 @media screen and (max-width: 1200px) and (min-width: 768px){
-	.series {
+	.series .button-box-2{
 		grid-template-columns: repeat(4, 1fr);
 	}
 }
 @media screen and (max-width: 768px) and (min-width: 576px){
-	.series {
+	.series .button-box-2{
 		grid-template-columns: repeat(3, 1fr);
 	}
 }
 @media screen and (max-width: 576px) and (min-width: 350px){
-	.series {
+	.series .button-box-2{
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
 @media screen and (max-width: 350px){
-	.series {
+	.series .button-box-2{
 		grid-template-columns: 1fr;
 	}
 }
