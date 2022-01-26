@@ -8,7 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 const app = (
     <BrowserRouter>
-        <Header brand='Anime Player'></Header>
+        <Header/>
         <App />
     </BrowserRouter>
 );

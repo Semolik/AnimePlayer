@@ -1,0 +1,48 @@
+.services{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 0;
+    /* background: var(--background-highest); */
+}
+.services .service {
+    background-color: var(--background-default);
+    padding: 1rem;
+    text-decoration: none;
+    color: white;
+    aspect-ratio: 1;
+    width: 10rem;
+    margin: 0 1rem;
+    border-radius: 1rem;
+    transition: 0.3s ease-in-out;
+    border: 2px solid #004182;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.services .service:hover {
+    background-color: transparent;
+    border: 2px solid #0079F2;
+    box-shadow: 0px 4px 20px #0079F2;
+    -webkit-transform: scale(1.025);
+    -ms-transform: scale(1.025);
+    transform: scale(1.025);
+}
+.services .service img {
+    object-fit: cover;
+    aspect-ratio: 1;
+    width: 100%;
+}
+.services .service .title {
+    width: 100%;
+    padding-top: 1rem;
+    text-align: center;
+}
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}

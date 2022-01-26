@@ -87,11 +87,11 @@ class Header extends React.Component {
 							{services.map((service, i) => (
 								<li key={i}>
 									<Link to={"/"+service.id} className='sidebar-item' onClick={this.menuBtnChange}>
-										<img
+										{/* <img
 											src={service.icon}
 											alt={service.title}
-										/>
-										<span className="links_name">{service.title}</span>
+										/> */}
+										<span className="index">{service.title}</span>
 									</Link>
 								</li>
 							))}
