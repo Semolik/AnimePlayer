@@ -167,7 +167,8 @@
 .sidebar li img{
 	height: 45px;
 	width: 45px;
-	object-fit: cover;
+	-o-object-fit: cover;
+	   object-fit: cover;
 	border-radius: 6px;
 	padding: 2px;
 	margin-left: 2px;

@@ -26,12 +26,11 @@
     background-color: transparent;
     border: 2px solid #0079F2;
     box-shadow: 0px 4px 20px #0079F2;
-    -webkit-transform: scale(1.025);
-    -ms-transform: scale(1.025);
     transform: scale(1.025);
 }
 .services .service img {
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     aspect-ratio: 1;
     width: 100%;
 }
@@ -41,8 +40,63 @@
     text-align: center;
 }
 .cards {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+	/* grid-template-columns: 1fr repeat(auto-fill, 1fr); */
+	grid-template-columns: repeat(auto-fill, 1fr);
+	gap: 10px;
+    /* flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 }
+.cards .shikimori-card {
+    display: flex;
+    /* width: 30rem; */
+    /* height: 30rem; */
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 1rem;
+    transition: 0.2s ease-in-out;
+    background: whitesmoke;
+    
+}
+.cards .shikimori-card img {
+    width: 100%;
+    
+    /* height: 70%; */
+    object-fit: cover;
+    border-radius: 0 0 1rem 0;
+    
+}
+/* .cards .shikimori-card:hover {
+    filter: blur(3px);
+} */
+@media screen and (min-width: 1320px){
+	.cards {
+		grid-template-columns: repeat(5, 1fr);
+	}
+}
+@media screen and (max-width: 1320px) and (min-width: 1200px) {
+	.cards {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+/* @media screen and (max-width: 1200px) and (min-width: 768px){
+	.cards {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+@media screen and (max-width: 768px) and (min-width: 576px){
+	.cards {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+@media screen and (max-width: 576px) and (min-width: 350px){
+	.cards {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media screen and (max-width: 350px){
+	.cards {
+		grid-template-columns: 1fr;
+	}
+} */
