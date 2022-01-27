@@ -53,9 +53,19 @@ class HomePage extends React.Component {
                     </div>
                     <div className='cards w-100'>
                         {items.map((el, index)=>{
-                            return <a className='card' key={index}>
-                                {/* <img src=''/> */}
+                            return <a className='shikimori-card' key={index}>
                                 <div className='title'>{el.topic_title}</div>
+								{function(){
+									if (el.html_footer){
+										var parser = new DOMParser();
+										var footer = parser.parseFromString(el.html_footer, 'text/html');
+										var array = new Array();
+										[].forEach.call(footer.querySelectorAll('img'), (img, i)=>{
+											array.push(<img src={img.attributes.src.nodeValue} key={i}/>);
+										})
+										return array;
+									}
+								}()}
                             </a>
                         })}
                     </div>
