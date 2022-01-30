@@ -181,7 +181,7 @@ class HomePage extends React.Component {
 					{items.map(service =>{
 						console.log(service);
 						return <div className='cards-container'>
-							{service.data.data.slice(0, 5).map((item, i) => (
+							{service.data.data.map((item, i) => (
 								<Card key={i} data={item} service={service}></Card>
 							))}
 						</div>
