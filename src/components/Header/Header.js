@@ -4,6 +4,7 @@ import './Header.css';
 import { Link } from 'react-router-dom';
 // import './NavigationBar.css';
 import services from '../../services';
+import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
 import { Route, Switch } from 'react-router-dom';
 class Header extends React.Component {
@@ -18,8 +19,7 @@ class Header extends React.Component {
 		};
 	}
 	componentDidMount() {
-		// fetch("http://127.0.0.1/api/services")
-		fetch("http://192.168.50.106:80/api/services")
+		fetch(`${settings.api}/services`)
 			.then(res => res.json())
 			.then(
 				(result) => {

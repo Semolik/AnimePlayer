@@ -4,7 +4,7 @@ import Card from '../components/card/card';
 import Pagination from '../components/Pagination/Pagination';
 import Title from '../components/Title/Title';
 import './index.css';
-
+import settings from '../settings';
 
 class ServicePage extends React.Component {
 	constructor(props) {
@@ -19,7 +19,7 @@ class ServicePage extends React.Component {
 			PageType: this.props.match.params.PageType,
 			PageNumber: this.props.match.params.PageNumber,
 			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
-			api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
+			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 			
 		};
@@ -27,7 +27,7 @@ class ServicePage extends React.Component {
   
 	componentDidMount() {
 		if (this.state.page===undefined | this.state.page==='page'){
-			fetch(this.state.api,{
+			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',

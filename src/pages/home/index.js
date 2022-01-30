@@ -3,6 +3,8 @@ import services from '../../services';
 import './index.css';
 import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
+import settings from '../../settings';
+import Card from '../../components/card/card';
 class HomePage extends React.Component {
 	
 	constructor(props) {
@@ -18,17 +20,25 @@ class HomePage extends React.Component {
 	componentDidMount() {
 		var data = {};
 		Promise.all(services.map(id =>
-			fetch(`http://127.0.0.1/api/${id.id}/`,{
+			fetch(`${settings.api}/${id.id}/`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify( {page: 1} ),
-			}).then(resp => resp.json())
+			}).then(resp => {return resp.json()})
+			.then(json => {
+				return {
+					id: id.id,
+					data: json.data
+				}})
 		))
 		.then(responses => {
-			console.log(responses);
+			this.setState({
+				// isLoaded: true,
+				items: responses,
+			});
 		})
 		.catch(error => {
 				this.setState({
@@ -36,6 +46,37 @@ class HomePage extends React.Component {
 					error
 				});
 			});
+		fetch('https://shikimori.one/api/topics?forum=news&limit=30')
+		.then(res => res.json())
+		.then(
+			(result) => {
+				this.setState({
+					isLoaded: true,
+					shikimori: result,
+				});
+				// console.log(result);
+				// if (result.status===200){
+				// 	this.setState({
+				// 		isLoaded: true,
+				// 		data: result.data,
+				// 		page_type: 'page',
+				// 	});
+				// } else {
+				// 	this.setState({
+				// 		isLoaded: false,
+				// 		error: {
+				// 			message: result.message
+				// 		}
+				// 	});
+				// }
+			},
+			(error) => {
+				this.setState({
+					isLoaded: false,
+					error
+					});
+				}
+		);
 		// Promise.all([
 		// 	fetch('https://shikimori.one/api/topics?forum=news&limit=30'),
 		// 	services.map(id => {
@@ -137,6 +178,14 @@ class HomePage extends React.Component {
                             </Link>
                         })}
                     </div>
+					{items.map(service =>{
+						console.log(service);
+						return <div className='cards-container'>
+							{service.data.data.slice(0, 5).map((item, i) => (
+								<Card key={i} data={item} service={service}></Card>
+							))}
+						</div>
+					})}
                     <div className='cards w-100'>
                         {shikimori.map((el, index)=>{
                             return <a className='shikimori-card' key={index}>

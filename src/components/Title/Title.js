@@ -29,7 +29,6 @@ function Sourse(data){
 	}
 }
 function Title(event) {
-	var ShikimoriLink = 'https://shikimori.one';
 	var data = event.data;
 	document.title = data.ru_title;
 	var service = event.service;
