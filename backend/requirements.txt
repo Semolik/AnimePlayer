@@ -1,0 +1,7 @@
+flask
+flask_cors
+beautifulsoup4
+lxml
+flask_restful
+requests
+shikimori_api

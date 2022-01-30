@@ -10,14 +10,14 @@ export default [
         description: 'Animevost',
         stack: ['react', 'redux', 'scss']
     },
-    {
-        id: 'anidub',
-        title: 'Anidub',
-        icon: anidubIcon,
-        description: 'Anidub',
-        link: '#',
-        stack: ['react', 'redux', 'scss']
-    },
+    // {
+    //     id: 'anidub',
+    //     title: 'Anidub',
+    //     icon: anidubIcon,
+    //     description: 'Anidub',
+    //     link: '#',
+    //     stack: ['react', 'redux', 'scss']
+    // },
     // {
     //     id: 'spa-3',
     //     title: 'SPA #3',

@@ -7,35 +7,121 @@ class HomePage extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		console.log(props);
 		this.state = {
 			error: null,
 			isLoaded: false,
-			items: {}
+			items: {},
+			shikimori: {},
+
 		};
 	}
 	componentDidMount() {
-		fetch("https://shikimori.one/api/topics?forum=news&limit=30")
-			.then(res => res.json())
-			.then(
-				(result) => {
-					
-					this.setState({
-						isLoaded: true,
-						items: result
-					});
+		var data = {};
+		Promise.all(services.map(id =>
+			fetch(`http://127.0.0.1/api/${id.id}/`,{
+				method: 'post',
+				headers: {
+					'Accept': 'application/json, text/plain, */*',
+					'Content-Type': 'application/json'
 				},
-				(error) => {
-					this.setState({
-					isLoaded: true,
+				body: JSON.stringify( {page: 1} ),
+			}).then(resp => resp.json())
+		))
+		.then(responses => {
+			console.log(responses);
+		})
+		.catch(error => {
+				this.setState({
+					isLoaded: false,
 					error
-					});
-				}
-				)
+				});
+			});
+		// Promise.all([
+		// 	fetch('https://shikimori.one/api/topics?forum=news&limit=30'),
+		// 	services.map(id => {
+		// 		return fetch(`http://127.0.0.1/api/${id}/`)
+		// 	})
+		// ])
+		// .then(async([...responces]) => {
+		// 	console.log(responces);
+		// 	// const a = await res1.json();
+		// 	// const b = await res2.json();
+		// 	// this.setState({
+		// 	// 	isLoaded: false,
+		// 	// 	error
+		// 	// });
+
+		// })
+		// .catch(error => {
+		// 	this.setState({
+		// 		isLoaded: false,
+		// 		error
+		// 	});
+		// });
+		// fetch("https://shikimori.one/api/topics?forum=news&limit=30")
+		// 	.then(res => res.json())
+		// 	.then(
+		// 		(result) => {
+		// 			// data['shikimori'] = result
+		// 			this.setState({
+		// 				shikimori: result,
+		// 			})
+		// 		},
+		// 		(error) => {
+		// 			this.setState({
+		// 				shikimori: error,
+		// 			})
+		// 		}
+		// 	)
+		// for (var service in services){
+		// 	var id = services[service].id;
+		// 	// alert(id);
+		// 	fetch(`http://127.0.0.1/api/${id}/`,
+		// 		{
+		// 			method: 'post',
+		// 			headers: {
+		// 				'Accept': 'application/json, text/plain, */*',
+		// 				'Content-Type': 'application/json'
+		// 			},
+		// 			body: JSON.stringify( {page: 1} ),
+		// 		})
+		// 		.then(res => res.json())
+		// 		.then(
+		// 			(result) => {
+		// 				data[id] = result
+		// 				console.log(data[id]);
+		// 			},
+		// 			(error) => {
+		// 				console.log(error);
+		// 				data[id] = error
+		// 			}
+		// 		)
+		// }
+		// console.log(data);
+		// this.setState({
+		// 	isLoaded: true,
+		// 	items: data,
+		// })
+
+		// if (Object.keys(data).length !== 0){
+		// 	this.setState({
+		// 		isLoaded: true,
+		// 		items: data,
+		// 	})
+
+		// } else {
+		// 	this.setState({
+		// 		isLoaded: false,
+		// 		error: {
+		// 			message: 'Сервер не вернул данные',
+		// 		}
+		// 	});
+		// }
 	}
 	render() {
-		const { error, isLoaded, items } = this.state;
+		const { error, isLoaded, items, shikimori } = this.state;
 		console.log(items);
+		console.log(shikimori);
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -52,7 +138,7 @@ class HomePage extends React.Component {
                         })}
                     </div>
                     <div className='cards w-100'>
-                        {items.map((el, index)=>{
+                        {shikimori.map((el, index)=>{
                             return <a className='shikimori-card' key={index}>
                                 {/* <div className='title'>{el.topic_title}</div> */}
 								{function(){
