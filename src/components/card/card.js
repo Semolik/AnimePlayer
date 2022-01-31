@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 
 function Card(item){
     var data = item.data;
+    console.log(item);
     return (
-        <Link to={`/${item.service}/${data.id}`} className="card"  title={data.ru_title}>
+        <Link to={`/${item.service.id}/${data.id}`} className="card"  title={data.ru_title}>
             <div className="poster-container">
                 <div className="blocks">
                     {data.announce &&

@@ -1,6 +1,6 @@
 import React from 'react';
 import services from '../../services';
-import './index.css';
+import './home.css';
 import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import settings from '../../settings';
@@ -181,7 +181,7 @@ class HomePage extends React.Component {
                     </div>
 					{items.map((service, key) =>{
 						console.log(service);
-						return <div className='cards-container' key={key}>
+						return <div className='cards-container hide-cards' key={key}>
 							<div className='service-title'>{service.title}</div>
 							{service.data.data.map((item, i) => (
 								<Card key={i} data={item} service={service}></Card>

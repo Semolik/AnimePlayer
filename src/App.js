@@ -3,7 +3,7 @@ import './App.css';
 
 
 import { Route, Switch, Redirect } from 'react-router-dom';
-import HomePage from './pages/home';
+import HomePage from './pages/home/home';
 import ServicePage from './pages';
 
 class App extends React.Component {

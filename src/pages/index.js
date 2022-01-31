@@ -62,7 +62,7 @@ class ServicePage extends React.Component {
 					}
 			)
 		} else if (this.state.page==='genre'){
-			fetch(this.state.api+'genre',{
+			fetch(`${settings.api}/${this.state.service}/genre`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',
@@ -107,7 +107,7 @@ class ServicePage extends React.Component {
 				});
 				return;
 			}
-			fetch(this.state.api+'search',{
+			fetch(`${settings.api}/${this.state.service}/search`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',
@@ -142,43 +142,8 @@ class ServicePage extends React.Component {
 						});
 					}
 			)
-		} else if (this.state.page==='genre'){
-			fetch(this.state.api+'genre',{
-				method: 'post',
-				headers: {
-					'Accept': 'application/json, text/plain, */*',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify( {genre: this.state.id, page: this.state.PageNumber} ),
-			})
-			.then(res => res.json())
-			.then(
-				(result) => {
-					console.log(result);
-					if (result.status===200){
-						this.setState({
-							isLoaded: true,
-							data: result.data,
-							page_type: 'genre',
-						});
-					} else {
-						this.setState({
-							isLoaded: false,
-							error: {
-								message: result.message
-							}
-						});
-					}
-				},
-				(error) => {
-					this.setState({
-						isLoaded: false,
-						error
-						});
-					}
-			)
 		} else if (this.state.page!==undefined){
-			fetch(this.state.api+'title',{
+			fetch(`${settings.api}/${this.state.service}/title`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',
