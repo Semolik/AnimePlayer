@@ -203,7 +203,7 @@ class ServicePage extends React.Component {
 				<div className='wrapper'>
 					<div className='cards-container'>
 						{data.data.map((item, i) => (
-							<Card key={i} data={item} service={service}></Card>
+							<Card key={i} data={item} service={{id: service}}></Card>
 						))}
 					</div>
 					{page_type==='genre' &&

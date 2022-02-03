@@ -1,3 +1,4 @@
+from operator import le
 from turtle import title
 from urllib import response
 import requests
@@ -122,8 +123,9 @@ def SearchOnShikimori(name, kind):
 						return title.get('data-id')
 			return titles[0].get('data-id')
 def FormatingAnimevostResponse(response_item):
-	title = response_item.get('title').replace('\\"', '"')
-	return {
+	text = response_item.get('title')
+	title = text.replace('\\"', '"')
+	data = {
 		'ru_title': GetTitle(title),
 		'en_title': GetOriginalTitle(title),
 		'poster' : response_item.get('urlImagePreview'),
@@ -134,6 +136,20 @@ def FormatingAnimevostResponse(response_item):
 		'genre' : response_item.get('genre').split(', '),
 		'announce': response_item.get('series')=='',
 	}
+	# series = text.split(" /")
+	# if len(series)>1:
+	# 	series = series[1].split("] [")
+	# 	if len(series)==1:
+	# 		series = series[0].split(' [')
+	# 		if len(series)>1:
+	# 			data['series'] = series[1][:-1]
+	# 	else:
+	# 		series[0] = series[0][1:]
+	# 		if len(series)>1:
+	# 			series[1] = series[1][:-1]
+	# 		data['series'] = series
+	return data
+	
 @timed_lru_cache(60*10)
 def GetPage(page=None):
 	size = 20
@@ -272,8 +288,9 @@ def GetTitles(Url):
 				'ru_title': GetTitle(text),
 				'en_title': GetOriginalTitle(text),
 				'id': IdFromLink(a.get('href')),
-				'poster' : GetMirror()+i.select(".shortstoryContent > table > tr > td > div > a > img")[0].get('src')
+				'poster' : GetMirror()+i.select(".shortstoryContent > table > tr > td > div > a > img")[0].get('src'),
 			}
+
 			count = text.split('/', maxsplit=1)[1].split(']')[0].split()[-1]
 			if count.startswith('['):
 				count = count[1:]
