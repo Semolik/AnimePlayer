@@ -219,10 +219,22 @@ def GenerateTitleResponse(response):
 		shikimori_data = shikimori_req.GET()
 		data['shikimori'] = shikimori_data
 		if shikimori_data.get('screenshots'):
-			data['shikimori']['screenshots'] = shikimori_req.screenshots.GET()
+			screenshots = [ ]
+			for i in  shikimori_req.screenshots.GET():
+				item = {}
+				for j in i:
+					item[j] = ShikimoriLink+i[j]
+				screenshots.append(item)
+			data['shikimori']['screenshots'] = screenshots
 		score = shikimori_data.get('score')
 		if score:
 			data['shikimori']['score']=float(score)
+		data['shikimori']['url'] = ShikimoriLink+shikimori_data.get('url')
+		image = shikimori_data.get('image')
+		if image:
+			for i in image:
+				image[i] = ShikimoriLink+image[i]
+			data['shikimori']['image'] = image
 	else:
 		data['shikimori'] = None
 	return data

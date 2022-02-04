@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import settings from '../../settings';
 import Card from '../../components/card/card';
-import Masonry from 'react-masonry-css'
 class HomePage extends React.Component {
 	
 	constructor(props) {
@@ -86,7 +85,7 @@ class HomePage extends React.Component {
 						})}
 					</div>
 					{items.map((service, key) =>{
-						console.log(service);
+						// console.log(service);
 						return <div className='cards-container hide-cards' key={key}>
 							<div className='service-title'>{service.title}</div>
 							{service.data.data.map((item, i) => (
@@ -94,27 +93,44 @@ class HomePage extends React.Component {
 							))}
 						</div>
 					})}
-					{/* <div className='cards-container'> */}
-					<Masonry
-						breakpointCols={3}
-						className="cards-container"
-						columnClassName="cards-container-column">
+					<div className='shikimori-cards-container'>
 						{shikimori.map((el, index)=>{
-							return <a className='shikimori-card' key={index} href={`${settings.shikimori}${el.forum.url}/${el.id}`}>
-							    <div className='title'>{el.topic_title}</div>
-								{/* {function(){
-									if (el.html_footer){
-										var parser = new DOMParser();
-										var footer = parser.parseFromString(el.html_footer, 'text/html');
-										var images = [...footer.querySelectorAll('img')];
-										if (images.length > 0){
-											return <img src={images[0].attributes.src.nodeValue} />;
-										}
-									}
-								}()} */}
-							</a>
+							// return <a className='shikimori-card' key={index} href={`${settings.shikimori}${el.forum.url}/${el.id}`}>
+							console.log(el);
+							return <a className="card-horizontal" href={`https://shikimori.one${el.forum.url}/${el.id}`} title={el.topic_title} key={index}>
+										<div className="poster">
+											{/* <div className="blocks">
+												{data.announce &&
+													<div className="block" data-text="Анонс"></div>
+												}
+											</div> */}
+											{function(){
+												if (el.html_footer){
+													var parser = new DOMParser();
+													var footer = parser.parseFromString(el.html_footer, 'text/html');
+													var images = [...footer.querySelectorAll('img')];
+													if (images.length > 0){
+														return <img src={images[0].attributes.src.nodeValue} />;
+													}
+												}
+											}()}
+										</div>
+										<div className="title">{el.topic_title}</div>
+									</a>
+							    {/* <div className='title'>{el.topic_title}</div> */}
+								// {function(){
+								// 	if (el.html_footer){
+								// 		var parser = new DOMParser();
+								// 		var footer = parser.parseFromString(el.html_footer, 'text/html');
+								// 		var images = [...footer.querySelectorAll('img')];
+								// 		if (images.length > 0){
+								// 			return <img src={images[0].attributes.src.nodeValue} />;
+								// 		}
+								// 	}
+								// }()}
+							// </a>
 						})}
-					</Masonry>
+					</div>
 				</div> 
 			);
 		}

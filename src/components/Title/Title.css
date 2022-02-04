@@ -159,14 +159,14 @@
 	padding-top: 2rem;
 	text-align: justify;
 }
-@media screen and (min-width: 1300px){
+@media screen and (min-width: 1400px){
 	.title-container {
-		width: 1300px;
+		max-width: 1300px;
 		margin-left: auto;
 		margin-right: auto;
 	}
 }
-@media screen and (min-width: 600px) and (max-width: 1300px){
+@media screen and (min-width: 600px) and (max-width: 1400px){
 	.title-container {
 		width: 100%;
 		padding-left: 20px;

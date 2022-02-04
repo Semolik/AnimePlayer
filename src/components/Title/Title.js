@@ -108,7 +108,7 @@ function Title(event) {
 								// 		<span>★★★★★</span>
 								// 	</div>
 								// </div>
-								<a href={"https://shikimori.one"+data.shikimori.url} className='block link' target="_blank" rel="noopener noreferrer">
+								<a href={data.shikimori.url} className='block link' target="_blank" rel="noopener noreferrer">
 									<span>Рейтинг</span>{data.shikimori.score}
 								</a>
 							}
@@ -175,7 +175,7 @@ function Title(event) {
 					{/* {data.shikimori && data.shikimori.screenshots &&
 						<div className='screenshots'>
 							{data.shikimori.screenshots.map((element, index)=>{
-								return <img src={ShikimoriLink+element['original']}></img>
+								return <img src={element['original']}></img>
 							})}
 						</div>
 					} */}

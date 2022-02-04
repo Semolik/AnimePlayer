@@ -39,56 +39,84 @@
     padding-top: 1rem;
     text-align: center;
 }
-.cards {
-    /* display: grid; */
-	/* grid-template-columns: 1fr repeat(auto-fill, 1fr); */
-	/* grid-template-columns: repeat(auto-fill, 1fr); */
-	/* gap: 10px; */
-    /* display: flex;
+.shikimori-cards-container {
+    display: flex;
+    padding-top: 2rem;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center; */
-}
-.cards-container .shikimori-card {
-    /* max-width: 10rem; */
-    display: flex;
-    /* width: 30rem; */
-    /* height: 30rem; */
-    /* aspect-ratio: 1; */
-    width: min-content;
-    overflow: hidden;
-    border-radius: 1rem;
-    transition: 0.2s ease-in-out;
-    background: whitesmoke;
-    
-}
-.cards .shikimori-card img {
     width: 100%;
-    height: 100%;
-    /* height: 70%; */
+    max-width: 1200px;
+}
+
+.shikimori-cards-container .card-horizontal{
+    /* */
+    display: flex;
+	flex-direction: column;
+	border-radius: 0.5rem;
+	/* height: auto; */
+	text-decoration: none;
+	margin: var(--card-margin);
+	width: calc(100% / var(--count) - var(--card-margin) * 2);
+	transition: .4s;
+}
+.shikimori-cards-container .card-horizontal .poster  {
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    transition: .2s;
+}
+.shikimori-cards-container .card-horizontal .poster img {
+    width: 100%;
     object-fit: cover;
-    border-radius: 0 0 1rem 0;
-    
+    height: 100%;
+    border-radius: 0.3rem;
+}
+.shikimori-cards-container .card-horizontal:hover .poster {
+	transform: translate(0, -2%);	
+}
+.shikimori-cards-container .card-horizontal .title {
+	padding-top: 0.5rem;
+	padding-left: 0.5rem;
+	color: #d9d7e0;
+	width: 100%;
+	display: block;
+	display: -webkit-box;
+	margin: 0 auto;
+}
+.shikimori-cards-container .card-horizontal:hover .title {
+	color: white;
 }
 
 @media screen and (min-width: 1200px){
 	.hide-cards .card:nth-child(6) ~ *{
         display: none;
     }
+    .shikimori-cards-container .card-horizontal {
+        --count: 3;
+    }
 }
 @media screen and (max-width: 1200px) and (min-width: 768px){
 	.hide-cards .card:nth-child(5) ~ *{
         display: none;
+    }
+    .shikimori-cards-container .card-horizontal {
+        --count: 3;
     }
 }
 @media screen and (max-width: 768px )and (min-width: 576px){
 	.hide-cards .card:nth-child(4) ~ *{
         display: none;
     }
+    .shikimori-cards-container .card-horizontal {
+        --count: 2;
+    }
 }
 @media screen and (max-width: 576px){
 	.hide-cards .card:nth-child(3) ~ *{
         display: none;
+    }
+    .shikimori-cards-container .card-horizontal {
+        --count: 1;
     }
 }
 .cards-container {

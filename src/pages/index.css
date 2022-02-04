@@ -13,9 +13,9 @@
 	flex-wrap: wrap;
 	justify-content: center;
 }
-@media screen and (min-width: 1200px){
+@media screen and (min-width: 1300px){
 	.cards-container{
-		width: 1200px;
+		max-width: 1200px;
 		margin-left: auto;
 		margin-right: auto;
 	}
