@@ -94,10 +94,10 @@ class HomePage extends React.Component {
 						</div>
 					})}
 					<div className='shikimori-cards-container'>
+						{/* <div className='block-title'>Shikimori news</div> */}
 						{shikimori.map((el, index)=>{
-							// return <a className='shikimori-card' key={index} href={`${settings.shikimori}${el.forum.url}/${el.id}`}>
-							console.log(el);
-							return <a className="card-horizontal" href={`https://shikimori.one${el.forum.url}/${el.id}`} title={el.topic_title} key={index}>
+							// console.log(el);
+							return <a className="card-horizontal" href={`https://shikimori.one${el.forum.url}/${el.id}`} title={el.topic_title} key={index} target="_blank">
 										<div className="poster">
 											{/* <div className="blocks">
 												{data.announce &&
@@ -109,8 +109,9 @@ class HomePage extends React.Component {
 													var parser = new DOMParser();
 													var footer = parser.parseFromString(el.html_footer, 'text/html');
 													var images = [...footer.querySelectorAll('img')];
+													console.log();
 													if (images.length > 0){
-														return <img src={images[0].attributes.src.nodeValue} />;
+														return <img src={images[0].attributes.src.nodeValue}/>;
 													}
 												}
 											}()}

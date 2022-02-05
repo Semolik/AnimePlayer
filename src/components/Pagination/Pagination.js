@@ -16,7 +16,7 @@ function Pagination (event){
 	if(page > 2){
 		liTags.push(<Link className="first numb" to={url+1} key={url+1+'first'}><span>1</span></Link>);
 	}
-	if (page === totalPages) {
+	if (page === totalPages && totalPages!==1) {
 		beforePage = beforePage - 2;
 	} else if (page === totalPages - 1) {
 		beforePage = beforePage - 1;
