@@ -1,11 +1,12 @@
 from flask import Flask
 import animevost
+import anidub
 from config import ApiPath
 app = Flask(__name__, static_folder='app', static_url_path="/app")
 from flask_cors import CORS
 CORS(app)
-from flask import Flask, render_template, url_for
 app.register_blueprint(animevost.Animevost)
+app.register_blueprint(anidub.Module)
 @app.route(ApiPath+'services')
 def servises():
     return {

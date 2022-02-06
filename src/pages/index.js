@@ -5,7 +5,15 @@ import Pagination from '../components/Pagination/Pagination';
 import Title from '../components/Title/Title';
 import './index.css';
 import settings from '../settings';
-
+// import { Route, Switch } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Switch,
+	useLocation,
+	Route,
+	Link,
+	useParams
+  } from "react-router-dom";
 class ServicePage extends React.Component {
 	constructor(props) {
 		super(props);
@@ -198,17 +206,11 @@ class ServicePage extends React.Component {
 		const urlParams = new URLSearchParams(queryString);
 		return urlParams.get(name);
 	}
-	
-	render() {
+	search(){
 		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber} = this.state;
-		if (error) {
-			return <div>Ошибка: {error.message}</div>;
-		} else if (!isLoaded) {
-			return <Loading/>;
-		} else if (page_type==='page' || page_type==='genre' || page_type==='search'){
-			return (
-				<div className='wrapper'>
-					<div className='cards-container'>
+		// alert();
+		return <div className='wrapper'>
+					<div className='cards-container' >
 						{data.data.map((item, i) => (
 							<Card key={i} data={item} service={{id: service}}></Card>
 						))}
@@ -220,10 +222,32 @@ class ServicePage extends React.Component {
 						<Pagination totalPages={data.pages} page={id===undefined ? 1 : id} url={`/${service}/page/`}/>
 					}
 					{page_type==='search' &&
-						<Pagination totalPages={data.pages} page={this.getParameterByName('page') || 1} url={`/${service}/search?text=${this.getParameterByName('text')}&page=`}/>
+						<Pagination totalPages={data.pages} page={this.getParameterByName('page') || 1} url={`/${service}/search/?text=${this.getParameterByName('text')}&page=`}/>
 					}
 					
 				</div>
+	}
+	render() {
+		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
+		if (error) {
+			return <div>Ошибка: {error.message}</div>;
+		} else if (!isLoaded) {
+			return <Loading/>;
+		} else if (page_type==='page' || page_type==='genre' || page_type==='search'){
+			return (
+				<Router>
+				<Switch>
+                    <Route path={`/${service}/search/?text=:text`} render={
+                        (props) => (
+                            this.search()
+                        )
+                    }/>
+				</Switch></Router>
+				// <Router>
+				// 	<Switch>
+				// 		<Route path={`/${service}/search/:params?`} render={()=>this.search()}></Route>
+				// 	</Switch>
+				// </Router>
 			)		
 		} else if (page_type==='title'){
 			console.log(data);

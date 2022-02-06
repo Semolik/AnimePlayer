@@ -1,6 +1,6 @@
-from operator import le
-from turtle import title
-from urllib import response
+# from operator import le
+# from turtle import title
+# from urllib import response
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -9,11 +9,12 @@ from flask_restful import reqparse
 from flask import Blueprint
 from requests.utils import requote_uri
 from config import ApiPath
-from functools import lru_cache, wraps
-from datetime import datetime, timedelta
+from utils.lru_cache import timed_lru_cache
+from utils.messages import messages
 from shikimori_api import Shikimori
 import re
-import math
+from settings import headers
+# import math
 
 shikimori_session = Shikimori()
 shikimori_api = shikimori_session.get_api()
@@ -22,40 +23,11 @@ AnimeVostPath = 'animevost/'
 AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
 AnimevostApiLink = "https://api.animevost.org/v1/"
-headers = {
-	'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-	'accept-language': 'uk,en-US;q=0.9,en;q=0.8,ru;q=0.7',
-	'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
-	'sec-ch-ua-mobile': '?0',
-	'sec-fetch-dest': 'document',
-	'sec-fetch-mode': 'navigate',
-	'sec-fetch-site': 'none',
-	'sec-fetch-user': '?1',
-	'upgrade-insecure-requests': '1',
-	'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36',
-	'Content-Type': 'text/html; charset=utf-8',
-}
-messages = {
-	'error_page_number' : 'Не корректный номер страницы',
-	'error_id' : 'Не корректный id',
-	404 : 'На сайте нет информации по данному запросу',
-	'not_response': "Сайт не ответил на запрос",
-}
+
+
 genres__ = {}
 Animevost = Blueprint(AnimeVostPath, __name__)
-def timed_lru_cache(seconds: int, maxsize: int = 128):
-	def wrapper_cache(func):
-		func = lru_cache(maxsize=maxsize)(func)
-		func.lifetime = timedelta(seconds=seconds)
-		func.expiration = datetime.utcnow() + func.lifetime
-		@wraps(func)
-		def wrapped_func(*args, **kwargs):
-			if datetime.utcnow() >= func.expiration:
-				func.cache_clear()
-				func.expiration = datetime.utcnow() + func.lifetime
-			return func(*args, **kwargs)
-		return wrapped_func
-	return wrapper_cache
+
 def func_chunks_generators(lst, n):
 	for i in range(0, len(lst), n):
 		yield lst[i : i + n]
