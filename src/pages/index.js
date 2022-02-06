@@ -97,6 +97,7 @@ class ServicePage extends React.Component {
 					}
 			)
 		} else if (this.state.page==='search') {
+			var body;
 			var text = this.getParameterByName('text');
 			if (text===null){
 				this.setState({
@@ -107,13 +108,19 @@ class ServicePage extends React.Component {
 				});
 				return;
 			}
+			var page = this.getParameterByName('page');
+			if (!page){
+				body =  {name: text};
+			} else {
+				body =  {name: text, page: page};
+			}
 			fetch(`${settings.api}/${this.state.service}/search`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify( {name: text} ),
+				body: JSON.stringify(body),
 			})
 			.then(res => res.json())
 			.then(
@@ -124,7 +131,7 @@ class ServicePage extends React.Component {
 						this.setState({
 							isLoaded: true,
 							data: result.data,
-							page_type: 'page',
+							page_type: 'search',
 						});
 					} else {
 						this.setState({
@@ -198,7 +205,7 @@ class ServicePage extends React.Component {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
 			return <Loading/>;
-		} else if (page_type==='page' || page_type==='genre'){
+		} else if (page_type==='page' || page_type==='genre' || page_type==='search'){
 			return (
 				<div className='wrapper'>
 					<div className='cards-container'>
@@ -211,6 +218,9 @@ class ServicePage extends React.Component {
 					}
 					{page_type==='page' &&
 						<Pagination totalPages={data.pages} page={id===undefined ? 1 : id} url={`/${service}/page/`}/>
+					}
+					{page_type==='search' &&
+						<Pagination totalPages={data.pages} page={this.getParameterByName('page') || 1} url={`/${service}/search?text=${this.getParameterByName('text')}&page=`}/>
 					}
 					
 				</div>

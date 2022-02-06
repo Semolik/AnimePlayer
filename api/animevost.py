@@ -13,6 +13,7 @@ from functools import lru_cache, wraps
 from datetime import datetime, timedelta
 from shikimori_api import Shikimori
 import re
+import math
 
 shikimori_session = Shikimori()
 shikimori_api = shikimori_session.get_api()
@@ -22,16 +23,16 @@ AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
 AnimevostApiLink = "https://api.animevost.org/v1/"
 headers = {
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'accept-language': 'uk,en-US;q=0.9,en;q=0.8,ru;q=0.7',
-    'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-fetch-dest': 'document',
-    'sec-fetch-mode': 'navigate',
-    'sec-fetch-site': 'none',
-    'sec-fetch-user': '?1',
-    'upgrade-insecure-requests': '1',
-    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36',
+	'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+	'accept-language': 'uk,en-US;q=0.9,en;q=0.8,ru;q=0.7',
+	'sec-ch-ua': '"Google Chrome";v="89", "Chromium";v="89", ";Not A Brand";v="99"',
+	'sec-ch-ua-mobile': '?0',
+	'sec-fetch-dest': 'document',
+	'sec-fetch-mode': 'navigate',
+	'sec-fetch-site': 'none',
+	'sec-fetch-user': '?1',
+	'upgrade-insecure-requests': '1',
+	'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36',
 	'Content-Type': 'text/html; charset=utf-8',
 }
 messages = {
@@ -55,6 +56,9 @@ def timed_lru_cache(seconds: int, maxsize: int = 128):
 			return func(*args, **kwargs)
 		return wrapped_func
 	return wrapper_cache
+def func_chunks_generators(lst, n):
+	for i in range(0, len(lst), n):
+		yield lst[i : i + n]
 def IdFromLink(url):
 	return int(url.split('/')[-1].split('-')[0])
 def GetTitle(fullTitle):
@@ -359,16 +363,21 @@ def GetSchedule():
 	else:
 		return {"message":messages['not_response'],'status':response.status_code}
 @timed_lru_cache(60*60)
-def search(name):
+def search(name, page):
 	response = AnimevostApiPost('search', {'name': name})
 	if response:
 		data = list()
 		for i in response.get('data'):
 			data.append(FormatingAnimevostResponse(i))
+		data =  list(func_chunks_generators(data, 20))
+		if not page:
+			page = 1
+		else:
+			page = int(page)
 		return {
 			'data': {
-				'data': data,
-				'pages': len(data)//20,
+				'data': data[page-1],
+				'pages': len(data),
 			},
 			'status': 200,
 		}
@@ -444,11 +453,15 @@ def ScheduleRequest():
 def SearchRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("name")
+	parser.add_argument("page")
 	params = parser.parse_args()
 	name = params.get('name')
+	page = params.get('page')
+	if page and not page.isdigit():
+		return "Некорректная страница", 404
 	if not name:
 		return "Не передан параметр name", 400
-	return search(name)
+	return search(name, page)
 # @Animevost.route(ApiPath+AnimeVostPath+'random',  methods = ['post', 'get'])
 # def RandomTitleRequest():
 # 	return GetRandomPost()
