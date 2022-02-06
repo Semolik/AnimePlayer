@@ -35,7 +35,7 @@ def GetPage(page):
             'status': 400,
             'message': messages.get('error_page_number'),
         }
-    response = requests.get(AnidubLink+'anime')
+    response = requests.get(AnidubLink+'anime'+(f'/page/{page}' if page else ''))
     response.encoding = 'utf8'
     if response:
         soup = BeautifulSoup(response.text, 'lxml')
@@ -43,12 +43,19 @@ def GetPage(page):
         if not data:
             return 'Ошибка', 500
         data = data[0]
+        pages = data.select('.navigation a')
+        if not pages:
+            return {
+                'status': 404,
+                'message': messages[404]
+            }
         outdata = list()
         for title in data.select('.th-item'):
             th_in = title.select('.th-in')
+            poster = th_in[0].select('.th-img > img')[0].get('data-src')
             title_info = {
-                'poster': AnidubMirrorLink+th_in[0].select('.th-img > img')[0].get('data-src'),
-                'id': LinkSplitter.join(th_in[0].get('href').split('/')[3:]),
+                'poster': (poster if 'http' in poster else AnidubMirrorLink+poster),
+                'id': LinkSplitter.join(th_in[0].get('href').split('/')[3:]).split('.')[0],#на конце кажой ссылки есть .html
             }
             
             # th_in2 = title.select('.th-in')
@@ -66,10 +73,7 @@ def GetPage(page):
                 title_info['en_title'] = ' '.join(en_title[0].text.split())
             outdata.append(title_info)
             # break
-            
-        pages = data.select('.navigation a')
-        if not pages:
-            return
+
         # file = open('1.html', 'w')
         # file.write(str(pages))
         # file.close()
