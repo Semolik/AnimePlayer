@@ -26,7 +26,7 @@ def Page():
 		return data, data.get('status')
 	# elif isinstance(data, str):
 	# 	return {'message': data, 'status': 404}, 404
-	return json.dumps({'data': data, 'status': 200})
+	return json.dumps(data), data.get('status')
 
 @timed_lru_cache(60*10)
 def GetPage(page):

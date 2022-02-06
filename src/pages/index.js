@@ -206,10 +206,15 @@ class ServicePage extends React.Component {
 		const urlParams = new URLSearchParams(queryString);
 		return urlParams.get(name);
 	}
-	search(){
-		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber} = this.state;
-		// alert();
-		return <div className='wrapper'>
+	render() {
+		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
+		if (error) {
+			return <div>Ошибка: {error.message}</div>;
+		} else if (!isLoaded) {
+			return <Loading/>;
+		} else if (page_type==='page' || page_type==='genre' || page_type==='search'){
+			return (
+				<div className='wrapper'>
 					<div className='cards-container' >
 						{data.data.map((item, i) => (
 							<Card key={i} data={item} service={{id: service}}></Card>
@@ -226,28 +231,6 @@ class ServicePage extends React.Component {
 					}
 					
 				</div>
-	}
-	render() {
-		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
-		if (error) {
-			return <div>Ошибка: {error.message}</div>;
-		} else if (!isLoaded) {
-			return <Loading/>;
-		} else if (page_type==='page' || page_type==='genre' || page_type==='search'){
-			return (
-				<Router>
-				<Switch>
-                    <Route path={`/${service}/search/?text=:text`} render={
-                        (props) => (
-                            this.search()
-                        )
-                    }/>
-				</Switch></Router>
-				// <Router>
-				// 	<Switch>
-				// 		<Route path={`/${service}/search/:params?`} render={()=>this.search()}></Route>
-				// 	</Switch>
-				// </Router>
 			)		
 		} else if (page_type==='title'){
 			console.log(data);

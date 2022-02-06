@@ -11,8 +11,8 @@ export default [
         stack: ['react', 'redux', 'scss']
     },
     {
-        // id: 'anidub',
-        id: 'animevost',
+        id: 'anidub',
+        // id: 'animevost',
         title: 'Anidub',
         icon: anidubIcon,
         description: 'Anidub',
