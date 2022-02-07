@@ -16,7 +16,7 @@ def servises():
             }
         ,
         'anidub': {
-            'genres': animevost.GetGenres(),
+            'genres': anidub.GetGenres(),
         }
     }
 app.run(host='0.0.0.0',port=80,debug=True)

@@ -8,16 +8,13 @@ export default [
         title: 'Animevost',
         icon: animevostIcon,
         description: 'Animevost',
-        stack: ['react', 'redux', 'scss']
     },
     {
         id: 'anidub',
-        // id: 'animevost',
         title: 'Anidub',
         icon: anidubIcon,
         description: 'Anidub',
-        link: '#',
-        stack: ['react', 'redux', 'scss']
+
     },
     // {
     //     id: 'spa-3',
