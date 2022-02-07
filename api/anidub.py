@@ -15,6 +15,13 @@ ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
 AnidubMirrorLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
+info_texts = {
+	'Жанр:': {'key':'genre', 'tag': 'a', 'list': True},
+	'Количество серий:' : {'key': 'series_coutnt'},
+	# 'Режиссер:': {'key': 'director','tag': '*', 'only_text': True},
+	# 'Режиссер:': {'key': 'sound','tag': 'a', 'only_text': True},
+}
+
 
 Module = Blueprint(ModulePath, __name__)
 @Module.route(ApiPath+ModulePath,  methods = ['post'])
@@ -50,6 +57,71 @@ def GenreRequest():
 				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
 				return genre_data, genre_data.get('status')
 	return {'message': 'Жанр не найден', 'status': 404}, 404
+@Module.route(ApiPath+ModulePath+'title',  methods = ['post'])
+def TitleRequest():
+	parser = reqparse.RequestParser()
+	parser.add_argument("id")
+	params = parser.parse_args()
+	id = params.get('id')
+	if not id:
+		return {"message":messages['no_param'].format('id'),'status': 400}
+	title = GetTitleById(id)
+	return title, title.get('status')
+
+@timed_lru_cache(60*60)
+def GetTitleById(title_id):
+	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
+	response.encoding = 'utf8'
+	if response:
+		soup = BeautifulSoup(response.text, 'lxml')
+		dle_content = soup.select('#dle-content')
+		if not dle_content:
+			return {
+				'status': 500,
+				'message': messages.get('error_parce')
+			}
+		out = {}
+		short_info = dle_content[0].select('ul.flist > li.short-info')
+		for info_item in short_info:
+			span = info_item.find('span')
+			if span:
+				span_text = span.text
+				# print(span_text)
+				if span_text=='Жанр:':
+					data = info_item.select('a')
+					out['genre'] = FormatLinkList(data, Split=[-2,-1])
+				if span_text=='Количество серий:':
+					out['series_coutnt'] = span.next_sibling
+				if span_text=='Режиссер:':
+					out['director'] = ', '.join([i.text for i in info_item.select('*')[1:]])
+				if span_text=='Автор оригинала:':
+					out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
+				if span_text=='Озвучивание:':
+					out['sound'] = [i.text for i in info_item.select('*')[1:]]
+				# key = info_texts.get(span.text)
+				# if key:
+				# 	tag = key.get('tag')
+				# 	if tag:
+				# 		data = info_item.select(tag)
+				# 		if key.get('only_text'):
+				# 			out[key.get('key')] = [i.text for i in data]
+				# 		else:
+				# 			out[key.get('key')] = (FormatLinkList(data, Split=[-2,-1]) if key.get('list') else [data[0].text.split('/')])
+				# 	else:
+				# 		if key.get('next'):
+				# 			out[key.get('key')] = span.next.text
+				# 		else:
+				# 			out[key.get('key')]span.next_sibling
+		return {
+			'status':200,
+			'data': out,
+		}
+	else:
+		return {
+			'status': response.status_code,
+			'message': messages.get('not_response'),
+		}
+
 
 @timed_lru_cache(60*10)
 def GetPage(page):
@@ -59,8 +131,6 @@ def GetPage(page):
 			'message': messages.get('error_page_number'),
 		}
 	return GetTitles(AnidubLink+'anime'+(f'/page/{page}' if page else ''))
-
-	
 @timed_lru_cache(60*60*6)
 def GetGenres():
 	response = requests.get(AnidubLink, headers=headers)
@@ -74,7 +144,7 @@ def GetGenres():
 			# 'status': response.status_code,
 			'genre': {
 				'name': 'Жанр',
-				'prelink': genres[0].get('href').split('/')[1],
+				'prelink': genres[0].get('href').split('/')[1]+'/genre',
 				'links': FormatLinkList(genres)
 			},
 			'category': {
@@ -131,11 +201,6 @@ def GetTitles(Url):
 				title_info['en_title'] = ' '.join(en_title[0].text.split())
 			outdata.append(title_info)
 		pages = data.select('.navigation a')
-		# if not pages:
-		# 	return {
-		# 		'status': 404,
-		# 		'message': messages[404]
-		# 	}
 		return {
 			'status': response.status_code,
 			'data': {
@@ -148,5 +213,8 @@ def GetTitles(Url):
 			'status': response.status_code,
 			'message': messages.get('not_response'),
 		}
-def FormatLinkList(a_tags):
-	return [[i.text.lower(), i.get('href').split('/')[-1]] for i in a_tags]
+def FormatLinkList(a_tags, Split=None):
+	array = [[i.text.lower(), i.get('href').split('/')] for i in a_tags]
+	if Split:
+		return [[i[0],i[1][Split[0]:Split[1]]] for i in array]
+	return [[i[0], i[1][-1]] for i in array]
