@@ -1,4 +1,5 @@
 from email import message
+from http import server
 import re
 import requests
 import json
@@ -7,6 +8,7 @@ from lxml import etree
 from flask_restful import reqparse
 from flask import Blueprint
 from requests.utils import requote_uri
+from soupsieve import select
 from config import ApiPath
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
@@ -90,6 +92,18 @@ def GetTitleById(title_id):
 		poster = dle_content[0].select('.fleft > .fposter > img')
 		if poster:
 			out['poster'] = AnidubMirrorLink()+poster[0].get('data-src')
+		series = dle_content[0].select('.fplayer.tabs-box > .tabs-b > .tabs-box > .tabs-sel')
+		if series:
+			out['series'] = {}
+			# out['series']['data'] = 
+			sibnet_links = list()
+			for link in [i for i in series[-1].select('span')]:
+				response = requests.get(link.get('data'))
+				if response:
+					url = re.search(r'\/v\/.*\.mp4',response.text)
+					if url:
+						sibnet_links.append('https://video.sibnet.ru'+url.group(0))
+			out['series']['data'] = sibnet_links
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
 			span = info_item.find('span')
