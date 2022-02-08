@@ -13,7 +13,6 @@ from utils.messages import messages
 from settings import headers
 ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
-AnidubMirrorLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
 info_texts = {
 	'Жанр:': {'key':'genre', 'tag': 'a', 'list': True},
@@ -68,6 +67,8 @@ def TitleRequest():
 	title = GetTitleById(id)
 	return title, title.get('status')
 
+def AnidubMirrorLink():
+	return 'https://online.anidub.club/'
 @timed_lru_cache(60*60)
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
@@ -81,6 +82,14 @@ def GetTitleById(title_id):
 				'message': messages.get('error_parce')
 			}
 		out = {}
+		title = dle_content[0].select('.fright.fx-1 > h1')
+		if title:
+			title = title[0].text.split(' / ')
+			out['ru_title'] = title[0]
+			out['en_title'] = title[1].split(' [')[0]
+		poster = dle_content[0].select('.fleft > .fposter > img')
+		if poster:
+			out['poster'] = AnidubMirrorLink()+poster[0].get('data-src')
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
 			span = info_item.find('span')
@@ -187,7 +196,7 @@ def GetTitles(Url):
 			th_in = title.select('.th-in')
 			poster = th_in[0].select('.th-img > img')[0].get('data-src')
 			title_info = {
-				'poster': (poster if 'http' in poster else AnidubMirrorLink+poster),
+				'poster': (poster if 'http' in poster else AnidubMirrorLink()+poster),
 				'id': LinkSplitter.join(th_in[0].get('href').split('/')[3:]).split('.')[0],#на конце кажой ссылки есть .html
 			}
 			ru_title = th_in[1].select('.th-title')
