@@ -97,12 +97,14 @@ def GetTitleById(title_id):
 			out['series'] = {}
 			# out['series']['data'] = 
 			sibnet_links = list()
-			for link in [i for i in series[-1].select('span')]:
-				response = requests.get(link.get('data'))
-				if response:
-					url = re.search(r'\/v\/.*\.mp4',response.text)
-					if url:
-						sibnet_links.append('https://video.sibnet.ru'+url.group(0))
+			for link in [i for i in series[1].select('span')]:
+				sibnet_links.append(link.get('data'))
+				# print(AnidubLink+link.get('data'))
+				# response = requests.get(link.get('data'))
+				# if response:
+				# 	url = re.search(r'\/v\/.*\.mp4',response.text)
+				# 	if url:
+				# 		sibnet_links.append('https://video.sibnet.ru'+url.group(0))
 			out['series']['data'] = sibnet_links
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
