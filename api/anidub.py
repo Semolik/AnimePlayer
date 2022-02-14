@@ -68,6 +68,34 @@ def TitleRequest():
 		return {"message":messages['no_param'].format('id'),'status': 400}
 	title = GetTitleById(id)
 	return title, title.get('status')
+@Module.route(ApiPath+'/'+ModulePath+'sibnet/<sibnetid>')
+def GetSibnetLink(sibnetid):
+	return SibnetLink(sibnetid)
+@timed_lru_cache(60*60)
+def SibnetLink(sibnetid):
+	response = requests.get(f'https://video.sibnet.ru/shell.php?videoid={sibnetid}')
+	if response:
+		url = re.search(r'\/v\/.*\.mp4',response.text)
+		if url:
+			return {
+				'status': 200,
+				'data': {
+					'type': "video",
+					'sources': [
+						{
+							'src': 'https://video.sibnet.ru'+url.group(0),
+							'size': 720,
+						},
+						
+					],
+					# 'poster': source['preview'],
+					'name': 'a',
+				}
+			}, 200
+	return {
+		'status': response.status_code,
+		'message': 'Ошибка'
+		}
 
 def AnidubMirrorLink():
 	return 'https://online.anidub.club/'
@@ -98,14 +126,20 @@ def GetTitleById(title_id):
 			# out['series']['data'] = 
 			sibnet_links = list()
 			for link in [i for i in series[1].select('span')]:
-				sibnet_links.append(link.get('data'))
-				# print(AnidubLink+link.get('data'))
+				print(link)
+				sibnet_links.append({
+					'link':'/'+ModulePath+'sibnet/'+link.get('data').split('=')[-1],
+					'name': link.text,
+					})
 				# response = requests.get(link.get('data'))
 				# if response:
 				# 	url = re.search(r'\/v\/.*\.mp4',response.text)
 				# 	if url:
 				# 		sibnet_links.append('https://video.sibnet.ru'+url.group(0))
 			out['series']['data'] = sibnet_links
+			out['series']['direct_link']=False
+			if title:
+				out['series']['info'] = [title[1].split(' [')[1].split(']')[0]]
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
 			span = info_item.find('span')

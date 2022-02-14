@@ -62,6 +62,22 @@ def Sorting(item):
 	if numbers:
 		return int(numbers[0])
 	return -1
+def PlyrSource(source):
+	return {
+		'type': "video",
+		'sources': [
+			{
+				'src': source['hd'],
+				'size': 720,
+			},
+			{
+				'src': source['std'],
+				'size': 480,
+			}
+		],
+		'poster': source['preview'],
+		'name': source['name'],
+	}
 def SortPlaylist(playlist):
 	series = list()
 	other = list()
@@ -73,7 +89,7 @@ def SortPlaylist(playlist):
 	if series:
 		series = sorted(series, key=Sorting)
 	other = sorted(other, key=lambda _: _.get('name'))
-	return series+other
+	return [PlyrSource(i) for i in series+other]
 def AnimevostApiGet(method, payload={}):
 	respond = requests.get(AnimevostApiLink+method,params=payload)
 	if respond:
@@ -174,6 +190,7 @@ def GenerateTitleResponse(response):
 		data['series']={
 			'info': re.findall('\[(.*?)\]', data.get('title')),
 			'data':SortPlaylist(series),
+			'direct_link': True,
 		}
 	else:
 		data['series'] = None

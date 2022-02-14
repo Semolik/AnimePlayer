@@ -1,8 +1,9 @@
 import React from 'react';
 import './Title.css';
 import { Link } from 'react-router-dom';
-import Plyr from 'plyr-react'
-import 'plyr-react/dist/plyr.css'
+import Plyr from 'plyr-react';
+import 'plyr-react/dist/plyr.css';
+import settings from '../../settings';
 // function spliting(elements){
 // 	var out = new Array();
 // 	for (var i = 0; i<elements.length; i++){
@@ -12,37 +13,73 @@ import 'plyr-react/dist/plyr.css'
 // 	out.pop();
 // 	return out;
 // }
-function Sourse(data){
-	return {
-		type: "video",
-		sources: [
-			{
-				src: data['hd'],
-				size: 720,
-			},
-			{
-				src: data['std'],
-				size: 480,
+// function Sourse(data){
+// 	return {
+// 		type: "video",
+// 		sources: [
+// 			{
+// 				src: data['hd'],
+// 				size: 720,
+// 			},
+// 			{
+// 				src: data['std'],
+// 				size: 480,
+// 			}
+// 		],
+// 		poster: data['preview'],
+// 	}
+// }
+function GetVideoUrl(url){
+	const geturl = fetch(settings.api+url)
+	.then(res => res.json())
+	.then(
+		(result) => {
+			if (result.status===200){
+				return result.data
+			} else {
+				console.log('Ошибка полуения ссылки на видео');
 			}
-		],
-		poster: data['preview'],
-	}
+		},
+		(error) => {
+			console.log('Ошибка получения ссылки на видео');
+		},
+	);
+	// var res = Promise.all([geturl]).then(values => { 
+	// 	return values[0]; 
+	// });
+	return geturl;
+	// alert(url);
+	// // return url;
+	// var req = new XMLHttpRequest();
+	// req.open('GET', settings.api+url, true);
+	// req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	// req.onload = function(){
+	// 	if (req.response != null) {
+	// 		var resp = JSON.parse(req.response);
+	// 		if (resp.status===200){
+	// 			console.log(resp.data);
+	// 			return resp.data
+	// 		}
+	// 	}
+		
+	// };
+	// req.send();
 }
 function Title(event) {
 	var data = event.data;
 	document.title = data.ru_title;
 	var service = event.service;
 	var player;
-	var saved = localStorage.saved;
-	var saved_data;
-	if (saved!==undefined){
-		try {
-			saved = JSON.parse(saved);
-			saved_data = saved[data.id];
-		} catch {
-			console.log('Ошибка чтения сохраненных серий.')
-		}
-	}
+	// var saved = localStorage.saved;
+	// var saved_data;
+	// if (saved!==undefined){
+	// 	try {
+	// 		saved = JSON.parse(saved);
+	// 		saved_data = saved[data.id];
+	// 	} catch {
+	// 		console.log('Ошибка чтения сохраненных серий.')
+	// 	}
+	// }
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -120,7 +157,7 @@ function Title(event) {
 					</div>
 					{data.series && data.series.data &&
 						<div className='flex w-100 margin-bottom'>
-							<Plyr source={saved_data!==undefined ? saved_data : Sourse(data.series.data[0])} id='player' ref={(player_) => (player = player_)} options={{
+							<Plyr source={data.series.direct_link===false ? GetVideoUrl(data.series.data[0]['link']) :data.series.data[0]} id='player' ref={(player_) => (player = player_)} options={{
 								controls: ['play', 'progress','current-time','duration','mute','volume','captions','settings','pip','fullscreen'],
 								i18n: {
 									speed: 'Скорость',
@@ -135,35 +172,41 @@ function Title(event) {
 								</div> */}
 								<div className='button-box-2'>
 									{data.series.data.map((element, key) => {
-										var source = Sourse(element);
-										var flag = false;
-										if (saved_data!==undefined){
-											if (source['sources'][0]['src']===saved_data['sources'][0]['src'] && source['sources'][1]['src']===saved_data['sources'][1]['src']){
-												flag = true;
-											}
-										} else {
-											if (element === data.series.data[0]){
-												flag = true;
-											}
-										}
-										return (<div className={flag ? 'button active':'button'} key={key} onClick={(e)=>{
-											var saving_data;
-											if (player.plyr.source!==source){
+										return (<div className='button' key={key} onClick={(e)=>{
+											if (!e.target.classList.contains('active')){
 												[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
 													el.classList.remove("active");
 												});
-												player.plyr.source = source;
-												if (localStorage.saved===undefined){
-													saving_data = {};
+												if (data.series.direct_link===false){
+													fetch(settings.api+element['link'])
+													.then(res => res.json())
+													.then(
+														(result) => {
+															if (result.status===200){
+																console.log(result.data)
+																player.plyr.source = result.data;
+															} else {
+																console.log('Ошибка полуения ссылки на видео');
+															}
+														},
+														(error) => {
+															console.log('Ошибка получения ссылки на видео');
+														},
+													);
 												} else {
-													try {
-														saving_data = JSON.parse(localStorage.saved);
-													} catch {
-														saving_data = {};
-													}
+													player.plyr.source = element;
 												}
-												saving_data[data.id] = source;
-												localStorage.saved = JSON.stringify(saving_data);
+												// if (localStorage.saved===undefined){
+												// 	saving_data = {};
+												// } else {
+												// 	try {
+												// 		saving_data = JSON.parse(localStorage.saved);
+												// 	} catch {
+												// 		saving_data = {};
+												// 	}
+												// }
+												// saving_data[data.id] = source;
+												// localStorage.saved = JSON.stringify(saving_data);
 												e.target.classList.add("active");
 											}
 										}}>{element['name']}</div>)
