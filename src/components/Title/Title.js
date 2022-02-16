@@ -172,6 +172,7 @@ function Title(event) {
 								</div> */}
 								<div className='button-box-2'>
 									{data.series.data.map((element, key) => {
+										
 										return (<div className='button' key={key} onClick={(e)=>{
 											if (!e.target.classList.contains('active')){
 												[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {

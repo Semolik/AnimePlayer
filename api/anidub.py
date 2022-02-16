@@ -73,7 +73,7 @@ def TitleRequest():
 def GetSibnetLink(sibnetid):
 	return SibnetLink(sibnetid)
 
-def PlyrSource(url):
+def PlyrSource(url,poster):
 	return {
 		'type': "video",
 		'sources': [
@@ -82,7 +82,7 @@ def PlyrSource(url):
 				'size': 720,
 			},
 		],
-		# 'poster': source['preview'],
+		'poster': poster,
 		# 'name': source['name'],
 	}
 
@@ -91,12 +91,19 @@ def SibnetLink(sibnetid):
 	s = requests.Session()
 	page_url = f'https://video.sibnet.ru/video{sibnetid}'
 	r = s.get(page_url)
+	# with open('3.html', "w", encoding="utf-8") as f:
+	# 	f.write(r.text)
+	# 	f.close()
 	if not r:
 		return {
 			'status': r.status_code,
 			'message': 'Ответ сервера не получен'
 		}
 	p = next(re.finditer(r"\/v\/.+\d+.mp4", r.text), None)
+	
+	poster = next(re.finditer(r"'\/upload\/cover\/.+\d+.(jpg|png)'", r.text), None)
+	if poster:
+		poster = "https://video.sibnet.ru"+poster.group(0)[1:-1]
 	if not p:
 		return {
 			'status': 404,
@@ -107,14 +114,14 @@ def SibnetLink(sibnetid):
 	if r.status_code == 200:
 		return {
 			'status': r.status_code,
-			'data': PlyrSource(r.text),
+			'data': PlyrSource(r.text,poster),
 		}
 	elif r.status_code == 302:
 		url = r.headers.get('Location')
 		if url.startswith('//'):
 			return {
 				'status': 200,
-				'data': PlyrSource('http:' + url),
+				'data': PlyrSource('http:' + url,poster),
 			}
 	return {
 		'status': r.status_code,
@@ -126,7 +133,10 @@ def AnidubMirrorLink():
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
 	response.encoding = 'utf8'
-	if response:
+	# with open('2.html', "w", encoding="utf-8") as f:
+	# 	f.write(response.text)
+	# 	f.close()
+	if response:		
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
 		if not dle_content:
@@ -149,7 +159,6 @@ def GetTitleById(title_id):
 			# out['series']['data'] = 
 			sibnet_links = list()
 			for link in [i for i in series[1].select('span')]:
-				print(link)
 				sibnet_links.append({
 					'link':'/'+ModulePath+'sibnet/'+link.get('data').split('=')[-1],
 					'name': link.text,
@@ -169,7 +178,6 @@ def GetTitleById(title_id):
 			span = info_item.find('span')
 			if span:
 				span_text = span.text
-				# print(span_text)
 				if span_text=='Жанр:':
 					data = info_item.select('a')
 					out['genre'] = FormatLinkList(data, Split=[-2,-1])

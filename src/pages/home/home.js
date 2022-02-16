@@ -20,8 +20,8 @@ class HomePage extends React.Component {
 	}
 	componentDidMount() {
 		var data = {};
-		Promise.all(services.map(item =>
-			fetch(`${settings.api}/${item.id}/`,{
+		Promise.all(Object.keys(services).map(key =>
+			fetch(`${settings.api}/${key}/`,{
 				method: 'post',
 				headers: {
 					'Accept': 'application/json, text/plain, */*',
@@ -31,8 +31,8 @@ class HomePage extends React.Component {
 			}).then(resp => {return resp.json()})
 			.then(json => {
 				return {
-					id: item.id,
-					title: item.title,
+					id: key,
+					title: services[key].title,
 					data: json.data
 				}})
 		))
@@ -77,10 +77,10 @@ class HomePage extends React.Component {
 			return (
 				<div className='wrapper'>
 					<div className='services'>
-						{services.map((el, index)=>{
-							return <Link className='service' key={index} to={"/"+el.id}>
-								<img src={el.icon}/>
-								<div className='title'>{el.title}</div>
+						{Object.keys(services).map((key)=>{
+							return <Link className='service' key={key} to={"/"+key}>
+								<img src={services[key].icon}/>
+								<div className='title'>{services[key].title}</div>
 							</Link>
 						})}
 					</div>
