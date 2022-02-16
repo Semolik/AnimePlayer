@@ -1,5 +1,3 @@
-from email import message
-from http import server
 import re
 import requests
 import json
@@ -13,7 +11,6 @@ from config import ApiPath
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from settings import headers
-import aiohttp
 ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
