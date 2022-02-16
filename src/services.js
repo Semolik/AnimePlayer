@@ -2,15 +2,13 @@ import animevostIcon from './img/servises/animevost.png';
 import anidubIcon from './img/servises/anidub.png';
 
 
-export default [
-    {
-        id: 'animevost',
+export default {
+    'animevost': {
         title: 'Animevost',
         icon: animevostIcon,
         description: 'Animevost',
     },
-    {
-        id: 'anidub',
+    'anidub': {
         title: 'Anidub',
         icon: anidubIcon,
         description: 'Anidub',
@@ -48,4 +46,4 @@ export default [
     //     link: '#',
     //     stack: ['react', 'redux', 'scss']
     // }
-];
+};

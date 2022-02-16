@@ -433,6 +433,7 @@ def GenreRequest():
 				if genre_data.get('message'):
 					return {'message':genre_data.get('message'), 'status': 404}, 404
 				else:
+					genre_data['genre_name'] = item[0]
 					return json.dumps({'data': genre_data, 'status': 200})
 	return {'message': 'Жанр не найден', 'status': 404}, 404
 @Animevost.route(ApiPath+AnimeVostPath+'schedule',  methods = ['post', 'get'])

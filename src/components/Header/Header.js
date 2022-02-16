@@ -84,14 +84,14 @@ class Header extends React.Component {
 										<div className="index"><span >Главная</span></div>
 									</Link>
 							</li>
-							{services.map((service, i) => (
-								<li key={i}>
-									<Link to={"/"+service.id} className='sidebar-item' onClick={this.menuBtnChange}>
+							{Object.keys(services).map((key) => (
+								<li key={key}>
+									<Link to={"/"+key} className='sidebar-item' onClick={this.menuBtnChange}>
 										{/* <img
 											src={service.icon}
 											alt={service.title}
 										/> */}
-										<span className="index">{service.title}</span>
+										<span className="index">{services[key].title}</span>
 									</Link>
 								</li>
 							))}

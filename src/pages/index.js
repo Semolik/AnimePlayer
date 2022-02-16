@@ -5,6 +5,7 @@ import Pagination from '../components/Pagination/Pagination';
 import Title from '../components/Title/Title';
 import './index.css';
 import settings from '../settings';
+import services from '../services';
 // import { Route, Switch } from 'react-router-dom';
 import {
 	BrowserRouter as Router,
@@ -35,6 +36,7 @@ class ServicePage extends React.Component {
   
 	componentDidMount() {
 		if (this.state.page===undefined | this.state.page==='page'){
+			document.title = services[this.state.service].title;
 			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
 				headers: {
@@ -70,6 +72,7 @@ class ServicePage extends React.Component {
 					}
 			)
 		} else if (this.state.page==='genre'){
+			
 			fetch(`${settings.api}/${this.state.service}/genre`,{
 				method: 'post',
 				headers: {
@@ -83,6 +86,7 @@ class ServicePage extends React.Component {
 				(result) => {
 					console.log(result);
 					if (result.status===200){
+						document.title = result.data.genre_name;
 						this.setState({
 							isLoaded: true,
 							data: result.data,
@@ -105,6 +109,7 @@ class ServicePage extends React.Component {
 					}
 			)
 		} else if (this.state.page==='search') {
+			document.title = 'Поиск';
 			var body;
 			var text = this.getParameterByName('text');
 			if (text===null){
@@ -233,7 +238,6 @@ class ServicePage extends React.Component {
 				</div>
 			)		
 		} else if (page_type==='title'){
-			console.log(data);
 			return (
 				<div className='wrapper'>
 					<Title data={data} service={service}></Title>
