@@ -165,6 +165,10 @@ def GetTitleById(title_id):
 				# 	url = re.search(r'\/v\/.*\.mp4',response.text)
 				# 	if url:
 				# 		sibnet_links.append('https://video.sibnet.ru'+url.group(0))
+			first_sibnet = SibnetLink(sibnet_links[0]['link'].split('/')[-1])
+			name = sibnet_links[0]['name']
+			sibnet_links[0] = first_sibnet.get('data')
+			sibnet_links[0]['name'] = name
 			out['series']['data'] = sibnet_links
 			out['series']['direct_link']=False
 			if title:

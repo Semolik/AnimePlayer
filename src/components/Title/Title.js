@@ -80,6 +80,7 @@ function Title(event) {
 	// 		console.log('Ошибка чтения сохраненных серий.')
 	// 	}
 	// }
+	// console.log(GetVideoUrl(data.series.data[0]['link']));
 	return (
 		<div className='title-container'>
 			<div className='info-block'>
@@ -157,7 +158,7 @@ function Title(event) {
 					</div>
 					{data.series && data.series.data &&
 						<div className='flex w-100 margin-bottom'>
-							<Plyr source={data.series.direct_link===false ? GetVideoUrl(data.series.data[0]['link']) :data.series.data[0]} id='player' ref={(player_) => (player = player_)} options={{
+							<Plyr source={data.series.data[0]} id='player' ref={(player_) => (player = player_)} options={{
 								controls: ['play', 'progress','current-time','duration','mute','volume','captions','settings','pip','fullscreen'],
 								i18n: {
 									speed: 'Скорость',
@@ -172,13 +173,15 @@ function Title(event) {
 								</div> */}
 								<div className='button-box-2'>
 									{data.series.data.map((element, key) => {
-										
-										return (<div className='button' key={key} onClick={(e)=>{
+										// if (key===0){
+										// 	player.plyr.source = element;
+										// }
+										return (<div className={'button'+(key===0? ' active' : '')} key={key} onClick={(e)=>{
 											if (!e.target.classList.contains('active')){
 												[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
 													el.classList.remove("active");
 												});
-												if (data.series.direct_link===false){
+												if (data.series.direct_link===false && key!==0){
 													fetch(settings.api+element['link'])
 													.then(res => res.json())
 													.then(
