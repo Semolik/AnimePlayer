@@ -183,7 +183,6 @@ function Title(event) {
 													.then(
 														(result) => {
 															if (result.status===200){
-																console.log(result.data)
 																player.plyr.source = result.data;
 															} else {
 																console.log('Ошибка полуения ссылки на видео');

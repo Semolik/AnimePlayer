@@ -13,6 +13,7 @@ from config import ApiPath
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from settings import headers
+import aiohttp
 ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
@@ -71,32 +72,54 @@ def TitleRequest():
 @Module.route(ApiPath+'/'+ModulePath+'sibnet/<sibnetid>')
 def GetSibnetLink(sibnetid):
 	return SibnetLink(sibnetid)
-@timed_lru_cache(60*60)
+
+def PlyrSource(url):
+	return {
+		'type': "video",
+		'sources': [
+			{
+				'src': url,
+				'size': 720,
+			},
+		],
+		# 'poster': source['preview'],
+		# 'name': source['name'],
+	}
+
+@timed_lru_cache(60*5)
 def SibnetLink(sibnetid):
-	response = requests.get(f'https://video.sibnet.ru/shell.php?videoid={sibnetid}')
-	if response:
-		url = re.search(r'\/v\/.*\.mp4',response.text)
-		if url:
+	s = requests.Session()
+	page_url = f'https://video.sibnet.ru/video{sibnetid}'
+	r = s.get(page_url)
+	if not r:
+		return {
+			'status': r.status_code,
+			'message': 'Ответ сервера не получен'
+		}
+	p = next(re.finditer(r"\/v\/.+\d+.mp4", r.text), None)
+	if not p:
+		return {
+			'status': 404,
+			'message': 'Ошибка получения ссылки',
+		}
+	file_url = 'https://video.sibnet.ru' + p.group(0)
+	r = s.head(file_url, headers={'Referer': page_url})
+	if r.status_code == 200:
+		return {
+			'status': r.status_code,
+			'data': PlyrSource(r.text),
+		}
+	elif r.status_code == 302:
+		url = r.headers.get('Location')
+		if url.startswith('//'):
 			return {
 				'status': 200,
-				'data': {
-					'type': "video",
-					'sources': [
-						{
-							'src': 'https://video.sibnet.ru'+url.group(0),
-							'size': 720,
-						},
-						
-					],
-					# 'poster': source['preview'],
-					'name': 'a',
-				}
-			}, 200
+				'data': PlyrSource('http:' + url),
+			}
 	return {
-		'status': response.status_code,
-		'message': 'Ошибка'
-		}
-
+		'status': r.status_code,
+		'message': 'Ошибка получения ссылки',
+	}
 def AnidubMirrorLink():
 	return 'https://online.anidub.club/'
 @timed_lru_cache(60*60)
@@ -139,7 +162,8 @@ def GetTitleById(title_id):
 			out['series']['data'] = sibnet_links
 			out['series']['direct_link']=False
 			if title:
-				out['series']['info'] = [title[1].split(' [')[1].split(']')[0]]
+				series_count = title[1].split(' [')[1].split(']')[0]
+				out['series']['info'] = [series_count[1:] if series_count[0]=='0' else series_count]
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
 			span = info_item.find('span')
