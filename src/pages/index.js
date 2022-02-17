@@ -18,6 +18,7 @@ import {
 class ServicePage extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log(props);
 		this.state = {
 			error: null,
 			isLoaded: false,
@@ -37,7 +38,10 @@ class ServicePage extends React.Component {
 	componentDidMount() {
 		
 		if (this.state.page===undefined | this.state.page==='page'){
-			document.title = services[this.state.service].title;
+			var service_data = services[this.state.service];
+			if (service_data){
+				document.title = service_data.title;
+			}
 			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
 				headers: {
@@ -129,7 +133,6 @@ class ServicePage extends React.Component {
 			} else {
 				body =  {name: text, page: page};
 			}
-			console.log(body);
 			fetch(`${settings.api}/${this.state.service}/search`,{
 				method: 'post',
 				headers: {
@@ -216,6 +219,7 @@ class ServicePage extends React.Component {
 	}
 	render() {
 		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
+		console.log(this.state);
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -236,7 +240,7 @@ class ServicePage extends React.Component {
 					}
 					{page_type==='search' &&
 					<Switch>
-						<Route path='/:service/:search?/:text?/:page?' component={(event)=> <Pagination props={event} totalPages={data.pages} page={this.getParameterByName('page') || 1} url={`/${service}/search/?text=${this.getParameterByName('text')}&page=`}/>}/>
+						<Route path='/:service/:search?/:text?/:page?' component={(event)=> <Pagination props={event} totalPages={data.pages} page={PageType || 1} url={`/${service}/search/?text=${this.getParameterByName('text')}&page=`}/>}/>
 					</Switch>
 						
 					}

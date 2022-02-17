@@ -50,11 +50,15 @@ def GenreRequest():
 	genre = requote_uri(genre)
 	genres = GetGenres()
 	for key, val in genres.items():
-		# print(val)
 		for item in val['links']:
 			if item[1]==genre:
 				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
 				return genre_data, genre_data.get('status')
+	if genre.isdigit() and len(genre)==4:
+		genre_data = GetGenre("xfsearch/year/"+genre, params.get('page'))
+		if genre_data.get('status')!=200:
+			genre_data['message'] = 'Жанр не найден'
+		return genre_data, genre_data.get('status')
 	return {'message': 'Жанр не найден', 'status': 404}, 404
 @Module.route(ApiPath+ModulePath+'title',  methods = ['post'])
 def TitleRequest():
@@ -143,8 +147,9 @@ def GetTitleById(title_id):
 			}
 		out = {}
 		title = dle_content[0].select('.fright.fx-1 > h1')
+		print(title)
 		if title:
-			title = title[0].text.split(' / ')
+			title = title[0].text.split('/')
 			out['ru_title'] = title[0]
 			out['en_title'] = title[1].split(' [')[0]
 		poster = dle_content[0].select('.fleft > .fposter > img')
@@ -174,6 +179,11 @@ def GetTitleById(title_id):
 			if title:
 				series_count = title[1].split(' [')[1].split(']')[0]
 				out['series']['info'] = [series_count[1:] if series_count[0]=='0' else series_count]
+		year = dle_content[0].select('.fmeta.fx-row.fx-start > span > a')
+		for a in year:
+			href = a.get('href')
+			if '/year/' in href:
+				out['year'] = [a.text, href.split('/')[-2]]
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
 			span = info_item.find('span')

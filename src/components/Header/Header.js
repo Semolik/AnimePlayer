@@ -6,18 +6,26 @@ import { Link } from 'react-router-dom';
 import services from '../../services';
 import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory} from 'react-router-dom';
 class Header extends React.Component {
 	
 	constructor(props) {
 		super(props);
 		console.log(props);
+		// this.handleSubmit = this.handleSubmit.bind(this);
 		this.state = {
 			error: null,
 			isLoaded: false,
-			items: {}
+			items: {},
+			props: props,
 		};
 	}
+	// handleSubmit = (event) => {
+	// 	event.preventDefault();
+	// 	var history = useHistory();
+	// 	console.log(event.target.text.value);
+	// 	history.push('/Userdashboard');
+	//   }
 	componentDidMount() {
 		fetch(`${settings.api}/services`)
 			.then(res => res.json())
@@ -66,6 +74,10 @@ class Header extends React.Component {
 		// }
 		return <div className='genres'>{list}</div>;
 	}
+	submitForm (event) {
+		event.preventDefault();
+		window.location.href=`/animevost/search/${decodeURIComponent(event.target.text.value)}`;
+	  }
 	render() {
 		const { error, isLoaded, items } = this.state;
 		console.log(items);
@@ -110,7 +122,7 @@ class Header extends React.Component {
 							id="btn">
 						</i>
 						{/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
-						<form className='input-container' action={`/animevost/search`}>
+						<form className='input-container' onSubmit={this.submitForm}>
 							<input type="text" name="text" className='search' placeholder='Введите название...'></input>
 						</form>
 						
