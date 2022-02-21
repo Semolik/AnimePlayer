@@ -11,6 +11,14 @@ function Card(item){
                     {data.announce &&
                         <div className="block" data-text="Анонс"></div>
                     }
+                    {data.ongoing &&
+                        <div className="block" data-text="Онгоинг"></div>
+                    }
+                    {data.info_blocks &&
+                        data.info_blocks.map((block,key)=>{
+                            return <div className="block" data-text={block} key={key}></div>
+                        })
+                    }
                 </div>
                 <img src={data.poster} alt={data.ru_title}></img>
             </div>

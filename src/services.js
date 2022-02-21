@@ -12,7 +12,11 @@ export default {
         title: 'Anidub',
         icon: anidubIcon,
         description: 'Anidub',
-
+    },
+    'hentaiz': {
+        title: 'HentaiZ',
+        icon: anidubIcon,
+        description: 'hentaiz',
     },
     // {
     //     id: 'spa-3',

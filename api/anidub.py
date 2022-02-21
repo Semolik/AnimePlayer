@@ -10,16 +10,12 @@ from soupsieve import select
 from config import ApiPath
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
+from utils.plyr import PlyrSource
 from settings import headers
+
 ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
-info_texts = {
-	'Жанр:': {'key':'genre', 'tag': 'a', 'list': True},
-	'Количество серий:' : {'key': 'series_coutnt'},
-	# 'Режиссер:': {'key': 'director','tag': '*', 'only_text': True},
-	# 'Режиссер:': {'key': 'sound','tag': 'a', 'only_text': True},
-}
 
 
 Module = Blueprint(ModulePath, __name__)
@@ -53,11 +49,15 @@ def GenreRequest():
 		for item in val['links']:
 			if item[1]==genre:
 				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
+				if genre_data.get('data'):
+					genre_data['data']['genre_name']=item[0]
 				return genre_data, genre_data.get('status')
 	if genre.isdigit() and len(genre)==4:
 		genre_data = GetGenre("xfsearch/year/"+genre, params.get('page'))
 		if genre_data.get('status')!=200:
 			genre_data['message'] = 'Жанр не найден'
+		if genre_data.get('data'):
+			genre_data['data']['genre_name']=genre
 		return genre_data, genre_data.get('status')
 	return {'message': 'Жанр не найден', 'status': 404}, 404
 @Module.route(ApiPath+ModulePath+'title',  methods = ['post'])
@@ -73,19 +73,6 @@ def TitleRequest():
 @Module.route(ApiPath+'/'+ModulePath+'sibnet/<sibnetid>')
 def GetSibnetLink(sibnetid):
 	return SibnetLink(sibnetid)
-
-def PlyrSource(url,poster):
-	return {
-		'type': "video",
-		'sources': [
-			{
-				'src': url,
-				'size': 720,
-			},
-		],
-		'poster': poster,
-		# 'name': source['name'],
-	}
 
 @timed_lru_cache(60*5)
 def SibnetLink(sibnetid):
@@ -147,7 +134,6 @@ def GetTitleById(title_id):
 			}
 		out = {}
 		title = dle_content[0].select('.fright.fx-1 > h1')
-		print(title)
 		if title:
 			title = title[0].text.split('/')
 			out['ru_title'] = title[0]
@@ -200,20 +186,6 @@ def GetTitleById(title_id):
 					out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
 				if span_text=='Озвучивание:':
 					out['sound'] = [i.text for i in info_item.select('*')[1:]]
-				# key = info_texts.get(span.text)
-				# if key:
-				# 	tag = key.get('tag')
-				# 	if tag:
-				# 		data = info_item.select(tag)
-				# 		if key.get('only_text'):
-				# 			out[key.get('key')] = [i.text for i in data]
-				# 		else:
-				# 			out[key.get('key')] = (FormatLinkList(data, Split=[-2,-1]) if key.get('list') else [data[0].text.split('/')])
-				# 	else:
-				# 		if key.get('next'):
-				# 			out[key.get('key')] = span.next.text
-				# 		else:
-				# 			out[key.get('key')]span.next_sibling
 		return {
 			'status':200,
 			'data': out,

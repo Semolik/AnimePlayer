@@ -219,7 +219,6 @@ class ServicePage extends React.Component {
 	}
 	render() {
 		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
-		console.log(this.state);
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
