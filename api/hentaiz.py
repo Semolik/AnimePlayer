@@ -1,11 +1,7 @@
 import re
-from traceback import print_tb
-from unicodedata import category
-from urllib import response
 import requests
 import json
 from bs4 import BeautifulSoup
-from lxml import etree
 from flask_restful import reqparse
 from flask import Blueprint
 from requests.utils import requote_uri
@@ -47,12 +43,17 @@ def TitleRequest():
 		return {"message":messages['no_param'].format('id'),'status': 400}
 	title = GetTitleById(id)
 	return title, title.get('status')
-@Module.route(ApiPath+ModulePath+'video/<videoid>')
-def GetVideo(videoid):
-	return {
-		'status': 200,
-		'data': GetVideoById(videoid)
+@Module.route(ApiPath+ModulePath+'video/<prelink>/<videoid>')
+def GetVideo(videoid,prelink):
+	data = GetVideoById(videoid,prelink)
+	out = {
+		'status': data.get('status'),
 	}
+	if data.get('status')==200:
+		out['data'] = data.get('data')
+	else:
+		out['message'] = data.get('message')
+	return out, data.get('status')
 @Module.route(ApiPath+ModulePath+'genre',  methods = ['post'])
 def GenreRequest():
 	parser = reqparse.RequestParser()
@@ -82,16 +83,19 @@ def GenreRequest():
 
 
 @timed_lru_cache(60*5)
-def GetVideoById(videoid):
+def GetVideoById(videoid, prelink):
 	session = requests.Session()
-	player_url = 'https://hentaiz.xyz/hub/heco/listh.php?id='+videoid
+	player_url = f'https://hentaiz.xyz/hub/{prelink}/list{prelink[0]}.php?id='+videoid
 	response = session.get(player_url)
+	with open('video.html', "w", encoding="utf-8") as f:
+		f.write(response.text)
+		f.close()
 	if not response:
 		return {
 			'status': response.status_code,
 			'message': 'Ответ сервера не получен'
 		}
-	response = session.get('https://hentaiz.xyz/hub/heco/fembed.php?id='+videoid, headers={'Referer': player_url})
+	response = session.get(f'https://hentaiz.xyz/hub/{prelink}/fembed.php?id='+videoid, headers={'Referer': player_url})
 	if response:
 		p = next(re.finditer(r"playerInstance\.setup\([\s\S]*?file: '(.*?)'[\s\S]*?image: '(.*?)'", response.text), None)
 		if not p:
@@ -99,7 +103,10 @@ def GetVideoById(videoid):
 				'status': 404,
 				'message': 'Ошибка получения ссылки',
 			}
-		return PlyrSource(p.group(1),p.group(2))
+		return {
+			'status': 200,
+			'data': PlyrSource(p.group(1),p.group(2))
+		}
 	else:
 		return {
 			'status': 404,
@@ -239,9 +246,6 @@ def GetTitleById(title_id):
 	response = requests.get(HentaizLink+title_id+'.html', headers=headers)
 	response.encoding = 'utf8'
 	if response:
-		# with open('title.html', "w", encoding="utf-8") as f:
-		# 	f.write(response.text)
-		# 	f.close()
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
 		if not dle_content:
@@ -262,19 +266,22 @@ def GetTitleById(title_id):
 			out_series = list()
 			for i in series:
 				if 'vip.php' not in i.get('data-src'):
+					link = i.get('data-src').split('/')
 					out_series.append({
-						'link':("/"+ModulePath+'video/'+i.get('data-src').split('id=')[1]),
+						'link':("/"+ModulePath+'video/'+link[link.index('hub')+1]+"/"+i.get('data-src').split('id=')[1]),
 						'name': i.text,
 					})
 			out['series']['data'] = out_series
-			first = GetVideoById(out_series[0]['link'].split('/')[-1])
-			first['name'] = out_series[0]['name']
-			out['series']['data'][0] = first
+			first_splited_link = out_series[0]['link'].split('/')
+			first = GetVideoById(first_splited_link[-1],first_splited_link[-2])
+			if first.get('status')==200:
+				first = first.get('data')
+				first['name'] = out_series[0]['name']
+				out['series']['data'][0] = first
 			out['series']['direct_link']=False
 			out['series']['info'] = list()
 		fmright = dle_content[0].select('.fmright')
 		if fmright:
-			# print('asdasdasd')
 			tags_data = list()
 			for items_container in fmright[0].select('.flist > .flist-col > .vis'):
 				items = items_container.select('span')
@@ -290,7 +297,7 @@ def GetTitleById(title_id):
 							value.append([a[0].text,a[0].get('href')])
 						else:
 							textintags = [i.text for i in tag.select('*')]
-							print(textintags)
+							# print(textintags)
 							if text:
 								value.append([' '.join(textintags)])
 						# print(first_child)

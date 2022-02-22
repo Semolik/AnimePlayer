@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,send_from_directory
 import animevost
 import anidub
 import hentaiz
@@ -15,8 +15,7 @@ def servises():
         'animevost': {
             # 'title': 'Animevost',
             'genres': animevost.GetGenres(),
-            }
-        ,
+        },
         'anidub': {
             'genres': anidub.GetGenres(),
         },
