@@ -4,9 +4,11 @@ import animevost
 import anidub
 import hentaiz
 from config import ApiPath
-app = Flask(__name__, static_folder='app', static_url_path="/app")
+import os
+app = Flask(__name__, static_url_path="/app",static_folder='../build')
 from flask_cors import CORS
 CORS(app)
+
 modules = [animevost, anidub, hentaiz]
 app.register_blueprint(animevost.Animevost)
 app.register_blueprint(anidub.Module)
@@ -32,7 +34,19 @@ def index():
     data = list()
     for module in modules:
         module_data = module.GetPage(None)
-        module_data['title'] = module.ModuleTitle
-        data.append(module_data)
+        if module_data.get('status')==200:
+            module_data = module_data.get('data')
+            module_data['title'] = module.ModuleTitle
+            module_data['id'] = module.ModulePath
+            module_data['icon'] = "/"+module.ModulePath.split('/')[0]+'/icon'
+            data.append(module_data)
     return {'data' :data}
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>')
+# def serve(path):
+#     if path != "" and os.path.exists(app.static_folder + '/' + path):
+#         return send_from_directory(app.static_folder, path)
+#     else:
+#         return send_from_directory(app.static_folder, 'index.html')
+
 app.run(host='0.0.0.0',port=80,debug=True)

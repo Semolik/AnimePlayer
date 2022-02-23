@@ -4,13 +4,14 @@ import json
 from bs4 import BeautifulSoup
 from lxml import etree
 from flask_restful import reqparse
-from flask import Blueprint
+from flask import Blueprint,send_from_directory
 from requests.utils import requote_uri
 from soupsieve import select
 from config import ApiPath
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from utils.plyr import PlyrSource
+from config import ApiPath, UPLOAD_FOLDER
 from settings import headers
 
 ModulePath = 'anidub/'
@@ -85,8 +86,10 @@ def SearchRequest():
 		return "Некорректная страница", 404
 	if not name:
 		return "Не передан параметр name", 400
-	return search(name, page)
-
+	return
+@Module.route(ApiPath+ModulePath+'icon')
+def icon():
+	return send_from_directory(UPLOAD_FOLDER, 'anidub.png')
 
 @timed_lru_cache(60*60)
 def search(name, page):

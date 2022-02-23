@@ -23,6 +23,35 @@ class HomePage extends React.Component {
 		.then(res => res.json())
 		.then(
 			(result) => {
+				this.setState({
+						isLoaded: true,
+						items: result.data,
+					});
+			},
+			(error) => {
+				this.setState({
+					isLoaded: false,
+					error
+				});
+			}
+		);
+		fetch('https://shikimori.one/api/topics?forum=news&limit=30')
+		.then(res => res.json())
+		.then(
+			(result) => {
+				this.setState({
+					isShikimoriLoaded: true,
+					shikimori: result,
+				});
+			},
+			(error) => {
+				this.setState({
+					isShikimoriLoaded: false,
+					error
+				});
+			}
+		);
+
 				// Promise.all(Object.keys(result).map(key =>
 				// 	fetch(`${settings.api}/${key}/`,{
 				// 		method: 'post',
@@ -105,33 +134,18 @@ class HomePage extends React.Component {
 				// 				error
 				// 			});
 				// 		});
-				fetch('https://shikimori.one/api/topics?forum=news&limit=30')
-				.then(res => res.json())
-				.then(
-					(result) => {
-						this.setState({
-							isShikimoriLoaded: true,
-							shikimori: result,
-						});
-					},
-					(error) => {
-						this.setState({
-							isShikimoriLoaded: false,
-							error
-						});
-					}
-				);
+				
 
-			},
-			// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-			// чтобы не перехватывать исключения из ошибок в самих компонентах.
-			(error) => {
-				this.setState({
-					isLoaded: true,
-					error
-				});
-			}
-		)
+		// 	},
+		// 	// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+		// 	// чтобы не перехватывать исключения из ошибок в самих компонентах.
+		// 	(error) => {
+		// 		this.setState({
+		// 			isLoaded: true,
+		// 			error
+		// 		});
+		// 	}
+		// )
 	}
 	render() {
 		const { error, isLoaded, items, shikimori, isShikimoriLoaded} = this.state;
@@ -145,18 +159,17 @@ class HomePage extends React.Component {
 			return (
 				<div className='wrapper'>
 					<div className='services'>
-						{Object.keys(services).map((key)=>{
-							return <Link className='service' key={key} to={"/"+key}>
-								<img src={services[key].icon}/>
-								<div className='title'>{services[key].title}</div>
+						{items.map((el,key)=>{
+							return <Link className='service' key={key} to={"/"+el.id}>
+								<img src={settings.api+el.icon}/>
+								<div className='title'>{el.title}</div>
 							</Link>
 						})}
 					</div>
-					{items.map((service, key) =>{
-						// console.log(service);
+					{items.map((service,key) =>{
 						return <div className='cards-container hide-cards' key={key}>
 							<div className='service-title'>{service.title}</div>
-							{service.data.data.map((item, i) => (
+							{service.data.map((item, i) => (
 								<Card key={i} data={item} service={service}></Card>
 							))}
 						</div>
@@ -165,7 +178,7 @@ class HomePage extends React.Component {
 						{/* <div className='block-title'>Shikimori news</div> */}
 						{shikimori.map((el, index)=>{
 							// console.log(el);
-							return <a className="card-horizontal" href={`https://shikimori.one${el.forum.url}/${el.id}`} title={el.topic_title} key={index} target="_blank">
+							return <a className="card-horizontal" href={`https://shikimori.one${el.forum.url}/${el.id}`} title={el.topic_title} key={index} target="_blank" rel="noopener noreferrer">
 										<div className="poster">
 											{/* <div className="blocks">
 												{data.announce &&

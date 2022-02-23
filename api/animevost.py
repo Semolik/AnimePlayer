@@ -6,9 +6,9 @@ import json
 from bs4 import BeautifulSoup
 from lxml import etree
 from flask_restful import reqparse
-from flask import Blueprint
+from flask import Blueprint, send_from_directory
 from requests.utils import requote_uri
-from config import ApiPath
+from config import ApiPath, UPLOAD_FOLDER
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from shikimori_api import Shikimori
@@ -19,14 +19,14 @@ from settings import headers
 shikimori_session = Shikimori()
 shikimori_api = shikimori_session.get_api()
 ShikimoriLink = 'https://shikimori.one/'
-AnimeVostPath = 'animevost/'
+ModulePath = 'animevost/'
 AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
 AnimevostApiLink = "https://api.animevost.org/v1/"
 ModuleTitle = "Animevost"
 
 genres__ = {}
-Animevost = Blueprint(AnimeVostPath, __name__)
+Animevost = Blueprint(ModulePath, __name__)
 
 def func_chunks_generators(lst, n):
 	for i in range(0, len(lst), n):
@@ -143,7 +143,7 @@ def FormatingAnimevostResponse(response_item):
 	return data
 	
 @timed_lru_cache(60*10)
-def GetPage(page=None):
+def GetPageData(page=None):
 	size = 20
 	if not page:
 		page=1
@@ -326,32 +326,32 @@ def GetGenre(GenreUrl, page=None):
 			return {"message":messages['error_page_number']}
 		Url+=f'/page/{page}/'
 	return GetTitles(Url)
-@timed_lru_cache(60*60*6)
-def GetSchedule():
-	response = requests.get(AnimevostLink)
-	if response:
-		tree = etree.HTML(response.text)
-		output = list()
-		for i in tree.xpath("//div[contains(@class, 'raspis')]"):
-			titles = list()
-			for j in i.findall('a'):
-				text = j.text.split(' ~ ')
-				titles.append({
-					'id': IdFromLink(j.attrib.get('href')),
-					'name': text[0],
-					'time': text[1][1:-1],
-				})
-			output.append({
-				'name': i.getprevious().text,
-				'titles': titles
-			})
-		return {
-			'data': output,
-			'status':200,
-		}
-	else:
-		return {"message":messages['not_response'],'status':response.status_code}
-@timed_lru_cache(60*60)
+# @timed_lru_cache(60*60*6)
+# def GetSchedule():
+# 	response = requests.get(AnimevostLink)
+# 	if response:
+# 		tree = etree.HTML(response.text)
+# 		output = list()
+# 		for i in tree.xpath("//div[contains(@class, 'raspis')]"):
+# 			titles = list()
+# 			for j in i.findall('a'):
+# 				text = j.text.split(' ~ ')
+# 				titles.append({
+# 					'id': IdFromLink(j.attrib.get('href')),
+# 					'name': text[0],
+# 					'time': text[1][1:-1],
+# 				})
+# 			output.append({
+# 				'name': i.getprevious().text,
+# 				'titles': titles
+# 			})
+# 		return {
+# 			'data': output,
+# 			'status':200,
+# 		}
+# 	else:
+# 		return {"message":messages['not_response'],'status':response.status_code}
+# @timed_lru_cache(60*60)
 def search(name, page):
 	response = AnimevostApiPost('search', {'name': name})
 	if response:
@@ -391,18 +391,18 @@ def search(name, page):
 # 		}
 # 	else:
 # 		return {"message":messages['not_response'],'status':response.status_code}
-@Animevost.route(ApiPath+AnimeVostPath,  methods = ['post'])
-def Page():
+@Animevost.route(ApiPath+ModulePath,  methods = ['post'])
+def GetPage(page=None):
 	parser = reqparse.RequestParser()
 	parser.add_argument("page")
 	params = parser.parse_args()
-	data = GetPage(params.get('page'))
+	data = GetPageData(params.get('page'))
 	if not data:
 		return {'message': 'Ошибка', 'status': 404}, 404
 	elif isinstance(data, str):
 		return {'message': data, 'status': 404}, 404
-	return json.dumps({'data': data, 'status': 200})
-@Animevost.route(ApiPath+AnimeVostPath+'title',  methods = ['post'])
+	return {'data': data, 'status': 200}
+@Animevost.route(ApiPath+ModulePath+'title', methods = ['post'])
 def TitleRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("id")
@@ -411,13 +411,13 @@ def TitleRequest():
 	if not id:
 		return {"message":"Не передан параметр genre",'status': 400}
 	return GetTitleById(id)
-@Animevost.route(ApiPath+AnimeVostPath+'genres',  methods = ['post', 'get'])
+@Animevost.route(ApiPath+ModulePath+'genres',  methods = ['post', 'get'])
 def GenresRequest():
 	data = GetGenres()
 	if data.get('message'):
 		return {'message': data.get('message'), 'status': 404}, 404
 	return json.dumps({'data': data, 'status': 200})
-@Animevost.route(ApiPath+AnimeVostPath+'genre', methods = ['post'])
+@Animevost.route(ApiPath+ModulePath+'genre', methods = ['post'])
 def GenreRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("genre")
@@ -437,10 +437,10 @@ def GenreRequest():
 					genre_data['genre_name'] = item[0]
 					return json.dumps({'data': genre_data, 'status': 200})
 	return {'message': 'Жанр не найден', 'status': 404}, 404
-@Animevost.route(ApiPath+AnimeVostPath+'schedule',  methods = ['post', 'get'])
-def ScheduleRequest():
-	return GetSchedule()
-@Animevost.route(ApiPath+AnimeVostPath+'search',  methods = ['post'])
+# @Animevost.route(ApiPath+ModulePath+'schedule',  methods = ['post', 'get'])
+# def ScheduleRequest():
+# 	return GetSchedule()
+@Animevost.route(ApiPath+ModulePath+'search',  methods = ['post'])
 def SearchRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("name")
@@ -453,6 +453,9 @@ def SearchRequest():
 	if not name:
 		return "Не передан параметр name", 400
 	return search(name, page)
-# @Animevost.route(ApiPath+AnimeVostPath+'random',  methods = ['post', 'get'])
+@Animevost.route(ApiPath+ModulePath+'icon')
+def icon():
+	return send_from_directory(UPLOAD_FOLDER, 'animevost.png')
+# @Animevost.route(ApiPath+ModulePath+'random',  methods = ['post', 'get'])
 # def RandomTitleRequest():
 # 	return GetRandomPost()
