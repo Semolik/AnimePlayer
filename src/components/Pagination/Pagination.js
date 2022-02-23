@@ -15,10 +15,10 @@ function Pagination (event){
 	let beforePage = page - 1;
 	let afterPage = page + 1;
 	if(page > 1){
-		liTags.push(<Link className="btn prev"  to={params!==undefined? `/${params.service}/search//${params.text}/${page - 1}`:url+(page - 1)} key={url+(page - 1)+'prev'}><span><i className="fas fa-angle-left"></i> Prev</span></Link>);
+		liTags.push(<Link className="btn prev"  to={params!==undefined? `/${params.service}/search/${params.text}/${page - 1}`:url+(page - 1)} key={url+(page - 1)+'prev'}><span><i className="fas fa-angle-left"></i> Prev</span></Link>);
 	}
 	if(page > 2){
-		liTags.push(<Link className="first numb" to={params!==undefined? `/${params.service}/search//${params.text}/1`:url+1} key={url+1+'first'}><span>1</span></Link>);
+		liTags.push(<Link className="first numb" to={params!==undefined? `/${params.service}/search/${params.text}/1`:url+1} key={url+1+'first'}><span>1</span></Link>);
 	}
 	if (page === totalPages && totalPages>3) {
 		beforePage = beforePage - 2;

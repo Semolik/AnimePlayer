@@ -73,7 +73,46 @@ def TitleRequest():
 @Module.route(ApiPath+'/'+ModulePath+'sibnet/<sibnetid>')
 def GetSibnetLink(sibnetid):
 	return SibnetLink(sibnetid)
+@Module.route(ApiPath+AnidubLink+'search',  methods = ['post'])
+def SearchRequest():
+	parser = reqparse.RequestParser()
+	parser.add_argument("name")
+	parser.add_argument("page")
+	params = parser.parse_args()
+	name = params.get('name')
+	page = params.get('page')
+	if page and not page.isdigit():
+		return "Некорректная страница", 404
+	if not name:
+		return "Не передан параметр name", 400
+	return search(name, page)
 
+
+@timed_lru_cache(60*60)
+def search(name, page):
+	response = requests.post(AnidubLink+'index.php?do=search',params={'story':name, 'result_from': page or 1, 'full_search': 0, 'search_start': 1, 'subaction':'search', 'do': 'search'}, headers=headers)
+	# response = AnimevostApiPost('search', {'name': name})
+	# if response:
+	# 	data = list()
+	# 	for i in response.get('data'):
+	# 		data.append(FormatingAnimevostResponse(i))
+	# 	data =  list(func_chunks_generators(data, 20))
+	# 	if not page:
+	# 		page = 1
+	# 	else:
+	# 		page = int(page)
+	# 	return {
+	# 		'data': {
+	# 			'data': data[page-1],
+	# 			'pages': len(data),
+	# 		},
+	# 		'status': 200,
+	# 	}
+	# else:
+	# 	return {
+	# 		'message':messages[404],
+	# 		'status': 404
+	# 		}
 @timed_lru_cache(60*5)
 def SibnetLink(sibnetid):
 	s = requests.Session()
@@ -241,11 +280,12 @@ def GetGenre(GenreUrl, page=None):
 			return {"message": messages['error_page_number'], 'status': 400}
 		Url+=f'/page/{page}/'
 	return GetTitles(Url)
-def GetTitles(Url):
-	response = requests.get(Url, headers=headers)
-	response.encoding = 'utf8'
-	if response:
-		soup = BeautifulSoup(response.text, 'lxml')
+def GetTitles(Url, html=None):
+	if not html:
+		response = requests.get(Url, headers=headers)
+		response.encoding = 'utf8'
+	if html or response:
+		soup = BeautifulSoup(response.text if not html else html, 'lxml')
 		data = soup.select('.sect-content.sect-items > #dle-content')
 		if not data:
 			return 'Ошибка', 500
