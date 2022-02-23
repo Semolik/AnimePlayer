@@ -41,11 +41,11 @@ class Header extends React.Component {
 				// чтобы не перехватывать исключения из ошибок в самих компонентах.
 				(error) => {
 					this.setState({
-					isLoaded: true,
-					error
+						isLoaded: true,
+						error
 					});
 				}
-				)
+			)
 	}
 	menuBtnChange() {
 		var sidebar = document.querySelector(".sidebar");
@@ -74,9 +74,9 @@ class Header extends React.Component {
 		// }
 		return <div className='genres'>{list}</div>;
 	}
-	submitForm (event) {
+	submitForm (event,service) {
 		event.preventDefault();
-		window.location.href=`/animevost/search/${decodeURIComponent(event.target.text.value)}`;
+		window.location.href=`/${service}/search/${decodeURIComponent(event.target.text.value)}`;
 	  }
 	render() {
 		const { error, isLoaded, items } = this.state;
@@ -122,9 +122,16 @@ class Header extends React.Component {
 							id="btn">
 						</i>
 						{/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
-						<form className='input-container' onSubmit={this.submitForm}>
-							<input type="text" name="text" className='search' placeholder='Введите название...'></input>
-						</form>
+						<Switch>
+                    		<Route path='/:service' render={
+								(props) => (
+									<form className='input-container' onSubmit={(event)=> this.submitForm(event, props.match.params.service)}>
+										<input type="text" name="text" className='search' placeholder='Введите название...'></input>
+									</form>
+								)
+							}/>
+						</Switch>
+						
 						
 					</div>
 				</header>

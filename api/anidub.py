@@ -73,7 +73,7 @@ def TitleRequest():
 @Module.route(ApiPath+'/'+ModulePath+'sibnet/<sibnetid>')
 def GetSibnetLink(sibnetid):
 	return SibnetLink(sibnetid)
-@Module.route(ApiPath+AnidubLink+'search',  methods = ['post'])
+@Module.route(ApiPath+ModulePath+'search',  methods = ['post'])
 def SearchRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("name")
@@ -90,9 +90,10 @@ def SearchRequest():
 
 @timed_lru_cache(60*60)
 def search(name, page):
-	response = requests.post(AnidubLink+'index.php?do=search',params={'story':name, 'result_from': page or 1, 'full_search': 0, 'search_start': 1, 'subaction':'search', 'do': 'search'}, headers=headers)
-	# response = AnimevostApiPost('search', {'name': name})
-	# if response:
+	print( page or 1)
+	response = requests.post(AnidubLink+'index.php?do=search',params={'story':name, 'result_from': 1, 'full_search': 0, 'search_start': page or 1, 'subaction':'search', 'do': 'search'}, headers=headers)
+	if response:
+		return GetTitles('', response.text)
 	# 	data = list()
 	# 	for i in response.get('data'):
 	# 		data.append(FormatingAnimevostResponse(i))
@@ -108,11 +109,11 @@ def search(name, page):
 	# 		},
 	# 		'status': 200,
 	# 	}
-	# else:
-	# 	return {
-	# 		'message':messages[404],
-	# 		'status': 404
-	# 		}
+	else:
+		return {
+			'message':messages[404],
+			'status': 404
+			}
 @timed_lru_cache(60*5)
 def SibnetLink(sibnetid):
 	s = requests.Session()
@@ -286,7 +287,7 @@ def GetTitles(Url, html=None):
 		response.encoding = 'utf8'
 	if html or response:
 		soup = BeautifulSoup(response.text if not html else html, 'lxml')
-		data = soup.select('.sect-content.sect-items > #dle-content')
+		data = soup.select('#dle-content')
 		if not data:
 			return 'Ошибка', 500
 		data = data[0]
@@ -316,7 +317,7 @@ def GetTitles(Url, html=None):
 			outdata.append(title_info)
 		pages = data.select('.navigation a')
 		return {
-			'status': response.status_code,
+			'status': 200,
 			'data': {
 				'data': outdata,
 				'pages': int(pages[-1].text) if pages else 1,
@@ -324,7 +325,7 @@ def GetTitles(Url, html=None):
 		}
 	else:
 		return {
-			'status': response.status_code,
+			'status': response.status_code if not html else 404,
 			'message': messages.get('not_response'),
 		}
 def FormatLinkList(a_tags, Split=None):
