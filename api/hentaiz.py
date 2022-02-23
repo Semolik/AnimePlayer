@@ -11,6 +11,7 @@ from utils.messages import messages
 from settings import headers
 from utils.plyr import PlyrSource
 
+ModuleTitle = "Hentaiz"
 ModulePath = 'hentaiz/'
 HentaizLink = 'https://hentaiz.org/'
 

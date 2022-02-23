@@ -23,7 +23,7 @@ AnimeVostPath = 'animevost/'
 AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
 AnimevostApiLink = "https://api.animevost.org/v1/"
-
+ModuleTitle = "Animevost"
 
 genres__ = {}
 Animevost = Blueprint(AnimeVostPath, __name__)
@@ -366,7 +366,8 @@ def search(name, page):
 		return {
 			'data': {
 				'data': data[page-1],
-				'pages': len(data),
+				# 'pages': len(data),
+				'pages': 2,
 			},
 			'status': 200,
 		}

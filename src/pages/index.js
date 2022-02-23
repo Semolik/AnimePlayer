@@ -5,7 +5,7 @@ import Pagination from '../components/Pagination/Pagination';
 import Title from '../components/Title/Title';
 import './index.css';
 import settings from '../settings';
-import services from '../services';
+// import services from '../services';
 // import { Route, Switch } from 'react-router-dom';
 import {
 	BrowserRouter as Router,
@@ -18,7 +18,6 @@ import {
 class ServicePage extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log(props);
 		this.state = {
 			error: null,
 			isLoaded: false,
@@ -38,10 +37,7 @@ class ServicePage extends React.Component {
 	componentDidMount() {
 		
 		if (this.state.page===undefined | this.state.page==='page'){
-			var service_data = services[this.state.service];
-			if (service_data){
-				document.title = service_data.title;
-			}
+
 			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
 				headers: {

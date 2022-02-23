@@ -16,7 +16,7 @@ from settings import headers
 ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
-
+ModuleTitle = "Anidub"
 
 Module = Blueprint(ModulePath, __name__)
 @Module.route(ApiPath+ModulePath,  methods = ['post'])

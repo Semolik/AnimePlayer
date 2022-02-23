@@ -19,51 +19,119 @@ class HomePage extends React.Component {
 		};
 	}
 	componentDidMount() {
-		var data = {};
-		Promise.all(Object.keys(services).map(key =>
-			fetch(`${settings.api}/${key}/`,{
-				method: 'post',
-				headers: {
-					'Accept': 'application/json, text/plain, */*',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify( {page: 1} ),
-			}).then(resp => {return resp.json()})
-			.then(json => {
-				return {
-					id: key,
-					title: services[key].title,
-					data: json.data
-				}})
-		))
-		.then(responses => {
-			this.setState({
-				isLoaded: true,
-				items: responses,
-			});
-		})
-		.catch(error => {
-				this.setState({
-					isLoaded: false,
-					error
-				});
-			});
-		fetch('https://shikimori.one/api/topics?forum=news&limit=30')
+		fetch(`${settings.api}/home`)
 		.then(res => res.json())
 		.then(
 			(result) => {
-				this.setState({
-					isShikimoriLoaded: true,
-					shikimori: result,
-				});
+				// Promise.all(Object.keys(result).map(key =>
+				// 	fetch(`${settings.api}/${key}/`,{
+				// 		method: 'post',
+				// 		headers: {
+				// 			'Accept': 'application/json, text/plain, */*',
+				// 			'Content-Type': 'application/json'
+				// 		},
+				// 		body: JSON.stringify( {page: 1} ),
+				// 	}).then(resp => {return resp.json()})
+				// 	.then(json => {
+				// 		return {
+				// 			id: key,
+				// 			title: result[key].title,
+				// 			data: json.data
+				// 		}})
+				// ))
+				// .then(responses => {
+				// 	this.setState({
+				// 		isLoaded: true,
+				// 		items: responses,
+				// 	});
+				// })
+				// .catch(error => {
+				// 		this.setState({
+				// 			isLoaded: false,
+				// 			error
+				// 		});
+				// 	});				Promise.all(Object.keys(result).map(key =>
+				// 	fetch(`${settings.api}/${key}/`,{
+				// 		method: 'post',
+				// 		headers: {
+				// 			'Accept': 'application/json, text/plain, */*',
+				// 			'Content-Type': 'application/json'
+				// 		},
+				// 		body: JSON.stringify( {page: 1} ),
+				// 	}).then(resp => {return resp.json()})
+				// 	.then(json => {
+				// 		return {
+				// 			id: key,
+				// 			title: result[key].title,
+				// 			data: json.data
+				// 		}})
+				// ))
+				// .then(responses => {
+				// 	this.setState({
+				// 		isLoaded: true,
+				// 		items: responses,
+				// 	});
+				// })
+				// .catch(error => {
+				// 		this.setState({
+				// 			isLoaded: false,
+				// 			error
+				// 		});
+				// 	});				Promise.all(Object.keys(result).map(key =>
+				// 		fetch(`${settings.api}/${key}/`,{
+				// 			method: 'post',
+				// 			headers: {
+				// 				'Accept': 'application/json, text/plain, */*',
+				// 				'Content-Type': 'application/json'
+				// 			},
+				// 			body: JSON.stringify( {page: 1} ),
+				// 		}).then(resp => {return resp.json()})
+				// 		.then(json => {
+				// 			return {
+				// 				id: key,
+				// 				title: result[key].title,
+				// 				data: json.data
+				// 			}})
+				// 	))
+				// 	.then(responses => {
+				// 		this.setState({
+				// 			isLoaded: true,
+				// 			items: responses,
+				// 		});
+				// 	})
+				// 	.catch(error => {
+				// 			this.setState({
+				// 				isLoaded: false,
+				// 				error
+				// 			});
+				// 		});
+				fetch('https://shikimori.one/api/topics?forum=news&limit=30')
+				.then(res => res.json())
+				.then(
+					(result) => {
+						this.setState({
+							isShikimoriLoaded: true,
+							shikimori: result,
+						});
+					},
+					(error) => {
+						this.setState({
+							isShikimoriLoaded: false,
+							error
+						});
+					}
+				);
+
 			},
+			// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
+			// чтобы не перехватывать исключения из ошибок в самих компонентах.
 			(error) => {
 				this.setState({
-					isShikimoriLoaded: false,
+					isLoaded: true,
 					error
 				});
 			}
-		);
+		)
 	}
 	render() {
 		const { error, isLoaded, items, shikimori, isShikimoriLoaded} = this.state;

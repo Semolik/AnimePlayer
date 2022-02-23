@@ -3,7 +3,6 @@ import './Header.css';
 
 import { Link } from 'react-router-dom';
 // import './NavigationBar.css';
-import services from '../../services';
 import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
 import { Route, Switch, useHistory} from 'react-router-dom';
@@ -51,7 +50,7 @@ class Header extends React.Component {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
 	}
-	LoadGenres(event, state){
+	LoadGenres(event){
 		var service_id = event.match.params.service;
 		console.log(service_id);
 		var list = new Array();
@@ -76,7 +75,7 @@ class Header extends React.Component {
 	}
 	submitForm (event,service) {
 		event.preventDefault();
-		window.location.href=`/${service}/search/${decodeURIComponent(event.target.text.value)}`;
+		window.location.href=`${service ? "/"+service: ""}/search/${decodeURIComponent(event.target.text.value)}`;
 	  }
 	render() {
 		const { error, isLoaded, items } = this.state;
@@ -96,14 +95,14 @@ class Header extends React.Component {
 										<div className="index"><span >Главная</span></div>
 									</Link>
 							</li>
-							{Object.keys(services).map((key) => (
+							{Object.keys(items).map((key) => (
 								<li key={key}>
 									<Link to={"/"+key} className='sidebar-item' onClick={this.menuBtnChange}>
 										{/* <img
 											src={service.icon}
 											alt={service.title}
 										/> */}
-										<span className="index">{services[key].title}</span>
+										<span className="index">{items[key].title}</span>
 									</Link>
 								</li>
 							))}
@@ -123,7 +122,7 @@ class Header extends React.Component {
 						</i>
 						{/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
 						<Switch>
-                    		<Route path='/:service' render={
+                    		<Route path='/:service?' render={
 								(props) => (
 									<form className='input-container' onSubmit={(event)=> this.submitForm(event, props.match.params.service)}>
 										<input type="text" name="text" className='search' placeholder='Введите название...'></input>

@@ -3,7 +3,6 @@ import './Pagination.css';
 import { Link } from 'react-router-dom';
 
 function Pagination (event){
-	console.log(event);
 	var liTags = [];
 	var url = event.url;
 	var params = event.props;
@@ -22,7 +21,7 @@ function Pagination (event){
 	}
 	if (page === totalPages && totalPages>3) {
 		beforePage = beforePage - 2;
-	} else if (page === totalPages - 1) {
+	} else if (page === totalPages - 1 && totalPages>2) {
 		beforePage = beforePage - 1;
 	}
 	if (page === 1  && totalPages>3) {
