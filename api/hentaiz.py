@@ -3,9 +3,9 @@ import requests
 import json
 from bs4 import BeautifulSoup
 from flask_restful import reqparse
-from flask import Blueprint
+from flask import Blueprint, send_from_directory
 from requests.utils import requote_uri
-from config import ApiPath
+from config import ApiPath, UPLOAD_FOLDER
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from settings import headers
@@ -81,7 +81,9 @@ def GenreRequest():
 			genre_data['data']['genre_name']=genre
 		return genre_data, genre_data.get('status')
 	return {'message': 'Жанр не найден', 'status': 404}, 404
-
+@Module.route(ApiPath+ModulePath+'icon')
+def icon():
+	return send_from_directory(UPLOAD_FOLDER, 'hentaiz.png')
 
 @timed_lru_cache(60*5)
 def GetVideoById(videoid, prelink):
