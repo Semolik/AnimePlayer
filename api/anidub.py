@@ -1,4 +1,6 @@
 import re
+from urllib import response
+from numpy import source
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -118,6 +120,32 @@ def search(name, page):
 			'status': 404
 			}
 @timed_lru_cache(60*5)
+def GetPlaylist(page_url,videourl):
+	session = requests.Session()
+	print(page_url)
+	response = session.get(AnidubLink+videourl, headers={'Referer': page_url})
+	if not response:
+		return
+	response = session.get(response.url, headers={'Referer': response.url.replace('index.php', 'video.php')})
+	if not response:
+		return
+	referer = next(re.finditer(r'refer = "(http.*?)"', response.text), None)
+	if not referer:
+		return
+	soup = BeautifulSoup(response.text, 'lxml')
+	player = soup.select('#hls-video')
+	if not player:
+		return
+	source = player[0].select('source')
+	response = session.get(AnidubLink+'player/'+source[0].get('src'), headers={'Referer': referer.group(1)})
+	if not response:
+		return
+	for i in response.text.split('RESOLUTION='):
+		splited = i.split('\n')
+		if len(splited)>=2 and '.m3u8' in splited[1]:
+			data = splited[:2]
+			print(data[0].split('x')[1], data[1])
+@timed_lru_cache(60*5)
 def SibnetLink(sibnetid):
 	s = requests.Session()
 	page_url = f'https://video.sibnet.ru/video{sibnetid}'
@@ -164,9 +192,9 @@ def AnidubMirrorLink():
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
 	response.encoding = 'utf8'
-	# with open('2.html', "w", encoding="utf-8") as f:
-	# 	f.write(response.text)
-	# 	f.close()
+	with open('2.html', "w", encoding="utf-8") as f:
+		f.write(response.text)
+		f.close()
 	if response:		
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
@@ -187,27 +215,43 @@ def GetTitleById(title_id):
 		series = dle_content[0].select('.fplayer.tabs-box > .tabs-b > .tabs-box > .tabs-sel')
 		if series:
 			out['series'] = {}
-			# out['series']['data'] = 
+			if title:
+				series_count = title[1].split(' [')[1].split(']')[0]
+				out['series']['info'] = [series_count[1:] if series_count[0]=='0' else series_count]
+		if len(series)>1:
 			sibnet_links = list()
 			for link in [i for i in series[1].select('span')]:
+				GetPlaylist(response.url, link.get('data'))
 				sibnet_links.append({
 					'link':'/'+ModulePath+'sibnet/'+link.get('data').split('=')[-1],
 					'name': link.text,
 					})
-				# response = requests.get(link.get('data'))
-				# if response:
-				# 	url = re.search(r'\/v\/.*\.mp4',response.text)
-				# 	if url:
-				# 		sibnet_links.append('https://video.sibnet.ru'+url.group(0))
+
 			first_sibnet = SibnetLink(sibnet_links[0]['link'].split('/')[-1])
 			name = sibnet_links[0]['name']
 			sibnet_links[0] = first_sibnet.get('data')
 			sibnet_links[0]['name'] = name
 			out['series']['data'] = sibnet_links
 			out['series']['direct_link']=False
-			if title:
-				series_count = title[1].split(' [')[1].split(']')[0]
-				out['series']['info'] = [series_count[1:] if series_count[0]=='0' else series_count]
+		# elif len(series)==1:
+		# 	links = list()
+		# 	for link in [i for i in series[0].select('span')]:
+		# 		links.append({
+		# 			'link': "/"+ModulePath+'playlist',
+		# 			'params': {
+		# 				'referer': response.url,
+		# 				'videourl': link.get('data'),
+		# 			},
+		# 			'name': link.text,
+
+		# 		})
+		# 	first_video = GetPlaylist(links[0]['params']['referer'], links[0]['params']['videourl'])
+		# 	if first_video:
+		# 		name = links[0]['name']
+		# 		links[0] = first_video.get('data')
+		# 		links[0]['name'] = name
+		# 		out['series']['data'] = links
+		# 		out['series']['direct_link']=False
 		year = dle_content[0].select('.fmeta.fx-row.fx-start > span > a')
 		for a in year:
 			href = a.get('href')

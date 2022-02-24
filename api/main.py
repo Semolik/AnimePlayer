@@ -5,7 +5,8 @@ import anidub
 import hentaiz
 from config import ApiPath
 import os
-app = Flask(__name__, static_url_path="/app",static_folder='../build')
+# app = Flask(__name__, static_url_path="/app",static_folder='../build')
+app = Flask(__name__, static_url_path="/app", static_folder='app')
 from flask_cors import CORS
 CORS(app)
 
@@ -37,7 +38,7 @@ def index():
         if module_data.get('status')==200:
             module_data = module_data.get('data')
             module_data['title'] = module.ModuleTitle
-            module_data['id'] = module.ModulePath
+            module_data['id'] = module.ModulePath.replace('/', '')
             module_data['icon'] = "/"+module.ModulePath.split('/')[0]+'/icon'
             data.append(module_data)
     return {'data' :data}
