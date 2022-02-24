@@ -2,16 +2,14 @@ import React from 'react';
 import './Header.css';
 
 import { Link } from 'react-router-dom';
-// import './NavigationBar.css';
 import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
-import { Route, Switch, useHistory} from 'react-router-dom';
+import { Route, Switch} from 'react-router-dom';
 class Header extends React.Component {
 	
 	constructor(props) {
 		super(props);
 		console.log(props);
-		// this.handleSubmit = this.handleSubmit.bind(this);
 		this.state = {
 			error: null,
 			isLoaded: false,
@@ -19,12 +17,6 @@ class Header extends React.Component {
 			props: props,
 		};
 	}
-	// handleSubmit = (event) => {
-	// 	event.preventDefault();
-	// 	var history = useHistory();
-	// 	console.log(event.target.text.value);
-	// 	history.push('/Userdashboard');
-	//   }
 	componentDidMount() {
 		fetch(`${settings.api}/services`)
 			.then(res => res.json())
@@ -36,8 +28,6 @@ class Header extends React.Component {
 						items: result
 					});
 				},
-				// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-				// чтобы не перехватывать исключения из ошибок в самих компонентах.
 				(error) => {
 					this.setState({
 						isLoaded: true,
@@ -53,7 +43,7 @@ class Header extends React.Component {
 	LoadGenres(event){
 		var service_id = event.match.params.service;
 		console.log(service_id);
-		var list = new Array();
+		var list = [];
 		if(this.state.items.hasOwnProperty(service_id)){
 			var genres = this.state.items[service_id].genres;
 			for (var genre_name in genres){
@@ -65,12 +55,6 @@ class Header extends React.Component {
 				}
 			}
 		}
-		// for (var button in buttons) {
-		// 	button.addEventListener('click', (e)=>{
-		// 		var genres_list = document.getElementById('genres');
-		// 		console.log(this.state.items);
-		// 	});
-		// }
 		return <div className='genres'>{list}</div>;
 	}
 	submitForm (event,service) {
@@ -120,7 +104,6 @@ class Header extends React.Component {
 							})}
 							id="btn">
 						</i>
-						{/* <Link to='/' className='header-brand'>{this.props.brand}</Link> */}
 						<Switch>
                     		<Route path='/:service?' render={
 								(props) => (
@@ -130,8 +113,6 @@ class Header extends React.Component {
 								)
 							}/>
 						</Switch>
-						
-						
 					</div>
 				</header>
 			);

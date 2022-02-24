@@ -7,14 +7,7 @@ import './index.css';
 import settings from '../settings';
 // import services from '../services';
 // import { Route, Switch } from 'react-router-dom';
-import {
-	BrowserRouter as Router,
-	Switch,
-	useLocation,
-	Route,
-	Link,
-	useParams
-  } from "react-router-dom";
+import {Switch,Route} from "react-router-dom";
 class ServicePage extends React.Component {
 	constructor(props) {
 		super(props);
@@ -214,7 +207,7 @@ class ServicePage extends React.Component {
 		return urlParams.get(name);
 	}
 	render() {
-		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
+		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber} = this.state;
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {

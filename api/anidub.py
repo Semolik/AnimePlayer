@@ -88,14 +88,13 @@ def SearchRequest():
 		return "Некорректная страница", 404
 	if not name:
 		return "Не передан параметр name", 400
-	return
+	return search(name, page)
 @Module.route(ApiPath+ModulePath+'icon')
 def icon():
 	return send_from_directory(UPLOAD_FOLDER, 'anidub.png')
 
 @timed_lru_cache(60*60)
 def search(name, page):
-	print( page or 1)
 	response = requests.post(AnidubLink+'index.php?do=search',params={'story':name, 'result_from': 1, 'full_search': 0, 'search_start': page or 1, 'subaction':'search', 'do': 'search'}, headers=headers)
 	if response:
 		return GetTitles('', response.text)
@@ -192,9 +191,9 @@ def AnidubMirrorLink():
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
 	response.encoding = 'utf8'
-	with open('2.html', "w", encoding="utf-8") as f:
-		f.write(response.text)
-		f.close()
+	# with open('2.html', "w", encoding="utf-8") as f:
+	# 	f.write(response.text)
+	# 	f.close()
 	if response:		
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
@@ -211,7 +210,9 @@ def GetTitleById(title_id):
 			out['en_title'] = title[1].split(' [')[0]
 		poster = dle_content[0].select('.fleft > .fposter > img')
 		if poster:
-			out['poster'] = AnidubMirrorLink()+poster[0].get('data-src')
+			poster = poster[0].get('data-src')
+			out['poster'] = (poster if 'http' in poster else AnidubMirrorLink()+poster)
+			
 		series = dle_content[0].select('.fplayer.tabs-box > .tabs-b > .tabs-box > .tabs-sel')
 		if series:
 			out['series'] = {}
@@ -221,11 +222,10 @@ def GetTitleById(title_id):
 		if len(series)>1:
 			sibnet_links = list()
 			for link in [i for i in series[1].select('span')]:
-				GetPlaylist(response.url, link.get('data'))
 				sibnet_links.append({
 					'link':'/'+ModulePath+'sibnet/'+link.get('data').split('=')[-1],
 					'name': link.text,
-					})
+				})
 
 			first_sibnet = SibnetLink(sibnet_links[0]['link'].split('/')[-1])
 			name = sibnet_links[0]['name']

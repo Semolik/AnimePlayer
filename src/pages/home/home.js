@@ -1,5 +1,4 @@
 import React from 'react';
-import services from '../../services';
 import './home.css';
 import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
@@ -161,7 +160,7 @@ class HomePage extends React.Component {
 					<div className='services'>
 						{items.map((el,key)=>{
 							return <Link className='service' key={key} to={"/"+el.id}>
-								<img src={settings.api+el.icon}/>
+									<img src={settings.api+el.icon} alt={el.id}/>
 								<div className='title'>{el.title}</div>
 							</Link>
 						})}
@@ -192,25 +191,13 @@ class HomePage extends React.Component {
 													var images = [...footer.querySelectorAll('img')];
 													console.log();
 													if (images.length > 0){
-														return <img src={images[0].attributes.src.nodeValue}/>;
+														return <img src={images[0].attributes.src.nodeValue} alt={el.topic_title}/>;
 													}
 												}
 											}()}
 										</div>
 										<div className="title">{el.topic_title}</div>
 									</a>
-							    {/* <div className='title'>{el.topic_title}</div> */}
-								// {function(){
-								// 	if (el.html_footer){
-								// 		var parser = new DOMParser();
-								// 		var footer = parser.parseFromString(el.html_footer, 'text/html');
-								// 		var images = [...footer.querySelectorAll('img')];
-								// 		if (images.length > 0){
-								// 			return <img src={images[0].attributes.src.nodeValue} />;
-								// 		}
-								// 	}
-								// }()}
-							// </a>
 						})}
 					</div>
 				</div> 

@@ -2,69 +2,9 @@ import React from 'react';
 import './Title.css';
 import { Link } from 'react-router-dom';
 import Plyr from 'plyr-react';
-import 'plyr-react/dist/plyr.css';
+// import 'plyr-react/dist/plyr.css';
 import settings from '../../settings';
-// function spliting(elements){
-// 	var out = new Array();
-// 	for (var i = 0; i<elements.length; i++){
-// 		out.push(elements[i]);
-// 		out.push(<div key={i*-1-1}>,&nbsp;</div>);
-// 	}
-// 	out.pop();
-// 	return out;
-// }
-// function Sourse(data){
-// 	return {
-// 		type: "video",
-// 		sources: [
-// 			{
-// 				src: data['hd'],
-// 				size: 720,
-// 			},
-// 			{
-// 				src: data['std'],
-// 				size: 480,
-// 			}
-// 		],
-// 		poster: data['preview'],
-// 	}
-// }
-function GetVideoUrl(url){
-	const geturl = fetch(settings.api+url)
-	.then(res => res.json())
-	.then(
-		(result) => {
-			if (result.status===200){
-				return result.data
-			} else {
-				console.log('Ошибка полуения ссылки на видео');
-			}
-		},
-		(error) => {
-			console.log('Ошибка получения ссылки на видео');
-		},
-	);
-	// var res = Promise.all([geturl]).then(values => { 
-	// 	return values[0]; 
-	// });
-	return geturl;
-	// alert(url);
-	// // return url;
-	// var req = new XMLHttpRequest();
-	// req.open('GET', settings.api+url, true);
-	// req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	// req.onload = function(){
-	// 	if (req.response != null) {
-	// 		var resp = JSON.parse(req.response);
-	// 		if (resp.status===200){
-	// 			console.log(resp.data);
-	// 			return resp.data
-	// 		}
-	// 	}
-		
-	// };
-	// req.send();
-}
+
 function Title(event) {
 	var data = event.data;
 	document.title = data.ru_title;
@@ -83,6 +23,7 @@ function Title(event) {
 	// console.log(GetVideoUrl(data.series.data[0]['link']));
 	return (
 		<div className='title-container'>
+			<link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
 			<div className='info-block'>
 				<h1 className='name ru-name'>{data.ru_title}</h1>
 				<h3 className='name en-name'>{data.en_title}</h3>

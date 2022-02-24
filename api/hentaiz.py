@@ -84,15 +84,32 @@ def GenreRequest():
 @Module.route(ApiPath+ModulePath+'icon')
 def icon():
 	return send_from_directory(UPLOAD_FOLDER, 'hentaiz.png')
-
+@Module.route(ApiPath+ModulePath+'search',  methods = ['post'])
+def SearchRequest():
+	parser = reqparse.RequestParser()
+	parser.add_argument("name")
+	parser.add_argument("page")
+	params = parser.parse_args()
+	name = params.get('name')
+	page = params.get('page')
+	if page and not page.isdigit():
+		return "Некорректная страница", 404
+	if not name:
+		return "Не передан параметр name", 400
+	return search(name, page)
+@timed_lru_cache(60*60)
+def search(name, page):
+	response = requests.post(HentaizLink+'index.php?do=search',params={'story':name, 'result_from': 1, 'full_search': 0, 'search_start': page or 1, 'subaction':'search', 'do': 'search'}, headers=headers)
+	if response:
+		return GetTitles('', response.text)
 @timed_lru_cache(60*5)
 def GetVideoById(videoid, prelink):
 	session = requests.Session()
 	player_url = f'https://hentaiz.xyz/hub/{prelink}/list{prelink[0]}.php?id='+videoid
 	response = session.get(player_url)
-	with open('video.html', "w", encoding="utf-8") as f:
-		f.write(response.text)
-		f.close()
+	# with open('video.html', "w", encoding="utf-8") as f:
+	# 	f.write(response.text)
+	# 	f.close()
 	if not response:
 		return {
 			'status': response.status_code,
@@ -177,11 +194,12 @@ def GetPage(page):
 			'message': messages.get('error_page_number'),
 		}
 	return GetTitles(HentaizLink+(f'page/{page}' if page else ''))
-def GetTitles(Url):
-	response = requests.get(Url, headers=headers)
-	response.encoding = 'utf8'
-	if response:
-		soup = BeautifulSoup(response.text, 'lxml')
+def GetTitles(Url, html=None):
+	if not html:
+		response = requests.get(Url, headers=headers)
+		response.encoding = 'utf8'
+	if html or response:
+		soup = BeautifulSoup(response.text if not html else html, 'lxml')
 		data = soup.select('#dle-content')
 		if not data:
 			return {
@@ -233,7 +251,7 @@ def GetTitles(Url):
 			outdata.append(title_info)
 		pages = data.select('.navigation a')
 		return {
-			'status': response.status_code,
+			'status': 200,
 			'data': {
 				'data': outdata,
 				'pages': int(pages[-1].text) if pages else 1,
@@ -241,7 +259,7 @@ def GetTitles(Url):
 		}
 	else:
 		return {
-			'status': response.status_code,
+			'status': response.status_code if not html else 404,
 			'message': messages.get('not_response'),
 		}
 @timed_lru_cache(60*60)
