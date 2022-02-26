@@ -32,10 +32,9 @@ class ServicePage extends React.Component {
 			var service_saved = localStorage.getItem('favorites');
 			if (!service_saved){
 				this.setState({
-					isLoaded: false,
-					error: {
-						message: 'Здесь появятся то что вы добавите в избранное'
-					}
+					isLoaded: true,
+					data: {},
+					page_type: 'favorites',
 				});
 				return;
 			}
