@@ -61,6 +61,7 @@ class ServicePage extends React.Component {
 				(result) => {
 					console.log(result);
 					if (result.status===200){
+						document.title = result.data.service_title
 						this.setState({
 							isLoaded: true,
 							data: result.data,

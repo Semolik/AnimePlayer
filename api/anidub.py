@@ -53,7 +53,7 @@ def GenreRequest():
 			if item[1]==genre:
 				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
 				if genre_data.get('data'):
-					genre_data['data']['genre_name']=item[0]
+					genre_data['data']['genre_name']=item[0].title()
 				return genre_data, genre_data.get('status')
 	if genre.isdigit() and len(genre)==4:
 		genre_data = GetGenre("xfsearch/year/"+genre, params.get('page'))
@@ -191,10 +191,10 @@ def AnidubMirrorLink():
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
 	response.encoding = 'utf8'
-	# with open('2.html', "w", encoding="utf-8") as f:
+	# with open('title.html', "w", encoding="utf-8") as f:
 	# 	f.write(response.text)
 	# 	f.close()
-	if response:		
+	if response:
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
 		if not dle_content:
@@ -273,6 +273,9 @@ def GetTitleById(title_id):
 					out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
 				if span_text=='Озвучивание:':
 					out['sound'] = [i.text for i in info_item.select('*')[1:]]
+		description = dle_content[0].select('.fdesc.clr.full-text')
+		if description:
+			out['description'] = description[0].text
 		out['service_title'] = ModuleTitle
 		return {
 			'status':200,
@@ -369,6 +372,7 @@ def GetTitles(Url, html=None):
 			'data': {
 				'data': outdata,
 				'pages': int(pages[-1].text) if pages else 1,
+				'service_title': ModuleTitle,
 			},
 		}
 	else:

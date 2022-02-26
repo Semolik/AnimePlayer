@@ -160,6 +160,7 @@ def GetPageData(page=None):
 		data.append(FormatingAnimevostResponse(i))
 	return {
 		'pages': respond.get('state').get('count')//size,
+		'service_title': ModuleTitle,
 		'data': data,
 	}
 def GenerateTitleResponse(response):
@@ -315,7 +316,7 @@ def GetTitles(Url):
 		pages = int(NavBar.select('a')[-1].text)
 		return {
 			'data': output,
-			'page': page,
+			# 'page': page,
 			'pages': pages if pages>=page else page,
 		}
 	else:
@@ -367,8 +368,7 @@ def search(name, page):
 		return {
 			'data': {
 				'data': data[page-1],
-				# 'pages': len(data),
-				'pages': 2,
+				'pages': len(data),
 			},
 			'status': 200,
 		}
@@ -435,7 +435,7 @@ def GenreRequest():
 				if genre_data.get('message'):
 					return {'message':genre_data.get('message'), 'status': 404}, 404
 				else:
-					genre_data['genre_name'] = item[0]
+					genre_data['genre_name'] = item[0].title()
 					return json.dumps({'data': genre_data, 'status': 200})
 	return {'message': 'Жанр не найден', 'status': 404}, 404
 # @Animevost.route(ApiPath+ModulePath+'schedule',  methods = ['post', 'get'])

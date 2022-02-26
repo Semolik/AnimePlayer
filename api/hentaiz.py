@@ -71,7 +71,7 @@ def GenreRequest():
 			if item[1]==genre:
 				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
 				if genre_data.get('data'):
-					genre_data['data']['genre_name']=item[0]
+					genre_data['data']['genre_name']=item[0].title()
 				return genre_data, genre_data.get('status')
 	if genre.isdigit() and len(genre)==4:
 		genre_data = GetGenre("xfsearch/"+genre+"+год", params.get('page'))
@@ -267,6 +267,9 @@ def GetTitleById(title_id):
 	response = requests.get(HentaizLink+title_id+'.html', headers=headers)
 	response.encoding = 'utf8'
 	if response:
+		# with open('title.html', "w", encoding="utf-8") as f:
+		# 	f.write(response.text)
+		# 	f.close()
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
 		if not dle_content:
@@ -281,6 +284,9 @@ def GetTitleById(title_id):
 		poster = dle_content[0].select('.fposter > img')
 		if poster:
 			out['poster'] = HentaizLink+poster[0].get('src').replace('\n', '')
+		description = dle_content[0].select('#fdesc')
+		if description:
+			out['description'] = description[0].text
 		series = dle_content[0].select('.tab_content > .tabs > .series-btn > .s-link')
 		if series:
 			out['series'] = {}
