@@ -263,7 +263,7 @@ class ServicePage extends React.Component {
 						<div className='cards-container'>
 							{Object.keys(data).map((service, index)=>{
 								console.log();
-								return Object.keys(data[service]).map((id, index2)=>{
+								return Object.keys(data[service]).filter(id => data[service][id].favorite===true).map((id, index2)=>{
 									console.log(data[service][id]);
 									console.log(id)
 									return <Card key={[index,index2].join('-')} data={{
