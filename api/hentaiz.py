@@ -374,6 +374,7 @@ def GetTitleById(title_id):
 	# 				out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
 	# 			if span_text=='Озвучивание:':
 	# 				out['sound'] = [i.text for i in info_item.select('*')[1:]]
+		out['service_title'] = ModuleTitle
 		return {
 			'status':200,
 			'data': out,

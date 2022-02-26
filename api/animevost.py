@@ -230,6 +230,7 @@ def GenerateTitleResponse(response):
 			data['shikimori']['image'] = image
 	else:
 		data['shikimori'] = None
+	data['service_title'] = ModuleTitle
 	return data
 @timed_lru_cache(60*60)
 def GetTitleById(title_id):

@@ -226,11 +226,11 @@ def GetTitleById(title_id):
 					'link':'/'+ModulePath+'sibnet/'+link.get('data').split('=')[-1],
 					'name': link.text,
 				})
-
 			first_sibnet = SibnetLink(sibnet_links[0]['link'].split('/')[-1])
-			name = sibnet_links[0]['name']
-			sibnet_links[0] = first_sibnet.get('data')
-			sibnet_links[0]['name'] = name
+			if first_sibnet.get('status')==200:
+				name = sibnet_links[0]['name']
+				sibnet_links[0] = first_sibnet.get('data')
+				sibnet_links[0]['name'] = name
 			out['series']['data'] = sibnet_links
 			out['series']['direct_link']=False
 		# elif len(series)==1:
@@ -273,6 +273,7 @@ def GetTitleById(title_id):
 					out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
 				if span_text=='Озвучивание:':
 					out['sound'] = [i.text for i in info_item.select('*')[1:]]
+		out['service_title'] = ModuleTitle
 		return {
 			'status':200,
 			'data': out,
@@ -347,7 +348,7 @@ def GetTitles(Url, html=None):
 		}
 		for title in titles:
 			th_in = title.select('.th-in')
-			poster = th_in[0].select('.th-img > img')[0].get('data-src')
+			poster = th_in[0].select('.th-img > img')[0].get('data-src').replace('thumbs/', '')
 			title_info = {
 				'poster': (poster if 'http' in poster else AnidubMirrorLink()+poster),
 				'id': LinkSplitter.join(th_in[0].get('href').split('/')[3:]).split('.')[0],#на конце кажой ссылки есть .html

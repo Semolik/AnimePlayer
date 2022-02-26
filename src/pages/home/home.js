@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import settings from '../../settings';
 import Card from '../../components/card/card';
+import HorizontalScroll from 'react-scroll-horizontal';
 class HomePage extends React.Component {
 	
 	constructor(props) {
@@ -34,7 +35,7 @@ class HomePage extends React.Component {
 				});
 			}
 		);
-		fetch('https://shikimori.one/api/topics?forum=news&limit=30')
+		fetch('https://shikimori.one/api/topics?forum=news&limit=29')
 		.then(res => res.json())
 		.then(
 			(result) => {
@@ -50,101 +51,6 @@ class HomePage extends React.Component {
 				});
 			}
 		);
-
-				// Promise.all(Object.keys(result).map(key =>
-				// 	fetch(`${settings.api}/${key}/`,{
-				// 		method: 'post',
-				// 		headers: {
-				// 			'Accept': 'application/json, text/plain, */*',
-				// 			'Content-Type': 'application/json'
-				// 		},
-				// 		body: JSON.stringify( {page: 1} ),
-				// 	}).then(resp => {return resp.json()})
-				// 	.then(json => {
-				// 		return {
-				// 			id: key,
-				// 			title: result[key].title,
-				// 			data: json.data
-				// 		}})
-				// ))
-				// .then(responses => {
-				// 	this.setState({
-				// 		isLoaded: true,
-				// 		items: responses,
-				// 	});
-				// })
-				// .catch(error => {
-				// 		this.setState({
-				// 			isLoaded: false,
-				// 			error
-				// 		});
-				// 	});				Promise.all(Object.keys(result).map(key =>
-				// 	fetch(`${settings.api}/${key}/`,{
-				// 		method: 'post',
-				// 		headers: {
-				// 			'Accept': 'application/json, text/plain, */*',
-				// 			'Content-Type': 'application/json'
-				// 		},
-				// 		body: JSON.stringify( {page: 1} ),
-				// 	}).then(resp => {return resp.json()})
-				// 	.then(json => {
-				// 		return {
-				// 			id: key,
-				// 			title: result[key].title,
-				// 			data: json.data
-				// 		}})
-				// ))
-				// .then(responses => {
-				// 	this.setState({
-				// 		isLoaded: true,
-				// 		items: responses,
-				// 	});
-				// })
-				// .catch(error => {
-				// 		this.setState({
-				// 			isLoaded: false,
-				// 			error
-				// 		});
-				// 	});				Promise.all(Object.keys(result).map(key =>
-				// 		fetch(`${settings.api}/${key}/`,{
-				// 			method: 'post',
-				// 			headers: {
-				// 				'Accept': 'application/json, text/plain, */*',
-				// 				'Content-Type': 'application/json'
-				// 			},
-				// 			body: JSON.stringify( {page: 1} ),
-				// 		}).then(resp => {return resp.json()})
-				// 		.then(json => {
-				// 			return {
-				// 				id: key,
-				// 				title: result[key].title,
-				// 				data: json.data
-				// 			}})
-				// 	))
-				// 	.then(responses => {
-				// 		this.setState({
-				// 			isLoaded: true,
-				// 			items: responses,
-				// 		});
-				// 	})
-				// 	.catch(error => {
-				// 			this.setState({
-				// 				isLoaded: false,
-				// 				error
-				// 			});
-				// 		});
-				
-
-		// 	},
-		// 	// Примечание: важно обрабатывать ошибки именно здесь, а не в блоке catch(),
-		// 	// чтобы не перехватывать исключения из ошибок в самих компонентах.
-		// 	(error) => {
-		// 		this.setState({
-		// 			isLoaded: true,
-		// 			error
-		// 		});
-		// 	}
-		// )
 	}
 	render() {
 		const { error, isLoaded, items, shikimori, isShikimoriLoaded} = this.state;
@@ -157,13 +63,19 @@ class HomePage extends React.Component {
 		} else {
 			return (
 				<div className='wrapper'>
-					<div className='services'>
-						{items.map((el,key)=>{
-							return <Link className='service' key={key} to={"/"+el.id}>
-									<img src={settings.api+el.icon} alt={el.id}/>
-								<div className='title'>{el.title}</div>
-							</Link>
-						})}
+					<div className='services' onWheel={(event) => {
+						 const delta = Math.max(-1, Math.min(1, (event.nativeEvent.wheelDelta || -event.nativeEvent.detail)))
+						 event.currentTarget.scrollLeft -= (delta * 10)
+						 event.preventDefault();
+					}}>
+						{/* <HorizontalScroll reverseScroll={true}> */}
+							{items.map((el,key)=>{
+								return <Link className='service' key={key} to={"/"+el.id}>
+										<img src={settings.api+el.icon} alt={el.id}/>
+									<div className='title'>{el.title}</div>
+								</Link>
+							})}
+						{/* </HorizontalScroll> */}
 					</div>
 					{items.map((service,key) =>{
 						return <div className='cards-container hide-cards' key={key}>

@@ -74,9 +74,14 @@ class Header extends React.Component {
 					<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
 					<div className="sidebar">
 						<div className="nav-list" >
+							<li key={-2}>
+									<Link to="/" className='sidebar-item' onClick={this.menuBtnChange}>
+										<div className="index"><span>Главная</span></div>
+									</Link>
+							</li>
 							<li key={-1}>
-									<Link to={"/"} className='sidebar-item' onClick={this.menuBtnChange}>
-										<div className="index"><span >Главная</span></div>
+									<Link to="/favorites" className='sidebar-item' onClick={this.menuBtnChange}>
+										<div className="index"><span>Избранное</span></div>
 									</Link>
 							</li>
 							{Object.keys(items).map((key) => (

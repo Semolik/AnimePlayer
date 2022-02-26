@@ -6,10 +6,22 @@ import Plyr from 'plyr-react';
 import settings from '../../settings';
 
 function Title(event) {
+	var id = event.id;
 	var data = event.data;
 	document.title = data.ru_title;
 	var service = event.service;
 	var player;
+	var service_saved_info = localStorage.getItem('favorites');
+	var favorite = false;
+	if (service_saved_info){
+		service_saved_info = JSON.parse(service_saved_info);
+		if (service_saved_info[service]){
+			if (service_saved_info[service][id]){
+				var favorite = true;
+			}
+			
+		}
+	}
 	// var saved = localStorage.saved;
 	// var saved_data;
 	// if (saved!==undefined){
@@ -30,7 +42,34 @@ function Title(event) {
 				<div className='box'>
 					<div className='flex w-100 margin-bottom'>
 						<div className='column'>
-							<img className='poster' src={data.poster} alt={data.ru_title}></img>
+							<div className="title-poster-container">
+								<img className='poster' src={data.poster} alt={data.ru_title}></img>
+								<div className='block button favorites' onClick={(event)=> {
+									var service_saved = localStorage.getItem('favorites');
+									if (!service_saved){
+										service_saved = {}
+									} else {
+										service_saved = JSON.parse(service_saved);
+									}
+									if (!service_saved[service]){
+										service_saved[service] = {}
+									}
+									var favorite = document.getElementById('favorite');
+									if (service_saved[service][id]){
+										delete service_saved[service][id];
+										favorite.classList.remove('active');
+									} else {
+										service_saved[service][id] = {
+											ru_title: data.ru_title,
+											en_title: data.en_title,
+											poster: data.poster,
+											service_title: data.service_title,
+										};
+										favorite.classList.add('active');
+									}
+									localStorage['favorites'] = JSON.stringify(service_saved);
+								}}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id = "favorite" className={(favorite? "active": "")}><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg></div>
+							</div>
 							{/* {data.genre && 
 								<div className='genres'>{data.genre.map((element, key) =>{
 									return <Link className="genre" to={`/${service}/genre/${element[1]}`} key={key}>{element[0]}</Link>
@@ -62,10 +101,10 @@ function Title(event) {
 								</div>
 							}
 							{data.type && (data.type.length>1 ?
-								<Link className="block link" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
+								<Link className="block button" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
 							)}
 							{data.year && (data.year.length>1 ?
-								<Link className="block link" to={`/${service}/genre/${data.year[1]}`}><span>Год</span>{data.year[0]}</Link> : <div className='block'><span>Год</span>{data.year[0]}</div>
+								<Link className="block button" to={`/${service}/genre/${data.year[1]}`}><span>Год</span>{data.year[0]}</Link> : <div className='block'><span>Год</span>{data.year[0]}</div>
 							)}
 							{data.director &&
 								<div className='block'>
@@ -87,7 +126,7 @@ function Title(event) {
 								// 		<span>★★★★★</span>
 								// 	</div>
 								// </div>
-								<a href={data.shikimori.url} className='block link' target="_blank" rel="noopener noreferrer">
+								<a href={data.shikimori.url} className='block button' target="_blank" rel="noopener noreferrer">
 									<span>Рейтинг</span>{data.shikimori.score}
 								</a>
 							}

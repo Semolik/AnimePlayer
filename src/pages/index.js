@@ -28,8 +28,25 @@ class ServicePage extends React.Component {
 	}
   
 	componentDidMount() {
-		
-		if (this.state.page===undefined | this.state.page==='page'){
+		if (this.state.service==="favorites"){
+			var service_saved = localStorage.getItem('favorites');
+			if (!service_saved){
+				this.setState({
+					isLoaded: false,
+					error: {
+						message: 'Здесь появятся то что вы добавите в избранное'
+					}
+				});
+				return;
+			}
+			service_saved = JSON.parse(service_saved);
+			this.setState({
+				isLoaded: true,
+				data: service_saved,
+				page_type: 'favorites',
+			});
+
+		} else if (this.state.page===undefined | this.state.page==='page'){
 
 			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
@@ -207,7 +224,7 @@ class ServicePage extends React.Component {
 		return urlParams.get(name);
 	}
 	render() {
-		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber} = this.state;
+		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -227,9 +244,9 @@ class ServicePage extends React.Component {
 						<Pagination totalPages={data.pages} page={id===undefined ? 1 : id} url={`/${service}/page/`}/>
 					}
 					{page_type==='search' &&
-					<Switch>
-						<Route path='/:service/:search?/:text?/:page?' component={(event)=> <Pagination props={event} totalPages={data.pages} page={PageType || 1} url={`/${service}/search/?text=${this.getParameterByName('text')}&page=`}/>}/>
-					</Switch>
+						<Switch>
+							<Route path='/:service/:search?/:text?/:page?' component={(event)=> <Pagination props={event} totalPages={data.pages} page={PageType || 1} url={`/${service}/search/?text=${this.getParameterByName('text')}&page=`}/>}/>
+						</Switch>
 						
 					}
 					
@@ -238,8 +255,27 @@ class ServicePage extends React.Component {
 		} else if (page_type==='title'){
 			return (
 				<div className='wrapper'>
-					<Title data={data} service={service}></Title>
+					<Title data={data} service={service} id={page}></Title>
 				</div>
+			)
+		}else if (page_type==='favorites') {
+			return (<div className='wrapper'>
+						<div className='cards-container'>
+							{Object.keys(data).map((service, index)=>{
+								console.log();
+								return Object.keys(data[service]).map((id, index2)=>{
+									console.log(data[service][id]);
+									console.log(id)
+									return <Card key={[index,index2].join('-')} data={{
+										id: id,
+										poster: data[service][id].poster,
+										ru_title: data[service][id].ru_title,
+										info_blocks: [data[service][id].service_title],
+									}} service={{id: service}}></Card>
+								})
+							})}
+						</div>
+					</div>
 			)
 		}
 	}
