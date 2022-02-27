@@ -38,8 +38,8 @@ function Pagination (event){
 		}
 		liTags.push(<Link className={`numb${page === plength ? ' active' : ''}`} to={params!==undefined? `/${params.service}/search/${params.text}/${plength}`:url+plength} key={url+plength}><span>{plength}</span></Link>);
 	}
-	if(page < totalPages - 1){
-		liTags.push(<Link className="last numb" to={params!==undefined? `/${params.service}/search/${params.text}/${totalPages}`:url+totalPages} key={url+totalPages+'last'}><span>{totalPages}</span></Link>);
+	if(page < totalPages - 1 || page === totalPages + 1){
+		liTags.push(<Link className={"last numb "+(page === totalPages + 1? ' active' : '')} to={params!==undefined? `/${params.service}/search/${params.text}/${totalPages}`:url+totalPages} key={url+totalPages+'last'}><span>{(page === totalPages + 1? totalPages+1 :totalPages)}</span></Link>);
 	}
 	
 	if (page < totalPages) { //show the next button if the page value is less than totalPage(20)

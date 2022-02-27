@@ -7,10 +7,10 @@ from bs4 import BeautifulSoup
 from lxml import etree
 from flask_restful import reqparse
 from flask import Blueprint, send_from_directory
-from requests.utils import requote_uri
-from config import ApiPath, UPLOAD_FOLDER
+from config import ApiPath, UPLOAD_FOLDER,ShikimoriLink
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
+from utils.shikimori import SearchOnShikimori
 from shikimori_api import Shikimori
 import re
 from settings import headers
@@ -18,7 +18,7 @@ from settings import headers
 
 shikimori_session = Shikimori()
 shikimori_api = shikimori_session.get_api()
-ShikimoriLink = 'https://shikimori.one/'
+
 ModulePath = 'animevost/'
 AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
@@ -100,20 +100,7 @@ def AnimevostApiPost(method, payload={}):
 	respond = requests.post(AnimevostApiLink+method,data=payload)
 	if respond:
 		return respond.json()
-def SearchOnShikimori(name, kind):
-	response = requests.get(f'https://shikimori.one/animes/autocomplete/v2?search={requote_uri(name)}', headers=headers)
-	if response:
-		soup = BeautifulSoup(response.text, 'lxml')
-		titles = soup.find_all('div', class_='b-db_entry-variant-list_item')
-		if titles:
-			for title in titles:
-				if not kind:
-					return title.get('data-id')
-				tags = title.select('.b-tag.linkeable')
-				if tags:
-					if tags[0].get('data-href') == ShikimoriLink+'animes/kind/'+kind:
-						return title.get('data-id')
-			return titles[0].get('data-id')
+
 def FormatingAnimevostResponse(response_item):
 	text = response_item.get('title')
 	title = text.replace('\\"', '"')
@@ -311,9 +298,9 @@ def GetTitles(Url):
 					title['current'] = current
 			title['count'] = count
 			output.append(title)
-		NavBar = soup.find(class_='block_4')
-		page = int([i for i in NavBar.select('span') if i.text.isdigit()][0].text)
-		pages = int(NavBar.select('a')[-1].text)
+		NavBar = soup.find_all(class_='block_4')
+		page = int([i for i in NavBar.select('span') if i.text.isdigit()][0].text) if NavBar else 1
+		pages = int(NavBar.select('a')[-1].text) if NavBar else 1
 		return {
 			'data': output,
 			# 'page': page,

@@ -84,17 +84,23 @@ class Header extends React.Component {
 										<div className="index"><span>Избранное</span></div>
 									</Link>
 							</li>
-							{Object.keys(items).map((key) => (
-								<li key={key}>
-									<Link to={"/"+key} className='sidebar-item' onClick={this.menuBtnChange}>
-										{/* <img
-											src={service.icon}
-											alt={service.title}
-										/> */}
-										<span className="index">{items[key].title}</span>
-									</Link>
-								</li>
-							))}
+							<Switch>
+								<Route path='/:service?' render={
+									(props) => (
+										Object.keys(items).map((key) => (
+											<li key={key}>
+												<Link to={"/"+key} className={'sidebar-item'+(props.match.params.service===key? " active": "")} onClick={this.menuBtnChange}>
+													{/* <img
+														src={service.icon}
+														alt={service.title}
+													/> */}
+													<span className="index">{items[key].title}</span>
+												</Link>
+											</li>
+										))
+									)}>
+								</Route>
+							</Switch>
 							<Switch>
                     			<Route path='/:service' component={(event)=> this.LoadGenres(event, this.state)}/>
 							</Switch>

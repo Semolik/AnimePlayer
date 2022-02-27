@@ -1,4 +1,5 @@
 import re
+from numpy import block
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -255,6 +256,7 @@ def GetTitles(Url, html=None):
 			'data': {
 				'data': outdata,
 				'pages': int(pages[-1].text) if pages else 1,
+				'service_title': ModuleTitle,
 			},
 		}
 	else:
@@ -278,9 +280,13 @@ def GetTitleById(title_id):
 				'message': messages.get('error_parce')
 			}
 		out = {}
-		title = dle_content[0].select('.fmain > .fheader > h1')
+		title = soup.find("meta", property="og:title")
 		if title:
-			out['ru_title'] = title[0].text
+			out['ru_title'] = title.get('content')
+		else:
+			title = dle_content[0].select('.fmain > .fheader > h1')
+			if title:
+				out['ru_title'] = title[0].text
 		poster = dle_content[0].select('.fposter > img')
 		if poster:
 			out['poster'] = HentaizLink+poster[0].get('src').replace('\n', '')
@@ -309,77 +315,42 @@ def GetTitleById(title_id):
 			out['series']['info'] = list()
 		fmright = dle_content[0].select('.fmright')
 		if fmright:
-			tags_data = list()
+			blocks = list()
 			for items_container in fmright[0].select('.flist > .flist-col > .vis'):
-				items = items_container.select('span')
-				
-				value = [items[0].text]
+				items = items_container.select('* > span')
+				value = list()
+				if not items:
+					continue
 				if len(items)==1:
-					value.append([items[0].next_sibling])
+					text_in_tag = items[0].text
+					text_after_tag = ' '.join(items[0].next_sibling.split())
+					if text_in_tag == 'Эпизоды:':
+						out['series']['info'] = [text_after_tag]
+						continue
+					else:
+						value.append(text_in_tag)
+						value.append([text_after_tag])
 				else:
 					text = list()
+					value.append(items.pop(0).text)
+					print(value[0])
 					for tag in items:
-						a = tag.select('a')
-						if a:
-							value.append([a[0].text,a[0].get('href')])
+						if value[0] == "Жанры:":
+							a = tag.select('a')
+							if a:
+								text.append([a[0].text, a[0].get('href').split('/')[-2]])
+							else:
+								text.append([tag.text])
 						else:
-							textintags = [i.text for i in tag.select('*')]
-							# print(textintags)
-							if text:
-								value.append([' '.join(textintags)])
-						# print(first_child)
-					# 	if first_child and first_child.attri.get('href') is not None:
-					# 		text.append([first_child.text,first_child.get('href')])
-					# 	else:
-					# 		text.append([first_child.text])
-				tags_data.append(value)
-				# print(tags_data)
-			# if out.get('series'):
-			# 	out['series']['info'] = ['']
-
-
-	# 		# out['series']['data'] = 
-	# 		sibnet_links = list()
-	# 		for link in [i for i in series[1].select('span')]:
-	# 			sibnet_links.append({
-	# 				'link':'/'+ModulePath+'sibnet/'+link.get('data').split('=')[-1],
-	# 				'name': link.text,
-	# 				})
-	# 			# response = requests.get(link.get('data'))
-	# 			# if response:
-	# 			# 	url = re.search(r'\/v\/.*\.mp4',response.text)
-	# 			# 	if url:
-	# 			# 		sibnet_links.append('https://video.sibnet.ru'+url.group(0))
-	# 		first_sibnet = SibnetLink(sibnet_links[0]['link'].split('/')[-1])
-	# 		name = sibnet_links[0]['name']
-	# 		sibnet_links[0] = first_sibnet.get('data')
-	# 		sibnet_links[0]['name'] = name
-	# 		out['series']['data'] = sibnet_links
-	# 		out['series']['direct_link']=False
-	# 		if title:
-	# 			series_count = title[1].split(' [')[1].split(']')[0]
-	# 			out['series']['info'] = [series_count[1:] if series_count[0]=='0' else series_count]
-	# 	year = dle_content[0].select('.fmeta.fx-row.fx-start > span > a')
-	# 	for a in year:
-	# 		href = a.get('href')
-	# 		if '/year/' in href:
-	# 			out['year'] = [a.text, href.split('/')[-2]]
-	# 	short_info = dle_content[0].select('ul.flist > li.short-info')
-	# 	for info_item in short_info:
-	# 		span = info_item.find('span')
-	# 		if span:
-	# 			span_text = span.text
-	# 			if span_text=='Жанр:':
-	# 				data = info_item.select('a')
-	# 				out['genre'] = FormatLinkList(data, Split=[-2,-1])
-	# 			if span_text=='Количество серий:':
-	# 				out['series_coutnt'] = span.next_sibling
-	# 			if span_text=='Режиссер:':
-	# 				out['director'] = ', '.join([i.text for i in info_item.select('*')[1:]])
-	# 			if span_text=='Автор оригинала:':
-	# 				out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
-	# 			if span_text=='Озвучивание:':
-	# 				out['sound'] = [i.text for i in info_item.select('*')[1:]]
+							text_in_tag = tag.text
+							if text_in_tag:
+								text.append(text_in_tag)
+					value.append(text)
+				if value[0] == "Жанры:":
+					out['genre'] =  value[1]
+					continue
+				blocks.append(value)
+			out['blocks'] = blocks
 		out['service_title'] = ModuleTitle
 		return {
 			'status':200,
