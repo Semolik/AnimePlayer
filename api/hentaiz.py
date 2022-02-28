@@ -294,8 +294,8 @@ def GetTitleById(title_id):
 		if description:
 			out['description'] = description[0].text
 		series = dle_content[0].select('.tab_content > .tabs > .series-btn > .s-link')
+		out['series'] = {}
 		if series:
-			out['series'] = {}
 			out_series = list()
 			for i in series:
 				if 'vip.php' not in i.get('data-src'):
@@ -312,7 +312,6 @@ def GetTitleById(title_id):
 				first['name'] = out_series[0]['name']
 				out['series']['data'][0] = first
 			out['series']['direct_link']=False
-			out['series']['info'] = list()
 		fmright = dle_content[0].select('.fmright')
 		if fmright:
 			blocks = list()
@@ -324,16 +323,30 @@ def GetTitleById(title_id):
 				if len(items)==1:
 					text_in_tag = items[0].text
 					text_after_tag = ' '.join(items[0].next_sibling.split())
-					if text_in_tag == 'Эпизоды:':
+					if text_in_tag == "Релиз от:":
+						numbs = next(re.finditer(r"\d{4}", text_after_tag), None)
+						if numbs:
+							numb = numbs.group(0)
+							genres = GetGenres()
+							for key, val in genres.items():
+								for item in val['links']:
+									if item[1]==str(numb):
+										out['year'] = [numb]*2
+							if not out.get('year'):
+								out['year'] = [numb]
+							continue
+					elif text_in_tag == 'Эпизоды:':
 						out['series']['info'] = [text_after_tag]
 						continue
-					else:
-						value.append(text_in_tag)
-						value.append([text_after_tag])
+
+					value.append(text_in_tag)
+					value.append([text_after_tag])
 				else:
 					text = list()
-					value.append(items.pop(0).text)
-					print(value[0])
+					tag_name = items.pop(0).text
+					if tag_name == "Жанры:":
+						items.pop(0)
+					value.append(tag_name)
 					for tag in items:
 						if value[0] == "Жанры:":
 							a = tag.select('a')

@@ -191,9 +191,9 @@ def AnidubMirrorLink():
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
 	response.encoding = 'utf8'
-	# with open('title.html', "w", encoding="utf-8") as f:
-	# 	f.write(response.text)
-	# 	f.close()
+	with open('title.html', "w", encoding="utf-8") as f:
+		f.write(response.text)
+		f.close()
 	if response:
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
@@ -259,8 +259,11 @@ def GetTitleById(title_id):
 				out['year'] = [a.text, href.split('/')[-2]]
 		short_info = dle_content[0].select('ul.flist > li.short-info')
 		for info_item in short_info:
+			# print(info_item)
 			span = info_item.find('span')
 			if span:
+				print(span.next_element)
+				print(dir(span))
 				span_text = span.text
 				if span_text=='Жанр:':
 					data = info_item.select('a')

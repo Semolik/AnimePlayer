@@ -130,6 +130,12 @@ function Title(event) {
 									<span>Длительность эпизода</span>{data.shikimori.duration} мин.
 								</div>
 							}
+							{data.type && (data.type.length>1 ?
+								<Link className="block button" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
+							)}
+							{data.year && (data.year.length>1 ?
+								<Link className="block button" to={`/${service}/genre/${data.year[1]}`}><span>Год</span>{data.year[0]}</Link> : <div className='block'><span>Год</span>{data.year[0]}</div>
+							)}
 							{data.blocks && data.blocks.map((block,key)=>{
 								return block.length===2 ? 
 									<div className='block' key={key}>
@@ -138,12 +144,7 @@ function Title(event) {
 									<Link className="block button" to={block[2]} key={key}><span>{block[0]}</span>{block[1]}</Link>
 							})}
 							
-							{data.type && (data.type.length>1 ?
-								<Link className="block button" to={`/${service}/genre/${data.type[1]}`}><span>Тип</span>{data.type[0]}</Link> : <div className='block'><span>Тип</span>{data.type[0]}</div>
-							)}
-							{data.year && (data.year.length>1 ?
-								<Link className="block button" to={`/${service}/genre/${data.year[1]}`}><span>Год</span>{data.year[0]}</Link> : <div className='block'><span>Год</span>{data.year[0]}</div>
-							)}
+							
 							{/* {data.director &&
 								<div className='block'>
 									<span>Режиссёр</span>{data.director}
