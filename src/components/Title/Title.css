@@ -22,6 +22,11 @@
     margin-top: 2rem;
 }
 
+.info-block .box .flex .related-container {
+    justify-content: left;
+    padding-top: 1rem;
+}
+
 .info-block .box .flex {
     flex-direction: column;
     padding-left: 1rem;

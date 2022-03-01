@@ -147,15 +147,7 @@ def GetGenres():
 	years = requests.get(HentaizLink+'years.html', headers=headers)
 	genres.encoding = 'utf8'
 	years.encoding = 'utf8'
-	# print(years.status_code)
-	# print(genres.status_code)
-	if years and years:
-		# with open('genres.html', "w", encoding="utf-8") as f:
-		# 	f.write(genres.text)
-		# 	f.close()
-		# with open('years.html', "w", encoding="utf-8") as f:
-		# 	f.write(years.text)
-		# 	f.close()
+	if years and genres:
 		soup_genres = BeautifulSoup(genres.text, 'lxml')
 		soup_years = BeautifulSoup(years.text, 'lxml')
 		data_genres = soup_genres.select('#dle-content')

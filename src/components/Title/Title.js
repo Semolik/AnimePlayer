@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Plyr from 'plyr-react';
 // import 'plyr-react/dist/plyr.css';
 import settings from '../../settings';
+import Card from '../card/card';
 
 function Save(service,id,data, series=null){
 	var service_saved = localStorage.getItem('favorites');
@@ -225,6 +226,16 @@ function Title(event) {
 									})}
 								</div>
 
+							</div>
+						</div>
+					}
+					{data.related && 
+						<div className='flex w-100 margin-bottom'>
+							<div className='service-title'>Рекомендуемые</div>
+							<div className='cards-container hide-cards related-container'>
+								{data.related.map((el,index)=>{
+									return <Card data={el} service={{id:service}} key={index}/>
+								})}
 							</div>
 						</div>
 					}

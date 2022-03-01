@@ -191,9 +191,9 @@ def AnidubMirrorLink():
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
 	response.encoding = 'utf8'
-	with open('title.html', "w", encoding="utf-8") as f:
-		f.write(response.text)
-		f.close()
+	# with open('title.html', "w", encoding="utf-8") as f:
+	# 	f.write(response.text)
+	# 	f.close()
 	if response:
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
@@ -208,11 +208,40 @@ def GetTitleById(title_id):
 			title = title[0].text.split('/')
 			out['ru_title'] = title[0]
 			out['en_title'] = title[1].split(' [')[0]
-		poster = dle_content[0].select('.fleft > .fposter > img')
-		if poster:
-			poster = poster[0].get('data-src')
-			out['poster'] = (poster if 'http' in poster else AnidubMirrorLink()+poster)
-			
+		fleft = dle_content[0].select('.fleft')
+		if fleft:
+			poster = dle_content[0].select('.fposter > img')
+			if poster:
+				poster = poster[0].get('data-src')
+				out['poster'] = (poster if 'http' in poster else AnidubMirrorLink()+poster)
+			related_list = list()
+			related = dle_content[0].select('.related > .th-item')
+			if related:
+				for i in related:
+					related_data = {}
+					th_in = i.select('a.th-in')
+					href = th_in[0].get('href')
+					if not th_in or '/anime/' not in href:
+						continue
+					related_poster = i.select('img')
+					if related_poster:
+						related_poster = related_poster[0].get('data-src').replace('/small/', '/')
+						related_data['poster'] = (related_poster if 'http' in related_poster else AnidubMirrorLink()+related_poster)
+					related_title = i.select('.th-title')
+					if related_title:
+						related_data['ru_title'] = related_title[0].text
+					related_data['id'] = LinkSplitter.join(href.split('/')[3:]).split('.')[0]
+					# related_subtitle = i.select('.th-subtitle > span')
+					# if related_subtitle and related_subtitle[0].text:
+					# 	related_subtitle = related_subtitle[0].text
+					# 	related_subtitle_list = related_subtitle.split('[', maxsplit=1)
+					# 	if len(related_subtitle_list)==2:
+					# 		related_data['en_title'] = related_subtitle_list[0]
+					# 	else:
+					# 		related_data['en_title'] = related_subtitle
+					related_list.append(related_data)
+				if related_list:
+					out['related'] = related_list
 		series = dle_content[0].select('.fplayer.tabs-box > .tabs-b > .tabs-box > .tabs-sel')
 		if series:
 			out['series'] = {}
@@ -253,29 +282,33 @@ def GetTitleById(title_id):
 		# 		out['series']['data'] = links
 		# 		out['series']['direct_link']=False
 		year = dle_content[0].select('.fmeta.fx-row.fx-start > span > a')
-		for a in year:
-			href = a.get('href')
-			if '/year/' in href:
-				out['year'] = [a.text, href.split('/')[-2]]
+		if year:
+			for a in year:
+				href = a.get('href')
+				if '/year/' in href:
+					out['year'] = [a.text, href.split('/')[-2]]
 		short_info = dle_content[0].select('ul.flist > li.short-info')
-		for info_item in short_info:
-			# print(info_item)
-			span = info_item.find('span')
-			if span:
-				print(span.next_element)
-				print(dir(span))
-				span_text = span.text
-				if span_text=='Жанр:':
-					data = info_item.select('a')
-					out['genre'] = FormatLinkList(data, Split=[-2,-1])
-				if span_text=='Количество серий:':
-					out['series_coutnt'] = span.next_sibling
-				if span_text=='Режиссер:':
-					out['director'] = ', '.join([i.text for i in info_item.select('*')[1:]])
-				if span_text=='Автор оригинала:':
-					out['original_author'] = ', '.join([i.text for i in info_item.select('*')[1:]])
-				if span_text=='Озвучивание:':
-					out['sound'] = [i.text for i in info_item.select('*')[1:]]
+		# with open('3.html', "w", encoding="utf-8") as f:
+		# 	f.write(str(short_info))
+		# 	f.close()
+		blocks = list()
+		if short_info:
+			for info_item in short_info:
+				# print(info_item)
+				if info_item:
+					text = list(filter(None, [' '.join(i.text.split()) for i in info_item.children]))
+					if not text or text[0] in ('Ссылка на трекер:', 'Количество серий:'):
+						continue
+					if 'Жанр:' == text[0]:
+						data = info_item.select('a')
+						out['genre'] = FormatLinkList(data, Split=[-2,-1])
+						continue
+					text[0] = text[0].replace(':', '')
+					if len(text)>2:
+						blocks.append([text.pop(0),', '.join([i for i in text if i !=','])])
+					else:
+						blocks.append(text)
+		out['blocks'] = blocks
 		description = dle_content[0].select('.fdesc.clr.full-text')
 		if description:
 			out['description'] = description[0].text
