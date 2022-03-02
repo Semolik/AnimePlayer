@@ -20,6 +20,9 @@ function Card(item){
                         })
                     }
                 </div>
+                {data.series &&
+                    <div className="series-info">{data.series}</div>
+                }
                 <img src={data.poster} alt={data.ru_title}></img>
             </div>
             <div className="title">{data.ru_title}</div>

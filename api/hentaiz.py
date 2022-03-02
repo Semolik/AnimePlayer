@@ -217,15 +217,27 @@ def GetTitles(Url, html=None):
 				'poster': img if img.startswith('//') else HentaizLink+img,
 				'announce': bool(imgbox[0].select('.announce .announce-new')),
 				'ongoing': bool(imgbox[0].select('.announce .announce-ongoing')),
-				'info_blocks': [i.text for i in imgbox[0].select('.short-meta.short-label') if i.text],
+				
 			}
-			orgtitle = title.select('.sh-orgtitle')
-			if orgtitle:
-				year = orgtitle[0].text
-				if year[0]=='(' and year[-1]==')':
-					title_info['year'] = year[1:-1] # может быть несколько лет через тире по этому не int
-				if len(orgtitle)>1:
-					title_info['genre'] = [i.text for i in orgtitle[1].select('a')]
+			info_blocks = list()
+			for i in imgbox[0].select('.short-meta.short-label'):
+				if not i.text:
+					continue
+				if 'sl-y' in i.get('class'):
+					title_info['series'] = i.text
+				else:
+					info_blocks.append(i.text)
+			if info_blocks:
+				title_info['info_blocks'] = info_blocks
+			# info_blocks = [i.text  if i.text]
+			
+			# orgtitle = title.select('.sh-orgtitle')
+			# if orgtitle:
+			# 	year = orgtitle[0].text
+			# 	if year[0]=='(' and year[-1]==')':
+			# 		title_info['year'] = year[1:-1] # может быть несколько лет через тире по этому не int
+			# 	if len(orgtitle)>1:
+			# 		title_info['genre'] = [i.text for i in orgtitle[1].select('a')]
 		# 	th_in = title.select('.th-in')
 		# 	poster = th_in[0].select('.th-img > img')[0].get('data-src')
 		# 	title_info = {
@@ -261,9 +273,7 @@ def GetTitleById(title_id):
 	response = requests.get(HentaizLink+title_id+'.html', headers=headers)
 	response.encoding = 'utf8'
 	if response:
-		# with open('title.html', "w", encoding="utf-8") as f:
-		# 	f.write(response.text)
-		# 	f.close()
+
 		soup = BeautifulSoup(response.text, 'lxml')
 		dle_content = soup.select('#dle-content')
 		if not dle_content:

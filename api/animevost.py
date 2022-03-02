@@ -115,18 +115,24 @@ def FormatingAnimevostResponse(response_item):
 		'genre' : response_item.get('genre').split(', '),
 		'announce': response_item.get('series')=='',
 	}
-	# series = text.split(" /")
-	# if len(series)>1:
-	# 	series = series[1].split("] [")
-	# 	if len(series)==1:
-	# 		series = series[0].split(' [')
-	# 		if len(series)>1:
-	# 			data['series'] = series[1][:-1]
-	# 	else:
-	# 		series[0] = series[0][1:]
-	# 		if len(series)>1:
-	# 			series[1] = series[1][:-1]
-	# 		data['series'] = series
+	# if response_item.get('series'):
+	# 	print(response_item.get('series'))
+	# 	series = json.loads(response_item.get('series').replace("\'", "\""))
+	# 	if len(series)>1:
+	# 		keys = list(series.keys())
+	# 		print(keys)
+	# 		data['series'] = f'{keys[0]} - {keys[-1]}'
+	series = text.split(" /")
+	if len(series)>1:
+		series = series[1].split("] [")
+		if len(series)==1:
+			series = series[0].split(' [')
+			if len(series)>1:
+				data['series'] = series[1][:-1]
+		elif series:
+			series = series[0].split(' [')
+			if len(series)>1:
+				data['series'] = series[1]
 	return data
 	
 @timed_lru_cache(60*10)
@@ -271,6 +277,7 @@ def GetTitles(Url):
 	response = requests.get(Url)
 	if response:
 		soup = BeautifulSoup(response.text, 'lxml')
+		
 		titles = soup.find_all('div', class_='shortstory')
 		if not titles:
 			return {"message":messages[404]}

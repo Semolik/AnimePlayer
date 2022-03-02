@@ -63,6 +63,11 @@
     line-height: 30px;
 }
 
+
+/* .info-block .column .genres {
+    grid-column: 2 / -1;
+} */
+
 .info-block .column .block {
     padding: 10px 1rem;
     border-radius: 0.5rem;
