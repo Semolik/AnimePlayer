@@ -244,7 +244,8 @@
     margin-top: 1rem;
 }
 
-.series .button-box-1 .button {
+
+/* .series .button-box-1 .button {
     width: 30%;
     margin: 0 1rem;
 }
@@ -255,13 +256,20 @@
     align-items: center;
     justify-content: center;
     padding-bottom: 1rem;
-}
+} */
 
+.series .button-box-1,
 .series .button-box-2 {
     display: grid;
     gap: 10px;
     width: 100%;
     padding-bottom: 1rem;
+}
+
+.series .button-box-1 .name {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
 }
 
 .series .button-box-2 .show_more {
@@ -302,6 +310,11 @@
     padding: 0.5rem;
 }
 
+.series .button.disable {
+    pointer-events: none;
+    background-color: rgba(100, 100, 255, 0.2);
+}
+
 @media screen and (min-width: 768px) {
     .series .button:hover:not(.series .button.active) {
         background: crimson;
@@ -316,6 +329,12 @@
 /* .series .button-box-2:not(.button-box-2:not(.button:nth-child(20) ~ .button)) .show_more {
     background-color: red;
 } */
+
+@media screen and (min-width:576px) {
+    .series .button-box-1 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 
 @media screen and (min-width: 1320px) {
     .series .button-box-2 {
@@ -366,8 +385,13 @@
 }
 
 @media screen and (max-width: 576px) and (min-width: 350px) {
+    .series .button-box-1,
     .series .button-box-2 {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .series .button-box-1 .name {
+        grid-row: 1;
+        grid-column: 1 / 3;
     }
     .series .button-box-2.hide .button:nth-child(9)~.button:not(.show_more) {
         display: none;

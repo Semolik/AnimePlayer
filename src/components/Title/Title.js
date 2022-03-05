@@ -6,7 +6,8 @@ import Plyr from 'plyr-react';
 import settings from '../../settings';
 import Card from '../card/card';
 
-function Save(service,id,data, series=null){
+
+function Save(service,id,data,fav, series){
 	var service_saved = localStorage.getItem('favorites');
 	if (!service_saved){
 		service_saved = {}
@@ -16,10 +17,10 @@ function Save(service,id,data, series=null){
 	if (!service_saved[service]){
 		service_saved[service] = {}
 	}
-	if (!series){
+	if (fav){
 		var favorite = document.getElementById('favorite');
 		if (service_saved[service][id] && service_saved[service][id].favorite===true){
-			service_saved[service][id].favorite=false;
+			service_saved[service][id].favorite= !service_saved[service][id].favorite;
 			favorite.classList.remove('active');
 		} else {
 			service_saved[service][id] = {
@@ -28,25 +29,21 @@ function Save(service,id,data, series=null){
 				poster: data.poster,
 				service_title: data.service_title,
 				favorite: true,
-				series:(service_saved[service][id] ? service_saved[service][id].series : 0),
+				series: series || 0,
 			};
 			favorite.classList.add('active');
 		}
 	} else {
-		if (service_saved[service][id]){
-			service_saved[service][id]['series'] = series;
-		} else {
-			service_saved[service][id] = {
-				favorite: false,
-				series:series,
-			};
-		}
+		service_saved[service][id] = {
+			favorite: (service_saved[service][id] ? service_saved[service][id].favorite : false),
+			series:series || 0,
+		};
 	}
 	localStorage['favorites'] = JSON.stringify(service_saved);
 }
 
 
-function SetSource(source,player, direct_link, time=null){
+function SetSource(source,player, direct_link,name){
 	if(direct_link===false){
 		fetch(settings.api+source)
 		.then(res => res.json())
@@ -54,9 +51,10 @@ function SetSource(source,player, direct_link, time=null){
 			(result) => {
 				if (result.status===200 && player && player.current){
 					player.current.plyr.source = result.data;
-					if (time){
-						player.current.plyr.currentTime = time;
-					}
+					document.getElementById('series-name').textContent = name;
+					// if (time){
+					// 	player.current.plyr.currentTime = time;
+					// }
 				} else {
 					console.log('Ошибка полуения ссылки на видео');
 				}
@@ -67,17 +65,18 @@ function SetSource(source,player, direct_link, time=null){
 		);
 	} else if (player && player.current){
 		player.current.plyr.source = source;
-		if (time && player.current.plyr.on){
-			console.log(player.current.plyr);
+		// if (time && player.current.plyr.on){
+		// 	console.log(player.current.plyr);
 			
-			player.current.plyr.on('ready',(e)=>{
-				player.current.plyr.currentTime = time;
-				console.log(time);
-				player.current.plyr.play();
-			})
+		// 	player.current.plyr.on('ready',(e)=>{
+		// 		player.current.plyr.currentTime = time;
+		// 		console.log(time);
+		// 		player.current.plyr.play();
+		// 	})
 			
-		}
+		// }
 	}
+	
 }
 
 function Title(event) {
@@ -85,7 +84,7 @@ function Title(event) {
 	var data = event.data;
 	document.title = data.ru_title;
 	var service = event.service;
-	// var player;
+	var current = 0;
 	var player = React.useRef(null);
 	var service_saved_info = localStorage.getItem('favorites');
 	var favorite = false;
@@ -96,6 +95,7 @@ function Title(event) {
 			if (service_saved_info[service][id]){
 				favorite = service_saved_info[service][id].favorite;
 				last_watched_episode = service_saved_info[service][id].series;
+				current = last_watched_episode;
 			}
 			
 		}
@@ -122,7 +122,7 @@ function Title(event) {
 						<div className='column'>
 							<div className="title-poster-container">
 								<img className='poster' src={data.poster} alt={data.ru_title}></img>
-								<div className='block button favorites' onClick={()=> Save(service,id,data)}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id = "favorite" className={(favorite? "active": "")}><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg></div>
+								<div className='block button favorites' onClick={()=> Save(service,id,data, true,null)}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id = "favorite" className={(favorite? "active": "")}><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg></div>
 							</div>
 							{/* {data.genre && 
 								<div className='genres'>{data.genre.map((element, key) =>{
@@ -209,27 +209,28 @@ function Title(event) {
 									if (localStorage.time && localStorage.time.split('-')[0]===last_watched_episode.toString()){
 										var time = localStorage.time.split('-');
 										if (time.length>1 && parseInt(time[1])){
-											SetSource(url, player, data.series.direct_link, parseInt(time[1]));
+											SetSource(url, player, data.series.direct_link, parseInt(time[1]),element['name']);
 										}
 										
 									} else {
-										SetSource(url, player, data.series.direct_link);
+										SetSource(url, player, data.series.direct_link,element['name']);
 									}
 									
 								}
 								
-								if (player_ && player_.plyr.on){
-									console.log(player_.plyr);
-									player_.plyr.on('play',event=>{
-										setInterval( function() {
-											// POST current time and state to the server
-											if(player_.plyr){
-												localStorage.setItem('time', `${last_watched_episode}-`+player_.plyr.currentTime)
-										  }}, 3000);
-									})
-								}
+								// if (player_ && player_.plyr.on){
+								// 	console.log(player_.plyr);
+								// 	player_.plyr.on('play',event=>{
+								// 		setInterval( function() {
+								// 			// POST current time and state to the server
+								// 			console.log(player_.plyr);
+								// 			if(player_.plyr){
+								// 				localStorage.setItem('time', `${last_watched_episode}-`+player_.plyr.currentTime)
+								// 		  }}, 3000);
+								// 	})
+								// }
 								// player.plyr.on('ready',(e)=>{})
-								// return player;
+								return player;
 							}} options={{
 								controls: ['play', 'progress','current-time','duration','mute','volume','captions','settings','pip','fullscreen'],
 								i18n: {
@@ -239,10 +240,36 @@ function Title(event) {
 								}
 							}}/>
 							<div className='series'>
-								{/* <div className='button-box-1'>
-									<div className='button' id='prev'>Прошлая серия</div>
-									<div className='button' id='next'>Следущая серия</div>
-								</div> */}
+								<div className='button-box-1'>
+									<div className={'button'+(current===0? " disable": "")} id='prev' onClick={e=>{
+										if (current-1<=0){
+											e.target.classList.add('disable');
+										}
+										if (current+1>data.series.data.length-1){
+											document.getElementById('next').classList.add('disable');
+										}
+										[].forEach.call(document.querySelectorAll('.series .button-box-2 .button.active'), function(el, index) {
+											el.classList.remove("active");
+										});
+										var buttons = document.getElementsByClassName('button-box-2')[0].children;
+										buttons[current].click();
+									}}>Прошлая серия</div>
+									<div className="name" id="series-name">{data.series.data[0]['name']}</div>
+									<div className={'button'+(current+1>data.series.data.length-1? " disable": "")} id='next' onClick={e=>{
+										if (current-1<=0){
+											
+											document.getElementById('prev').classList.add('disable');
+										}
+										if (current+1>data.series.data.length-1){
+											e.target.classList.add('disable');
+										}
+										[].forEach.call(document.querySelectorAll('.series .button-box-2 .button.active'), function(el, index) {
+											el.classList.remove("active");
+										});
+										var buttons = document.getElementsByClassName('button-box-2')[0].children;
+										buttons[current+2].click();
+									}}>Следущая серия</div>
+								</div>
 								<div className='button-box-2 hide'>
 									<div className="button show_more" onClick={e=>{e.target.parentNode.classList.toggle('hide')}}></div>
 									{data.series.data.map((element, key) => {
@@ -251,12 +278,23 @@ function Title(event) {
 										// }
 										return (<div className={'button'+(key===(last_watched_episode | 0)? ' active' : '')} key={key} onClick={(e)=>{
 											if (!e.target.classList.contains('active')){
-												[].forEach.call(document.querySelectorAll('.series .button.active'), function(el) {
+												[].forEach.call(document.querySelectorAll('.series .button-box-2 .button.active'), function(el) {
 													el.classList.remove("active");
 												});
-												Save(service,id,data,key);
-												SetSource((element.link ? element['link']: element), player, data.series.direct_link);
+												current = key;
+												Save(service,id,data,null,key);
+												SetSource((element.link ? element['link']: element), player, data.series.direct_link,element['name']);
 												e.target.classList.add("active");
+												if (key===0){
+													document.getElementById('prev').classList.add('disable');
+												} else {
+													document.getElementById('prev').classList.remove('disable');
+												}
+												if (key===data.series.data.length-1){
+													document.getElementById('next').classList.add('disable');
+												}else {
+													document.getElementById('next').classList.remove('disable');
+												}
 											}
 										}}>{element['name']}</div>)
 									})}
