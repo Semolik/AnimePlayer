@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
 
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
 import { Route, Switch} from 'react-router-dom';
@@ -64,6 +64,7 @@ class Header extends React.Component {
 	render() {
 		const { error, isLoaded, items } = this.state;
 		console.log(items);
+		
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -86,8 +87,10 @@ class Header extends React.Component {
 							</li>
 							<Switch>
 								<Route path='/:service?' render={
-									(props) => (
-										Object.keys(items).map((key) => (
+									(props) => {
+										var horny = localStorage['horny-mode'] === "true"
+
+										return Object.keys(items).map((key) => (
 											<li key={key}>
 												<Link to={"/"+key} className={'sidebar-item'+(props.match.params.service===key? " active": "")} onClick={this.menuBtnChange}>
 													{/* <img
@@ -98,9 +101,17 @@ class Header extends React.Component {
 												</Link>
 											</li>
 										))
-									)}>
+									}}>
 								</Route>
 							</Switch>
+							<li>
+								<div className={"sidebar-item button"+(localStorage['horny-mode']==="true" ?" active":"")}>
+									<span className="index" onClick={(e=>{
+										localStorage.setItem('horny-mode',e.target.parentNode.classList.toggle('active'));
+										
+									})}>Horny mode</span>
+								</div>
+							</li>
 							<Switch>
                     			<Route path='/:service' component={(event)=> this.LoadGenres(event, this.state)}/>
 							</Switch>

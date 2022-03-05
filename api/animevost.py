@@ -7,17 +7,15 @@ from bs4 import BeautifulSoup
 from lxml import etree
 from flask_restful import reqparse
 from flask import Blueprint, send_from_directory
-from config import ApiPath, UPLOAD_FOLDER,ShikimoriLink
+from config import ApiPath, UPLOAD_FOLDER,ShikimoriLink,shikimori_api
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from utils.shikimori import SearchOnShikimori
-from shikimori_api import Shikimori
 import re
 from settings import headers
 # import math
 
-shikimori_session = Shikimori()
-shikimori_api = shikimori_session.get_api()
+
 
 ModulePath = 'animevost/'
 AnimevostLink = "https://v2.vost.pw/"

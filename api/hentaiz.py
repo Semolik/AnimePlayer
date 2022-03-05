@@ -303,7 +303,7 @@ def GetTitleById(title_id):
 				if 'vip.php' not in i.get('data-src'):
 					link = i.get('data-src').split('/')
 					out_series.append({
-						'link':("/"+ModulePath+'video/'+link[link.index('hub')+1]+"/"+i.get('data-src').split('id=')[1]),
+						'link':"/"+ModulePath+'video/'+link[link.index('hub')+1]+"/"+i.get('data-src').split('id=')[1],
 						'name': i.text,
 					})
 			out['series']['data'] = out_series

@@ -46,7 +46,7 @@ function Save(service,id,data, series=null){
 }
 
 
-function SetSource(source,player, direct_link){
+function SetSource(source,player, direct_link, time=null){
 	if(direct_link===false){
 		fetch(settings.api+source)
 		.then(res => res.json())
@@ -54,6 +54,9 @@ function SetSource(source,player, direct_link){
 			(result) => {
 				if (result.status===200 && player && player.current){
 					player.current.plyr.source = result.data;
+					if (time){
+						player.current.plyr.currentTime = time;
+					}
 				} else {
 					console.log('Ошибка полуения ссылки на видео');
 				}
@@ -64,6 +67,16 @@ function SetSource(source,player, direct_link){
 		);
 	} else if (player && player.current){
 		player.current.plyr.source = source;
+		if (time && player.current.plyr.on){
+			console.log(player.current.plyr);
+			
+			player.current.plyr.on('ready',(e)=>{
+				player.current.plyr.currentTime = time;
+				console.log(time);
+				player.current.plyr.play();
+			})
+			
+		}
 	}
 }
 
@@ -192,8 +205,30 @@ function Title(event) {
 								player.current = player_;
 								if (last_watched_episode && data.series.data.length>last_watched_episode){
 									var element = data.series.data[last_watched_episode];
-									SetSource((element.link ? element['link']: element), player, data.series.direct_link);
+									var url = (element.link ? element['link']: element);
+									if (localStorage.time && localStorage.time.split('-')[0]===last_watched_episode.toString()){
+										var time = localStorage.time.split('-');
+										if (time.length>1 && parseInt(time[1])){
+											SetSource(url, player, data.series.direct_link, parseInt(time[1]));
+										}
+										
+									} else {
+										SetSource(url, player, data.series.direct_link);
+									}
+									
 								}
+								
+								if (player_ && player_.plyr.on){
+									console.log(player_.plyr);
+									player_.plyr.on('play',event=>{
+										setInterval( function() {
+											// POST current time and state to the server
+											if(player_.plyr){
+												localStorage.setItem('time', `${last_watched_episode}-`+player_.plyr.currentTime)
+										  }}, 3000);
+									})
+								}
+								// player.plyr.on('ready',(e)=>{})
 								// return player;
 							}} options={{
 								controls: ['play', 'progress','current-time','duration','mute','volume','captions','settings','pip','fullscreen'],
@@ -208,7 +243,8 @@ function Title(event) {
 									<div className='button' id='prev'>Прошлая серия</div>
 									<div className='button' id='next'>Следущая серия</div>
 								</div> */}
-								<div className='button-box-2'>
+								<div className='button-box-2 hide'>
+									<div className="button show_more" onClick={e=>{e.target.parentNode.classList.toggle('hide')}}></div>
 									{data.series.data.map((element, key) => {
 										// if (last_watched_episode===key){
 										// 	SetSource((element.link ? element :element['link']), player, data.series.direct_link)
@@ -224,6 +260,7 @@ function Title(event) {
 											}
 										}}>{element['name']}</div>)
 									})}
+									<div className="button show_more" onClick={e=>{e.target.parentNode.classList.toggle('hide')}}></div>
 								</div>
 
 							</div>

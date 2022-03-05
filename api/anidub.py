@@ -9,12 +9,13 @@ from flask_restful import reqparse
 from flask import Blueprint,send_from_directory
 from requests.utils import requote_uri
 from soupsieve import select
-from config import ApiPath
+from config import ApiPath,ShikimoriLink
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
 from utils.plyr import PlyrSource
-from config import ApiPath, UPLOAD_FOLDER
+from config import ApiPath, UPLOAD_FOLDER,shikimori_api
 from settings import headers
+from utils.shikimori import SearchOnShikimori
 
 ModulePath = 'anidub/'
 AnidubLink = 'https://online.anidub.club/'
@@ -139,6 +140,7 @@ def GetPlaylist(page_url,videourl):
 	response = session.get(AnidubLink+'player/'+source[0].get('src'), headers={'Referer': referer.group(1)})
 	if not response:
 		return
+	print(response.text)
 	for i in response.text.split('RESOLUTION='):
 		splited = i.split('\n')
 		if len(splited)>=2 and '.m3u8' in splited[1]:
@@ -207,7 +209,17 @@ def GetTitleById(title_id):
 		if title:
 			title = title[0].text.split('/')
 			out['ru_title'] = title[0]
-			out['en_title'] = title[1].split(' [')[0]
+			if len(title)>1:
+				out['en_title'] = title[1].split(' [')[0]
+			shikimori_id = SearchOnShikimori(out.get('en_title') or out.get('ru_title'))
+			if shikimori_id:
+				shikimori_req = shikimori_api.animes(shikimori_id)
+				shikimori_data = shikimori_req.GET()
+				if shikimori_data:
+					if shikimori_data.get('url'):
+						shikimori_data['url'] = ShikimoriLink+shikimori_data.get('url')
+					out['shikimori'] = shikimori_data
+				# if shikimori_data.get('screenshots'):
 		fleft = dle_content[0].select('.fleft')
 		if fleft:
 			poster = dle_content[0].select('.fposter > img')
@@ -262,25 +274,26 @@ def GetTitleById(title_id):
 				sibnet_links[0]['name'] = name
 			out['series']['data'] = sibnet_links
 			out['series']['direct_link']=False
-		# elif len(series)==1:
-		# 	links = list()
-		# 	for link in [i for i in series[0].select('span')]:
-		# 		links.append({
-		# 			'link': "/"+ModulePath+'playlist',
-		# 			'params': {
-		# 				'referer': response.url,
-		# 				'videourl': link.get('data'),
-		# 			},
-		# 			'name': link.text,
+		elif len(series)==1:
+			links = list()
+			for link in [i for i in series[0].select('span')]:
+				links.append({
+					'link': "/"+ModulePath+'playlist',
+					'params': {
+						'referer': response.url,
+						'videourl': link.get('data'),
+					},
+					'name': link.text,
 
-		# 		})
-		# 	first_video = GetPlaylist(links[0]['params']['referer'], links[0]['params']['videourl'])
-		# 	if first_video:
-		# 		name = links[0]['name']
-		# 		links[0] = first_video.get('data')
-		# 		links[0]['name'] = name
-		# 		out['series']['data'] = links
-		# 		out['series']['direct_link']=False
+				})
+			out['series']['data'] = links
+			first_video = GetPlaylist(links[0]['params']['referer'], links[0]['params']['videourl'])
+			if first_video:
+				name = links[0]['name']
+				links[0] = first_video.get('data')
+				links[0]['name'] = name
+				out['series']['data'] = links
+				out['series']['direct_link']=False
 		year = dle_content[0].select('.fmeta.fx-row.fx-start > span > a')
 		if year:
 			for a in year:
@@ -302,6 +315,8 @@ def GetTitleById(title_id):
 					if 'Жанр:' == text[0]:
 						data = info_item.select('a')
 						out['genre'] = FormatLinkList(data, Split=[-2,-1])
+						continue
+					if 'День недели:' == text[0]:
 						continue
 					text[0] = text[0].replace(':', '')
 					if len(text)>2:

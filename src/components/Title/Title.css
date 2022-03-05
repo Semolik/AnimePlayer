@@ -49,9 +49,9 @@
 
 .info-block .name.ru-name {
     /* font-size: 35px;
-    line-height: 44px;
-    font-weight: 900;
-    font-style: normal; */
+	line-height: 44px;
+	font-weight: 900;
+	font-style: normal; */
     font-size: 28px;
     font-weight: 700;
     text-transform: uppercase;
@@ -65,7 +65,7 @@
 
 
 /* .info-block .column .genres {
-    grid-column: 2 / -1;
+	grid-column: 2 / -1;
 } */
 
 .info-block .column .block {
@@ -264,8 +264,34 @@
     padding-bottom: 1rem;
 }
 
+.series .button-box-2 .show_more {
+    grid-column: 1 / -1;
+    display: none;
+}
+
+
+/* .series .button-box-2.hide .show_more {
+    display: none;
+    pointer-events: none;
+} */
+
+.series .button-box-2.hide .show_more:last-child:after {
+    content: 'Показать больше';
+}
+
+.series .button-box-2 .show_more::after {
+    content: 'Показать меньше';
+}
+
+.series .button-box-2 .show_more:first-child {
+    display: flex;
+}
+
+.series .button-box-2.hide .show_more:first-child {
+    display: none;
+}
+
 .series .button {
-    /* min-width: ; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -274,20 +300,32 @@
     transition: .4s;
     background-color: rgba(255, 255, 255, 0.3);
     padding: 0.5rem;
-    /* border: 1px solid rgba(255, 255, 255, 0.60); */
 }
 
-.series .button:hover:not(.series .button.active) {
-    background: crimson;
+@media screen and (min-width: 768px) {
+    .series .button:hover:not(.series .button.active) {
+        background: crimson;
+    }
 }
 
 .series .button.active {
     background: #e7711b;
 }
 
+
+/* .series .button-box-2:not(.button-box-2:not(.button:nth-child(20) ~ .button)) .show_more {
+    background-color: red;
+} */
+
 @media screen and (min-width: 1320px) {
     .series .button-box-2 {
         grid-template-columns: repeat(6, 1fr);
+    }
+    .series .button-box-2.hide .button:nth-child(25)~.button:not(.show_more) {
+        display: none;
+    }
+    .series .button-box-2 .button:nth-last-child(n+25)~.show_more {
+        display: flex;
     }
 }
 
@@ -295,11 +333,23 @@
     .series .button-box-2 {
         grid-template-columns: repeat(5, 1fr);
     }
+    .series .button-box-2.hide .button:nth-child(21)~.button:not(.show_more) {
+        display: none;
+    }
+    .series .button-box-2 .button:nth-last-child(n+21)~.show_more {
+        display: flex;
+    }
 }
 
 @media screen and (max-width: 1200px) and (min-width: 768px) {
     .series .button-box-2 {
         grid-template-columns: repeat(4, 1fr);
+    }
+    .series .button-box-2.hide .button:nth-child(17)~.button:not(.show_more) {
+        display: none;
+    }
+    .series .button-box-2 .button:nth-last-child(n+17)~.show_more {
+        display: flex;
     }
 }
 
@@ -307,16 +357,31 @@
     .series .button-box-2 {
         grid-template-columns: repeat(3, 1fr);
     }
+    .series .button-box-2.hide .button:nth-child(13)~.button:not(.show_more) {
+        display: none;
+    }
+    .series .button-box-2 .button:nth-last-child(n+13)~.show_more {
+        display: flex;
+    }
 }
 
 @media screen and (max-width: 576px) and (min-width: 350px) {
     .series .button-box-2 {
         grid-template-columns: repeat(2, 1fr);
     }
+    .series .button-box-2.hide .button:nth-child(9)~.button:not(.show_more) {
+        display: none;
+    }
+    .series .button-box-2 .button:nth-last-child(n+9)~.show_more {
+        display: flex;
+    }
 }
 
 @media screen and (max-width: 350px) {
     .series .button-box-2 {
         grid-template-columns: 1fr;
+    }
+    .series .button-box-2.hide .button:nth-child(5)~.button:not(:last-child) {
+        display: none;
     }
 }
