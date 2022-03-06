@@ -69,7 +69,7 @@ def GenreRequest():
 	genres = GetGenres()
 	for key, val in genres.items():
 		for item in val['links']:
-			if item[1]==genre:
+			if item[1].lower()==genre.lower():
 				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
 				if genre_data.get('data'):
 					genre_data['data']['genre_name']=item[0].title()
@@ -311,6 +311,7 @@ def GetTitleById(title_id):
 			first = GetVideoById(first_splited_link[-1],first_splited_link[-2])
 			if first.get('status')==200:
 				first = first.get('data')
+				
 				first['name'] = out_series[0]['name']
 				out['series']['data'][0] = first
 			out['series']['direct_link']=False

@@ -44,7 +44,7 @@ function Save(service,id,data,fav, series){
 
 
 function SetSource(source,player, direct_link,name){
-	if(direct_link===false){
+	if(direct_link===false && typeof source === 'string'){
 		fetch(settings.api+source)
 		.then(res => res.json())
 		.then(
