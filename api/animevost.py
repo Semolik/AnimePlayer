@@ -20,7 +20,8 @@ from settings import headers
 ModulePath = 'animevost/'
 AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
-AnimevostApiLink = "https://api.animevost.org/v1/"
+# AnimevostApiLink = "https://api.animevost.org/v1/"
+AnimevostApiLink = "https://api.animetop.info/v1/"
 ModuleTitle = "Animevost"
 
 genres__ = {}

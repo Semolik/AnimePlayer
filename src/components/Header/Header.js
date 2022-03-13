@@ -1,10 +1,12 @@
 import React from 'react';
 import './Header.css';
 
+import button from '../button/button';
 import { Link} from 'react-router-dom';
 import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
 import { Route, Switch} from 'react-router-dom';
+import RippleButton from '../button/button';
 class Header extends React.Component {
 	
 	constructor(props) {
@@ -42,7 +44,6 @@ class Header extends React.Component {
 	}
 	LoadGenres(event){
 		var service_id = event.match.params.service;
-		console.log(service_id);
 		var list = [];
 		if(this.state.items.hasOwnProperty(service_id)){
 			var genres = this.state.items[service_id].genres;
@@ -75,6 +76,9 @@ class Header extends React.Component {
 					<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'></link>
 					<div className="sidebar">
 						<div className="nav-list" >
+							{/* <li key={-3}>
+									<RippleButton className='sidebar-item' ><div className="index"><span>Главная</span></div></RippleButton>
+							</li> */}
 							<li key={-2}>
 									<Link to="/" className='sidebar-item' onClick={this.menuBtnChange}>
 										<div className="index"><span>Главная</span></div>

@@ -254,7 +254,7 @@ def GetTitles(Url, html=None):
 		# 	if en_title:
 		# 		title_info['en_title'] = ' '.join(en_title[0].text.split())
 			outdata.append(title_info)
-		pages = data.select('.navigation a')
+		pages = data.select('.navigation *')
 		return {
 			'status': 200,
 			'data': {
@@ -302,19 +302,21 @@ def GetTitleById(title_id):
 			for i in series:
 				if 'vip.php' not in i.get('data-src'):
 					link = i.get('data-src').split('/')
-					out_series.append({
-						'link':"/"+ModulePath+'video/'+link[link.index('hub')+1]+"/"+i.get('data-src').split('id=')[1],
-						'name': i.text,
-					})
-			out['series']['data'] = out_series
-			first_splited_link = out_series[0]['link'].split('/')
-			first = GetVideoById(first_splited_link[-1],first_splited_link[-2])
-			if first.get('status')==200:
-				first = first.get('data')
-				
-				first['name'] = out_series[0]['name']
-				out['series']['data'][0] = first
-			out['series']['direct_link']=False
+					if 'hub' in link:
+						out_series.append({
+							'link':"/"+ModulePath+'video/'+link[link.index('hub')+1]+"/"+i.get('data-src').split('id=')[1],
+							'name': i.text,
+						})
+			if out_series:
+				out['series']['data'] = out_series
+				first_splited_link = out_series[0]['link'].split('/')
+				first = GetVideoById(first_splited_link[-1],first_splited_link[-2])
+				if first.get('status')==200:
+					first = first.get('data')
+					
+					first['name'] = out_series[0]['name']
+					out['series']['data'][0] = first
+				out['series']['direct_link']=False
 		fmright = dle_content[0].select('.fmright')
 		if fmright:
 			blocks = list()

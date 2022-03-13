@@ -43,15 +43,20 @@ function Save(service,id,data,fav, series){
 }
 
 
-function SetSource(source,player, direct_link,name){
+function SetSource(source,player, direct_link,name,wait_response=true){
 	if(direct_link===false && typeof source === 'string'){
+		if (!wait_response){
+			document.getElementById('series-name').textContent = name;
+		}
 		fetch(settings.api+source)
 		.then(res => res.json())
 		.then(
 			(result) => {
 				if (result.status===200 && player && player.current){
 					player.current.plyr.source = result.data;
-					document.getElementById('series-name').textContent = name;
+					if (wait_response){
+						document.getElementById('series-name').textContent = name;
+					}
 					// if (time){
 					// 	player.current.plyr.currentTime = time;
 					// }
@@ -283,7 +288,7 @@ function Title(event) {
 												});
 												current = key;
 												Save(service,id,data,null,key);
-												SetSource((element.link ? element['link']: element), player, data.series.direct_link,element['name']);
+												SetSource((element.link ? element['link']: element), player, data.series.direct_link,element['name'],null);
 												e.target.classList.add("active");
 												if (key===0){
 													document.getElementById('prev').classList.add('disable');

@@ -11,7 +11,24 @@
 	display: flex;
 	width: 100%;
 	flex-wrap: wrap;
+	/* justify-content: center; */
+}
+.load_more_container {
+	width: 100%;
+	display: flex;
+	align-items: center;
 	justify-content: center;
+}
+.load_more_container .load_more{
+	border-radius: 3rem;
+	width: min-content;
+	padding: 1rem 2rem;
+	white-space: nowrap;
+	background: rgba(255, 255, 255, 0.1);
+	transition: .2s;
+}
+.load_more_container .load_more:hover{
+	background: rgba(255, 255, 255, 0.2);
 }
 @media screen and (min-width: 1300px){
 	.cards-container{

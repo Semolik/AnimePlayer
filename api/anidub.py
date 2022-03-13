@@ -417,7 +417,7 @@ def GetTitles(Url, html=None):
 			if en_title:
 				title_info['en_title'] = ' '.join(en_title[0].text.split())
 			outdata.append(title_info)
-		pages = data.select('.navigation a')
+		pages = data.select('.navigation *')
 		return {
 			'status': 200,
 			'data': {

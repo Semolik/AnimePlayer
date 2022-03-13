@@ -23,6 +23,7 @@ class ServicePage extends React.Component {
 			// api: `http://127.0.0.1/api/${this.props.match.params.service}/`,
 			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
+			page_: 1,
 			
 		};
 	}
@@ -45,7 +46,13 @@ class ServicePage extends React.Component {
 				page_type: 'favorites',
 			});
 
-		} else if (this.state.page===undefined | this.state.page==='page'){
+		} else{
+			this.loadData()
+		}
+		
+	}
+	loadData = ()=>{
+		 if (this.state.page===undefined | this.state.page==='page'){
 
 			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
@@ -61,11 +68,22 @@ class ServicePage extends React.Component {
 					console.log(result);
 					if (result.status===200){
 						document.title = result.data.service_title
-						this.setState({
-							isLoaded: true,
-							data: result.data,
-							page_type: 'page',
+						// this.setState({
+						// 	isLoaded: true,
+						// 	data: result.data,
+						// 	page_type: 'page',
+						// });
+		
+						this.setState((prevState) => {
+							result.data.data = prevState.data.data ? [...prevState.data.data, ...result.data.data] : result.data.data;
+							return {
+								isLoaded: true,
+								data: result.data,
+								page_type: 'page',
+							}
 						});
+						
+						
 					} else {
 						this.setState({
 							isLoaded: false,
@@ -223,6 +241,16 @@ class ServicePage extends React.Component {
 		const urlParams = new URLSearchParams(queryString);
 		return urlParams.get(name);
 	}
+	componentDidUpdate(prevProps, prevState) {
+		if (prevState.id !== this.state.id) {
+			this.loadData();
+		}
+	}
+	loadMore = () => {
+		this.setState((prevState) => ({
+			id: prevState.id ? parseInt(prevState.id) + 1 : 2
+		}));
+	}
 	render() {
 		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
 		if (error) {
@@ -237,8 +265,13 @@ class ServicePage extends React.Component {
 							<Card key={i} data={item} service={{id: service}}></Card>
 						))}
 					</div>
+					{page_type==='page' && data.pages > 1 && (id===undefined ? 1 : parseInt(id))!==data.pages &&
+						<div className="load_more_container">
+							<div className="load_more" onClick={this.loadMore}>Загрузить больше</div>
+						</div>
+					}
 					{page_type==='genre' &&
-						<Pagination totalPages={data.pages} page={PageNumber===undefined ? 1 : PageNumber} url={`/${service}/genre/${id}/page/`}/>
+						<Pagination totalPages={data.pages} page={(PageNumber===undefined ? 1 : PageNumber)} url={`/${service}/genre/${id}/page/`}/>
 					}
 					{page_type==='page' &&
 						<Pagination totalPages={data.pages} page={id===undefined ? 1 : id} url={`/${service}/page/`}/>
@@ -264,8 +297,6 @@ class ServicePage extends React.Component {
 							{Object.keys(data).map((service, index)=>{
 								console.log();
 								return Object.keys(data[service]).filter(id => data[service][id].favorite===true).map((id, index2)=>{
-									console.log(data[service][id]);
-									console.log(id)
 									return <Card key={[index,index2].join('-')} data={{
 										id: id,
 										poster: data[service][id].poster,
