@@ -17,10 +17,13 @@ from config import ApiPath, UPLOAD_FOLDER,shikimori_api
 from settings import headers
 from utils.shikimori import SearchOnShikimori
 
-ModulePath = 'anidub/'
+Moduleid = 'anidub'
+ModulePath = Moduleid+'/'
 AnidubLink = 'https://online.anidub.club/'
 LinkSplitter = '~'
 ModuleTitle = "Anidub"
+hentai = False
+
 
 Module = Blueprint(ModulePath, __name__)
 @Module.route(ApiPath+ModulePath,  methods = ['post'])
@@ -424,6 +427,7 @@ def GetTitles(Url, html=None):
 				'data': outdata,
 				'pages': int(pages[-1].text) if pages else 1,
 				'service_title': ModuleTitle,
+				'horny': hentai,
 			},
 		}
 	else:

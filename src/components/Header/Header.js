@@ -17,6 +17,7 @@ class Header extends React.Component {
 			isLoaded: false,
 			items: {},
 			props: props,
+			horny_mode: localStorage['horny-mode']==="true",
 		};
 	}
 	componentDidMount() {
@@ -24,7 +25,6 @@ class Header extends React.Component {
 			.then(res => res.json())
 			.then(
 				(result) => {
-					
 					this.setState({
 						isLoaded: true,
 						items: result
@@ -38,6 +38,11 @@ class Header extends React.Component {
 				}
 			)
 	}
+	// componentDidUpdate(prevProps, prevState) {
+	// 	if (prevState.horny_mode !== this.state.horny_mode) {
+	// 		this.render();
+	// 	}
+	// }
 	menuBtnChange() {
 		var sidebar = document.querySelector(".sidebar");
 		sidebar.classList.toggle("open");
@@ -63,8 +68,9 @@ class Header extends React.Component {
 		window.location.href=`${service ? "/"+service: ""}/search/${decodeURIComponent(event.target.text.value)}`;
 	  }
 	render() {
-		const { error, isLoaded, items } = this.state;
+		const { error, isLoaded, items, horny_mode} = this.state;
 		console.log(items);
+		console.log(horny_mode);
 		
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
@@ -89,12 +95,20 @@ class Header extends React.Component {
 										<div className="index"><span>Избранное</span></div>
 									</Link>
 							</li>
+							<li>
+								<div className={"sidebar-item button"+(localStorage['horny-mode']==="true" ?" active":"")}>
+									<span className="index" onClick={(e=>{
+										var hornymode = e.target.parentNode.classList.toggle('active');
+										localStorage.setItem('horny-mode',hornymode);
+										this.setState({horny_mode: hornymode});
+									})}>Horny mode</span>
+								</div>
+							</li>
 							<Switch>
 								<Route path='/:service?' render={
 									(props) => {
-										var horny = localStorage['horny-mode'] === "true"
 
-										return Object.keys(items).map((key) => (
+										return Object.keys(items).filter(key=> (items[key].horny===horny_mode || props.match.params.service===key)).map((key) => (
 											<li key={key}>
 												<Link to={"/"+key} className={'sidebar-item'+(props.match.params.service===key? " active": "")} onClick={this.menuBtnChange}>
 													{/* <img
@@ -108,14 +122,21 @@ class Header extends React.Component {
 									}}>
 								</Route>
 							</Switch>
-							<li>
-								<div className={"sidebar-item button"+(localStorage['horny-mode']==="true" ?" active":"")}>
-									<span className="index" onClick={(e=>{
-										localStorage.setItem('horny-mode',e.target.parentNode.classList.toggle('active'));
-										
-									})}>Horny mode</span>
-								</div>
-							</li>
+							
+							{/* {horny_mode &&
+								<li>
+									<Link to="/services/hentai" className='sidebar-item'>
+										<div className="index"><span>Хентай</span></div>
+									</Link>
+								</li>
+							}
+							{!horny_mode &&
+								<li>
+									<Link to="/services/" className='sidebar-item'>
+										<div className="index"><span>Аниме</span></div>
+									</Link>
+								</li>
+							} */}
 							<Switch>
                     			<Route path='/:service' component={(event)=> this.LoadGenres(event, this.state)}/>
 							</Switch>

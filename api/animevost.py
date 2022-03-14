@@ -16,8 +16,9 @@ from settings import headers
 # import math
 
 
-
-ModulePath = 'animevost/'
+hentai = False
+Moduleid = 'animevost'
+ModulePath = Moduleid+'/'
 AnimevostLink = "https://v2.vost.pw/"
 AnimevostMirrorLink = {}
 # AnimevostApiLink = "https://api.animevost.org/v1/"
@@ -310,6 +311,7 @@ def GetTitles(Url):
 		return {
 			'data': output,
 			# 'page': page,
+			'horny': hentai,
 			'pages': pages if pages>=page else page,
 		}
 	else:

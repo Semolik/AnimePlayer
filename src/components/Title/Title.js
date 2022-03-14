@@ -69,6 +69,7 @@ function SetSource(source,player, direct_link,name,wait_response=true){
 			},
 		);
 	} else if (player && player.current){
+		document.getElementById('series-name').textContent = name;
 		player.current.plyr.source = source;
 		// if (time && player.current.plyr.on){
 		// 	console.log(player.current.plyr);

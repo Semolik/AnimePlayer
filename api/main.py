@@ -16,20 +16,13 @@ app.register_blueprint(anidub.Module)
 app.register_blueprint(hentaiz.Module)
 @app.route(ApiPath+'services')
 def servises():
-    return {
-        'animevost': {
-            'title': 'Animevost',
-            'genres': animevost.GetGenres(),
-        },
-        'anidub': {
-            'title': 'Anidub',
-            'genres': anidub.GetGenres(),
-        },
-        'hentaiz': {
-            'title': 'HentaiZ',
-            'genres': hentaiz.GetGenres(),
-        }
-    }
+    out = {}
+    for module in modules:
+        out[module.Moduleid] = {}
+        out[module.Moduleid]['title'] = module.ModuleTitle
+        out[module.Moduleid]['genres'] = module.GetGenres()
+        out[module.Moduleid]['horny'] = module.hentai
+    return out
 @app.route(ApiPath+'home')
 def index():
     data = list()

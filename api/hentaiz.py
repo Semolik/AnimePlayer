@@ -13,9 +13,10 @@ from settings import headers
 from utils.plyr import PlyrSource
 
 ModuleTitle = "Hentaiz"
-ModulePath = 'hentaiz/'
+Moduleid = 'hentaiz'
+ModulePath = Moduleid+'/'
 HentaizLink = 'https://hentaiz.org/'
-
+hentai = True
 Module = Blueprint(ModulePath, __name__)
 @Module.route(ApiPath+ModulePath,  methods = ['post'])
 def Page():
@@ -259,6 +260,7 @@ def GetTitles(Url, html=None):
 			'status': 200,
 			'data': {
 				'data': outdata,
+				'horny': hentai,
 				'pages': int(pages[-1].text) if pages else 1,
 				'service_title': ModuleTitle,
 			},
