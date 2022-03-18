@@ -275,8 +275,11 @@ def GetTitleById(title_id):
 	response = requests.get(HentaizLink+title_id+'.html', headers=headers)
 	response.encoding = 'utf8'
 	if response:
-
+		# with open('title.html', "w", encoding="utf-8") as f:
+		# 	f.write(response.text)
+		# 	f.close()
 		soup = BeautifulSoup(response.text, 'lxml')
+
 		dle_content = soup.select('#dle-content')
 		if not dle_content:
 			return {
@@ -371,6 +374,24 @@ def GetTitleById(title_id):
 					continue
 				blocks.append(value)
 			out['blocks'] = blocks
+		fdownloads = dle_content[0].select('#fdownloads')
+		if fdownloads:
+			frelated = fdownloads[0].select('.frelated .tc-item')
+			if frelated:
+				related_list = list()
+				for i in frelated:
+					related_data = {}
+					related_poster = i.select('img')
+					if related_poster:
+						related_poster = related_poster[0].get('src').replace('/thumbs/', '/')
+						related_data['poster'] = (related_poster if related_poster.startswith('//') else HentaizLink+related_poster)
+					related_title = i.select('.tc-title')
+					if related_title:
+						related_data['ru_title'] = related_title[0].text
+					related_data['id'] = i.get('href').split('/')[-1].split('.')[0]
+					related_list.append(related_data)
+				if related_list:
+					out['related'] = related_list
 		out['service_title'] = ModuleTitle
 		return {
 			'status':200,

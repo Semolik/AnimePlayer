@@ -11,9 +11,8 @@ from flask_cors import CORS
 CORS(app)
 
 modules = [animevost, anidub, hentaiz]
-app.register_blueprint(animevost.Animevost)
-app.register_blueprint(anidub.Module)
-app.register_blueprint(hentaiz.Module)
+for module in modules:
+    app.register_blueprint(module.Module)
 @app.route(ApiPath+'services')
 def servises():
     out = {}

@@ -76,7 +76,8 @@
 .shikimori-cards-container .block-title {
     width: 100%;
     text-align: center;
-    font-size: 30px;
+    font-size: 25px;
+    margin-bottom: 10px;
 }
 
 .shikimori-cards-container .card-horizontal {
@@ -89,8 +90,20 @@
     margin: var(--card-margin);
     width: calc(100% / var(--count) - var(--card-margin) * 2);
     transition: .4s;
+    margin-bottom: 20px;
 }
-
+.shikimori-cards-container .card-horizontal .btn {
+    width: 100%;
+    text-decoration: none;
+    color: white;
+    background-color: var(--background-highest);
+    /* border-color: #f8f9fa; */
+    margin-top: auto;
+    transition: .4s;
+}
+.shikimori-cards-container .card-horizontal .btn:hover {
+    background-color: var(--outline-default);
+}
 .shikimori-cards-container .card-horizontal .poster {
     width: 100%;
     overflow: hidden;
@@ -118,6 +131,7 @@
     display: -webkit-box;
     margin: 0 auto;
     transition: .2s;
+    margin-bottom: 10px;
 }
 
 .shikimori-cards-container .card-horizontal:hover .title {

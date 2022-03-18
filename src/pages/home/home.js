@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import settings from '../../settings';
 import Card from '../../components/card/card';
-import HorizontalScroll from 'react-scroll-horizontal';
+// import HorizontalScroll from 'react-scroll-horizontal';
+import Fancybox from '../../components/Fancybox/Fancybox';
 class HomePage extends React.Component {
 	
 	constructor(props) {
@@ -86,31 +87,28 @@ class HomePage extends React.Component {
 						</div>
 					})}
 					<div className='shikimori-cards-container'>
-						{/* <div className='block-title'>Shikimori news</div> */}
+						<div className='block-title'>Shikimori news</div>
+						<Fancybox>
 						{shikimori.map((el, index)=>{
-							// console.log(el);
-							return <a className="card-horizontal" href={`https://shikimori.one${el.forum.url}/${el.id}`} title={el.topic_title} key={index} target="_blank" rel="noopener noreferrer">
-										<div className="poster">
-											{/* <div className="blocks">
-												{data.announce &&
-													<div className="block" data-text="Анонс"></div>
-												}
-											</div> */}
-											{function(){
-												if (el.html_footer){
-													var parser = new DOMParser();
-													var footer = parser.parseFromString(el.html_footer, 'text/html');
-													var images = [...footer.querySelectorAll('img')];
-													console.log();
-													if (images.length > 0){
-														return <img src={images[0].attributes.src.nodeValue} alt={el.topic_title}/>;
-													}
-												}
-											}()}
-										</div>
-										<div className="title">{el.topic_title}</div>
-									</a>
+							if (el.html_footer){
+								var parser = new DOMParser();
+								var footer = parser.parseFromString(el.html_footer, 'text/html');
+								var images = [...footer.querySelectorAll('img')];
+								console.log(images[0].attributes)
+								if (images.length > 0){
+									return images.map((image,image_index)=>(
+										<a className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
+											<div className="poster" data-fancybox={`gallery-${index}`} data-src={image.attributes.src.nodeValue}>
+												<img src={image.attributes.src.nodeValue} alt={el.topic_title}/>
+											</div>
+											<div className="title">{el.topic_title}</div>
+											<a href={`https://shikimori.one${el.forum.url}/${el.id}`} className="btn" target="_blank" rel="noopener noreferrer">Открыть</a>
+										</a>
+									));
+								}
+							}
 						})}
+						</Fancybox>
 					</div>
 				</div> 
 			);

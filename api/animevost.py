@@ -26,7 +26,7 @@ AnimevostApiLink = "https://api.animetop.info/v1/"
 ModuleTitle = "Animevost"
 
 genres__ = {}
-Animevost = Blueprint(ModulePath, __name__)
+Module = Blueprint(ModulePath, __name__)
 
 def func_chunks_generators(lst, n):
 	for i in range(0, len(lst), n):
@@ -122,17 +122,18 @@ def FormatingAnimevostResponse(response_item):
 	# 		keys = list(series.keys())
 	# 		print(keys)
 	# 		data['series'] = f'{keys[0]} - {keys[-1]}'
-	series = text.split(" /")
-	if len(series)>1:
-		series = series[1].split("] [")
-		if len(series)==1:
-			series = series[0].split(' [')
-			if len(series)>1:
-				data['series'] = series[1][:-1]
-		elif series:
-			series = series[0].split(' [')
-			if len(series)>1:
-				data['series'] = series[1]
+	if response_item.get('series'):
+		series = text.split(" /")
+		if len(series)>1:
+			series = series[1].split("] [")
+			if len(series)==1:
+				series = series[0].split(' [')
+				if len(series)>1:
+					data['series'] = series[1][:-1]
+			elif series:
+				series = series[0].split(' [')
+				if len(series)>1:
+					data['series'] = series[1]
 	return data
 	
 @timed_lru_cache(60*10)
@@ -387,7 +388,7 @@ def search(name, page):
 # 		}
 # 	else:
 # 		return {"message":messages['not_response'],'status':response.status_code}
-@Animevost.route(ApiPath+ModulePath,  methods = ['post'])
+@Module.route(ApiPath+ModulePath,  methods = ['post'])
 def GetPage(page=None):
 	parser = reqparse.RequestParser()
 	parser.add_argument("page")
@@ -398,7 +399,7 @@ def GetPage(page=None):
 	elif isinstance(data, str):
 		return {'message': data, 'status': 404}, 404
 	return {'data': data, 'status': 200}
-@Animevost.route(ApiPath+ModulePath+'title', methods = ['post'])
+@Module.route(ApiPath+ModulePath+'title', methods = ['post'])
 def TitleRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("id")
@@ -407,13 +408,13 @@ def TitleRequest():
 	if not id:
 		return {"message":"Не передан параметр genre",'status': 400}
 	return GetTitleById(id)
-@Animevost.route(ApiPath+ModulePath+'genres',  methods = ['post', 'get'])
+@Module.route(ApiPath+ModulePath+'genres',  methods = ['post', 'get'])
 def GenresRequest():
 	data = GetGenres()
 	if data.get('message'):
 		return {'message': data.get('message'), 'status': 404}, 404
 	return json.dumps({'data': data, 'status': 200})
-@Animevost.route(ApiPath+ModulePath+'genre', methods = ['post'])
+@Module.route(ApiPath+ModulePath+'genre', methods = ['post'])
 def GenreRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("genre")
@@ -433,10 +434,10 @@ def GenreRequest():
 					genre_data['genre_name'] = item[0].title()
 					return json.dumps({'data': genre_data, 'status': 200})
 	return {'message': 'Жанр не найден', 'status': 404}, 404
-# @Animevost.route(ApiPath+ModulePath+'schedule',  methods = ['post', 'get'])
+# @Module.route(ApiPath+ModulePath+'schedule',  methods = ['post', 'get'])
 # def ScheduleRequest():
 # 	return GetSchedule()
-@Animevost.route(ApiPath+ModulePath+'search',  methods = ['post'])
+@Module.route(ApiPath+ModulePath+'search',  methods = ['post'])
 def SearchRequest():
 	parser = reqparse.RequestParser()
 	parser.add_argument("name")
@@ -449,9 +450,9 @@ def SearchRequest():
 	if not name:
 		return "Не передан параметр name", 400
 	return search(name, page)
-@Animevost.route(ApiPath+ModulePath+'icon')
+@Module.route(ApiPath+ModulePath+'icon')
 def icon():
 	return send_from_directory(UPLOAD_FOLDER, 'animevost.png')
-# @Animevost.route(ApiPath+ModulePath+'random',  methods = ['post', 'get'])
+# @Module.route(ApiPath+ModulePath+'random',  methods = ['post', 'get'])
 # def RandomTitleRequest():
 # 	return GetRandomPost()
