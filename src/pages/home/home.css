@@ -43,6 +43,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100%;
 }
 
 .services .service:hover {
@@ -55,7 +56,7 @@
 .services .service img {
     -o-object-fit: cover;
     object-fit: cover;
-    aspect-ratio: 1;
+    /* aspect-ratio: 1; */
     width: 100%;
 }
 

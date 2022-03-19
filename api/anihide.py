@@ -12,10 +12,10 @@ from utils.messages import messages
 from settings import headers
 from utils.plyr import PlyrSource
 
-ModuleTitle = "Animemoon"
-Moduleid = 'animemoon'
+ModuleTitle = "Anihide"
+Moduleid = 'anihide'
 ModulePath = Moduleid+'/'
-AnimeMoonLink = 'https://animemoon.top/'
+ModuleSiteLink = 'http://anihide.com/'
 hentai = True
 Module = Blueprint(ModulePath, __name__)
 @Module.route(ApiPath+ModulePath,  methods = ['post'])
@@ -41,14 +41,14 @@ def GenreRequest():
 	for key, val in genres.items():
 		for item in val['links']:
 			if item[1].lower()==genre.lower():
-				genre_data = GetGenre(val.get('prelink')+"/"+item[1], params.get('page'))
+				genre_data = GetGenre(f"/f/{val.get('prelink')}={item[1]}/sort=date/order=desc/", params.get('page'))
 				if genre_data.get('data'):
 					genre_data['data']['genre_name']=item[0].title()
 				return genre_data, genre_data.get('status')
 	return {'message': 'Жанр не найден', 'status': 404}, 404
 @Module.route(ApiPath+ModulePath+'icon')
 def icon():
-	return send_from_directory(UPLOAD_FOLDER, 'animemoon.png')
+	return send_from_directory(UPLOAD_FOLDER, 'anihide.svg')
 @Module.route(ApiPath+ModulePath+'title',  methods = ['post'])
 def TitleRequest():
 	parser = reqparse.RequestParser()
@@ -62,12 +62,11 @@ def TitleRequest():
 
 @timed_lru_cache(60*10)
 def GetGenre(GenreUrl, page=None):
-	Url = AnimeMoonLink+GenreUrl
+	Url = ModuleSiteLink+GenreUrl
 	if page is not None:
 		if not page.isdigit():
 			return {"message": messages['error_page_number'], 'status': 400}
 		Url+=f'/page/{page}/'
-	print(Url)
 	return GetTitles(Url)
 @timed_lru_cache(60*10)
 def GetPage(page):
@@ -76,13 +75,16 @@ def GetPage(page):
 			'status': 400,
 			'message': messages.get('error_page_number'),
 		}
-	return GetTitles(AnimeMoonLink+'anime_hentay'+(f'/page/{page}' if page else ''))
+	return GetTitles(ModuleSiteLink+(f'/page/{page}' if page else ''))
 
 def GetTitles(Url, html=None):
 	if not html:
 		response = requests.get(Url, headers=headers)
 		response.encoding = 'utf8'
 	if html or response:
+		with open('title.html', "w", encoding="utf-8") as f:
+			f.write(response.text)
+			f.close()
 		soup = BeautifulSoup(response.text if not html else html, 'lxml')
 		data = soup.select('#dle-content')
 		if not data:
@@ -92,7 +94,7 @@ def GetTitles(Url, html=None):
 			}
 		data = data[0]
 		outdata = list()
-		titles = data.select('.short-item')
+		titles = data.select('article.card')
 		if not titles:
 			return {
 				'status': 404,
@@ -100,22 +102,41 @@ def GetTitles(Url, html=None):
 			}
 		for title in titles:
 			title_info = {}
-			short_head = title.select('.short-head')
-			if short_head:
-				title_block = short_head[0].select('h3 > .short-link')
-				if title_block:
-					title_text = title_block[0].text.split('/')
-					title_info['ru_title'] = ' '.join(title_text[0].split())
-					if len(title_text)>1:
-						title_info['en_title'] = ' '.join(title_text[1].split())
-					title_info['id'] = title_block[0].get('href').split('/')[-1].split('.')[0]
-			short_inner = title.select('.short-inner')
-			if short_inner:
-				img = short_inner[0].select('.short-img > img')
-				if img:
-					title_info['poster'] = AnimeMoonLink+img[0].get('src')
+			# short_head = title.select('.short-head')
+			title_block = title.select('.card__title > a')
+			if title_block:
+				title_text = title_block[0].text.split('/')
+				title_info['ru_title'] = ' '.join(title_text[0].split())
+				if len(title_text)>1:
+					title_info['en_title'] = ' '.join(title_text[1].split())
+				title_info['id'] = title_block[0].get('href').split('/')[-1].split('.')[0]
+			desc = title.select('.card__desc')
+			if desc:
+				card_list = desc[0].select('.card__list > li')
+				if card_list:
+					blocks = list()
+					for i in card_list:
+						span = i.select('span')
+						if not span:
+							continue
+						span_text = span[0].text.lower()
+						text_after_span = span[0].next_sibling
+						if not text_after_span or not text_after_span.split():
+							continue
+						if 'эпизоды' in span_text:
+							title_info['series'] = text_after_span+' эпизод'
+						if 'качество' in span_text:
+							blocks.append('Качество: '+text_after_span.lower())
+						elif text_after_span:
+							text_after_span = text_after_span.lower()
+							if 'онгоинг' in text_after_span:
+								title_info['ongoing'] = True
+					title_info['info_blocks'] = blocks			
+			poster = title.select('.card__img > img')
+			if poster:
+				title_info['poster'] = ModuleSiteLink+poster[0].get('src')
 			outdata.append(title_info)
-		pages = data.select('.navigation *')
+		pages = data.select('.pagination > .pagination__pages > *')
 		return {
 			'status': 200,
 			'data': {
@@ -133,11 +154,11 @@ def GetTitles(Url, html=None):
 
 @timed_lru_cache(60*60*6)
 def GetGenres():
-	genres = requests.get(AnimeMoonLink+'anime_hentay/', headers=headers)
+	genres = requests.get(ModuleSiteLink, headers=headers)
 	genres.encoding = 'utf8'
 	if genres:
 		soup_genres = BeautifulSoup(genres.text, 'lxml')
-		tags = soup_genres.select('aside.col-left > .nav-box > .nav-box-content > ul.nav > li > ul.garmoshka > li > a')
+		tags = soup_genres.select('.side-block__content > .nav-col > .nav-menu > li > a')
 		if not tags:
 			return {
 				'status': 500,
@@ -145,14 +166,14 @@ def GetGenres():
 			}
 		return {
 			'genre': {
-				'links': [[i.text, requote_uri(i.get('href').split('/')[-1])] for i in tags],
-				'prelink': 'xfsearch/genre',
+				'links': [[i.text, requote_uri(i.get('href').split('/')[-1].split('=')[-1])] for i in tags],
+				'prelink': 'j.genres',
 				'name': 'Жанр',
 			},
 		}
 @timed_lru_cache(60*60)
 def GetTitleById(title_id):
-	response = requests.get(AnimeMoonLink+title_id+'.html', headers=headers)
+	response = requests.get(ModuleSiteLink+title_id+'.html', headers=headers)
 	response.encoding = 'utf8'
 	if response:
 		soup = BeautifulSoup(response.text, 'lxml')
@@ -166,8 +187,9 @@ def GetTitleById(title_id):
 			f.write(response.text)
 			f.close()
 		out = {}
-		short_item = dle_content[0].select('article > .short-item')
-		if not short_item:
+		# short_item = dle_content[0].select('article > .short-item')
+		subcols = dle_content[0].select('article > .page__subcols')
+		if not subcols:
 			return {
 			'status': 404,
 			'message': messages.get('not_response'),
@@ -177,7 +199,7 @@ def GetTitleById(title_id):
 		if title:
 			title_text = title.get('content')
 		else:
-			title = short_item[0].select('.short-head > h1')
+			title = subcols[0].select('.page__header > h1')
 			if title:
 				title_text = title[0].text
 		if title_text:
@@ -185,29 +207,26 @@ def GetTitleById(title_id):
 			out['ru_title'] = ' '.join(title_text[0].split())
 			if len(title_text)>1:
 				out['en_title'] = ' '.join(title_text[1].split())
-		f_mov_cols = short_item[0].select('.f-mov-cols')
-		if f_mov_cols:
-			poster = f_mov_cols[0].select('.fmc-left > .f-mov-img > img')
-			if poster:
-				out['poster'] = AnimeMoonLink+poster[0].get('src')
-			# fmc_right = f_mov_cols[0].select('.fmc-right')
-			# if fmc_right:
-			# 	short_info_items = fmc_right[0].select('.short-info-item')
-			# 	for i in short_info_items:
+		poster = subcols[0].select('.page__subcol-side > .pmovie__poster > img')
+		if poster:
+			out['poster'] = ModuleSiteLink+poster[0].get('src')
+		desc = dle_content[0].select('article > .page__text')
+		if desc:
+			out['description'] = desc[0].text
+		# mov_desc = short_item[0].select('.mov-desc')
+		# if mov_desc:
+		# 	description = mov_desc[0].select('.full-text')
+		# 	if description:
+		# 		out['description'] = description[0].text
+		# 	divs = mov_desc[0].select('* > div')
+		# 	if len(divs)>=2:
+		# 		screens = divs[2].select('a')
+		# 		if screens:
+		# 			print([ModuleSiteLink+i.get('href')[1:] for i in screens])
+		# player = dle_content[0].select('article > .player-section > .player-box > .reclama > script')
+		# print(player)
 
-		# poster = dle_content[0].select('.fposter > img')
-		# if poster:
-		# 	out['poster'] = HentaizLink+poster[0].get('src').replace('\n', '')
-		mov_desc = short_item[0].select('.mov-desc')
-		if mov_desc:
-			description = mov_desc[0].select('.full-text')
-			if description:
-				out['description'] = description[0].text
-			divs = mov_desc[0].select('* > div')
-			if len(divs)>=2:
-				screens = divs[2].select('a')
-				if screens:
-					print([AnimeMoonLink+i.get('href') for i in screens])
+
 		# series = dle_content[0].select('.tab_content > .tabs > .series-btn > .s-link')
 		# out['series'] = {}
 		# if series:

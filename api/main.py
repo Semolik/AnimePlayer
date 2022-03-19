@@ -4,7 +4,7 @@ from flask import Flask,send_from_directory
 import animevost
 import anidub
 import hentaiz
-import animemoon
+import anihide
 from config import ApiPath
 from flask_restful import reqparse
 # app = Flask(__name__, static_url_path="/app",static_folder='../build')
@@ -12,7 +12,7 @@ app = Flask(__name__, static_url_path="/app", static_folder='app')
 from flask_cors import CORS
 CORS(app)
 
-modules = [animevost, anidub, hentaiz,animemoon]
+modules = [animevost, anidub, hentaiz,anihide]
 for module in modules:
 	app.register_blueprint(module.Module)
 @app.route(ApiPath+'services')
