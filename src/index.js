@@ -6,10 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import Header from './components/Header/Header';
 import { BrowserRouter } from 'react-router-dom';
 
+var hormymode = React.createRef()
 const app = (
     <BrowserRouter>
-        <Header/>
-        <App />
+        <Header hormymoderef={hormymode}/>
+        <App hormymoderef={hormymode}/>
     </BrowserRouter>
 );
 

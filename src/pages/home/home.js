@@ -21,6 +21,10 @@ class HomePage extends React.Component {
 
 		};
 	}
+	// componentWillReceiveProps(props) {
+	// 	// this.setState({ open: props.drawerOpen })
+	// 	console.log(props)
+	// }
 	LoadNoHorny(){
 		const self = this;
 		axios.post(`${settings.api}/home`, {horny: false})
@@ -58,6 +62,9 @@ class HomePage extends React.Component {
 		});
 		
 	}
+	// componentWillReceiveProps(nextProps) {
+    //     console.log('componentWillReceiveProps', nextProps);
+    // }
 	LoadHorny(){
 		const self = this;
 		axios.post(`${settings.api}/home`, {horny: true})
@@ -98,6 +105,21 @@ class HomePage extends React.Component {
 			shikimori: [],
 		});
 		
+	}
+	// componentDidUpdate(prevProps, prevState) {
+	// 	console.log(prevState);
+	// 	console.log(this.state.horny_mode);
+	// 	// if (prevState.pokemons !== this.state.pokemons) {
+	// 	//   console.log('pokemons state has changed.')
+	// 	// }
+	// }
+	SetHornyMode(bool){
+		this.setState({horny_mode:bool});
+		if (bool){
+			this.LoadHorny();
+		} else {
+			this.LoadNoHorny();
+		}
 	}
 	componentDidMount() {
 		if (this.state.horny_mode){
@@ -145,24 +167,26 @@ class HomePage extends React.Component {
 					<div className='shikimori-cards-container'>
 						<div className='block-title'>Shikimori news</div>
 						<Fancybox>
-						{shikimori.map((el, index)=>{
-							if (el.html_footer){
-								var parser = new DOMParser();
-								var footer = parser.parseFromString(el.html_footer, 'text/html');
-								var images = [...footer.querySelectorAll('img')];
-								if (images.length > 0){
-									return images.map((image,image_index)=>(
-										<div className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
-											<div className="poster" data-fancybox={`gallery-${index}`} data-src={image.attributes.src.nodeValue}>
-												<img src={image.attributes.src.nodeValue} alt={el.topic_title}/>
+							{shikimori.map((el, index)=>{
+								if (el.html_footer){
+									var parser = new DOMParser();
+									var footer = parser.parseFromString(el.html_footer, 'text/html');
+									var images = [...footer.querySelectorAll('img')];
+									if (images.length > 0){
+										return images.map((image,image_index)=>(
+											<div className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
+												<div className="poster" data-fancybox={`gallery-${index}`} data-src={image.attributes.src.nodeValue}>
+													<img src={image.attributes.src.nodeValue} alt={el.topic_title}/>
+												</div>
+												<div className="title">{el.topic_title}</div>
+												<a href={`https://shikimori.one${el.forum.url}/${el.id}`} className="btn" target="_blank" rel="noopener noreferrer">Открыть</a>
 											</div>
-											<div className="title">{el.topic_title}</div>
-											<a href={`https://shikimori.one${el.forum.url}/${el.id}`} className="btn" target="_blank" rel="noopener noreferrer">Открыть</a>
-										</div>
-									));
+										));
+									} 
+									return null
 								}
-							}
-						})}
+								return null
+							})}
 						</Fancybox>
 					</div>
 				</div> 

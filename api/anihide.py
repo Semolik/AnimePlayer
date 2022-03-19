@@ -82,9 +82,9 @@ def GetTitles(Url, html=None):
 		response = requests.get(Url, headers=headers)
 		response.encoding = 'utf8'
 	if html or response:
-		with open('title.html', "w", encoding="utf-8") as f:
-			f.write(response.text)
-			f.close()
+		# with open('title.html', "w", encoding="utf-8") as f:
+		# 	f.write(response.text)
+		# 	f.close()
 		soup = BeautifulSoup(response.text if not html else html, 'lxml')
 		data = soup.select('#dle-content')
 		if not data:
@@ -183,9 +183,9 @@ def GetTitleById(title_id):
 				'status': 500,
 				'message': messages.get('error_parce')
 			}
-		with open('title.html', "w", encoding="utf-8") as f:
-			f.write(response.text)
-			f.close()
+		# with open('title.html', "w", encoding="utf-8") as f:
+		# 	f.write(response.text)
+		# 	f.close()
 		out = {}
 		# short_item = dle_content[0].select('article > .short-item')
 		subcols = dle_content[0].select('article > .page__subcols')

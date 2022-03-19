@@ -1,12 +1,12 @@
 import React from 'react';
 import './Header.css';
 
-import button from '../button/button';
+// import button from '../button/button';
 import { Link} from 'react-router-dom';
 import settings from '../../settings';
 import Loading from '../../components/Loading/Loading';
 import { Route, Switch} from 'react-router-dom';
-import RippleButton from '../button/button';
+// import RippleButton from '../button/button';
 class Header extends React.Component {
 	
 	constructor(props) {
@@ -18,6 +18,7 @@ class Header extends React.Component {
 			items: {},
 			props: props,
 			horny_mode: localStorage['horny-mode']==="true",
+			hormymode_ref: props.hormymoderef,
 		};
 	}
 	componentDidMount() {
@@ -69,8 +70,8 @@ class Header extends React.Component {
 	  }
 	render() {
 		const { error, isLoaded, items, horny_mode} = this.state;
-		console.log(items);
-		console.log(horny_mode);
+		// console.log(items);
+		// console.log(horny_mode);
 		
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
@@ -99,6 +100,9 @@ class Header extends React.Component {
 								<div className={"sidebar-item button"+(localStorage['horny-mode']==="true" ?" active":"")}>
 									<span className="index" onClick={(e=>{
 										var hornymode = e.target.parentNode.classList.toggle('active');
+										if (this.state.hormymode_ref.current){
+											this.state.hormymode_ref.current.SetHornyMode(hornymode);
+										}
 										localStorage.setItem('horny-mode',hornymode);
 										this.setState({horny_mode: hornymode});
 									})}>Horny mode</span>
