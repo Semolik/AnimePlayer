@@ -183,9 +183,15 @@
     position: absolute;
     top: 0;
     left: 1rem;
+    text-decoration: none;
+    color: white;
+    padding: 3px 5px;
+    border-radius: 7px;
+    transition: .4s;
 }
-
-
+.cards-container .service-title:hover{
+    background: var(--background-highest);
+}
 /* .cards .shikimori-card:hover {
     filter: blur(3px);
 } */

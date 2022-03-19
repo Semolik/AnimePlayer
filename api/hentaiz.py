@@ -1,5 +1,4 @@
 import re
-from numpy import block
 import requests
 import json
 from bs4 import BeautifulSoup

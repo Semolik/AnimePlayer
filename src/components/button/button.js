@@ -23,6 +23,7 @@ const RippleButton = ({ children, onClick, className }) => {
                 setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
                 onClick && onClick(e);
             }}
+            href=''
         >
             {isRippling ? (
                 <span

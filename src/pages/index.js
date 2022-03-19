@@ -168,8 +168,6 @@ class ServicePage extends React.Component {
 			.then(res => res.json())
 			.then(
 				(result) => {
-					console.log(result);
-					console.log(result.status);
 					if (result.status===200){
 						this.setState({
 							isLoaded: true,
@@ -243,6 +241,9 @@ class ServicePage extends React.Component {
 	}
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.id !== this.state.id) {
+			// this.setState({
+			// 	load: false,
+			// });
 			this.loadData();
 		}
 	}

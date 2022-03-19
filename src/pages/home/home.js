@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import settings from '../../settings';
 import Card from '../../components/card/card';
+import axios from 'axios';
 // import HorizontalScroll from 'react-scroll-horizontal';
 import Fancybox from '../../components/Fancybox/Fancybox';
 class HomePage extends React.Component {
@@ -16,42 +17,95 @@ class HomePage extends React.Component {
 			isShikimoriLoaded: false,
 			items: {},
 			shikimori: {},
+			horny_mode: localStorage['horny-mode']==="true",
 
 		};
 	}
-	componentDidMount() {
-		fetch(`${settings.api}/home`)
-		.then(res => res.json())
-		.then(
-			(result) => {
-				this.setState({
-						isLoaded: true,
-						items: result.data,
-					});
-			},
-			(error) => {
-				this.setState({
+	LoadNoHorny(){
+		const self = this;
+		axios.post(`${settings.api}/home`, {horny: false})
+		.then(function (response) {
+			if (response.status===200){
+				self.setState({
+					isLoaded: true,
+					items: response.data.data,
+				});
+			} else {
+				self.setState({
 					isLoaded: false,
-					error
+					error: {message: 'Ошибка получения домашней страницы'}
 				});
 			}
-		);
-		fetch('https://shikimori.one/api/topics?forum=news&limit=29')
-		.then(res => res.json())
-		.then(
-			(result) => {
-				this.setState({
-					isShikimoriLoaded: true,
-					shikimori: result,
+		})
+		.catch(function (error) {
+			self.setState({
+				isLoaded: false,
+				error
+			});
+		});
+		axios.get('https://shikimori.one/api/topics?forum=news&limit=29')
+		.then(function (response) {
+			self.setState({
+				isShikimoriLoaded: true,
+				shikimori: response.data,
+			});
+		})
+		.catch(function (error) {
+			self.setState({
+				isShikimoriLoaded: false,
+				error
+			});
+		});
+		
+	}
+	LoadHorny(){
+		const self = this;
+		axios.post(`${settings.api}/home`, {horny: true})
+		.then(function (response) {
+			if (response.status===200){
+				self.setState({
+					isLoaded: true,
+					items: response.data.data,
 				});
-			},
-			(error) => {
-				this.setState({
-					isShikimoriLoaded: false,
-					error
+			} else {
+				self.setState({
+					isLoaded: false,
+					error: {message: 'Ошибка получения домашней страницы'}
 				});
 			}
-		);
+		})
+		.catch(function (error) {
+			self.setState({
+				isLoaded: false,
+				error
+			});
+		});
+		// axios.get('https://shikimori.one/api/topics?forum=news&limit=29')
+		// .then(function (response) {
+		// 	self.setState({
+		// 		isShikimoriLoaded: true,
+		// 		shikimori: response.data,
+		// 	});
+		// })
+		// .catch(function (error) {
+		// 	self.setState({
+		// 		isShikimoriLoaded: false,
+		// 		error
+		// 	});
+		// });
+		self.setState({
+			isShikimoriLoaded: true,
+			shikimori: [],
+		});
+		
+	}
+	componentDidMount() {
+		if (this.state.horny_mode){
+			this.LoadHorny();
+		} else {
+			this.LoadNoHorny();
+		}
+		
 	}
 	render() {
 		const { error, isLoaded, items, shikimori, isShikimoriLoaded} = this.state;
@@ -80,7 +134,9 @@ class HomePage extends React.Component {
 					</div>
 					{items.map((service,key) =>{
 						return <div className='cards-container hide-cards' key={key}>
-							<div className='service-title'>{service.title}</div>
+							<Link className='service-title' to={"/"+service.id}>
+								{service.title}
+							</Link>
 							{service.data.map((item, i) => (
 								<Card key={i} data={item} service={service}></Card>
 							))}
@@ -94,16 +150,15 @@ class HomePage extends React.Component {
 								var parser = new DOMParser();
 								var footer = parser.parseFromString(el.html_footer, 'text/html');
 								var images = [...footer.querySelectorAll('img')];
-								console.log(images[0].attributes)
 								if (images.length > 0){
 									return images.map((image,image_index)=>(
-										<a className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
+										<div className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
 											<div className="poster" data-fancybox={`gallery-${index}`} data-src={image.attributes.src.nodeValue}>
 												<img src={image.attributes.src.nodeValue} alt={el.topic_title}/>
 											</div>
 											<div className="title">{el.topic_title}</div>
 											<a href={`https://shikimori.one${el.forum.url}/${el.id}`} className="btn" target="_blank" rel="noopener noreferrer">Открыть</a>
-										</a>
+										</div>
 									));
 								}
 							}
