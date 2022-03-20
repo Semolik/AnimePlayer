@@ -208,7 +208,7 @@
     margin-bottom: 10px;
     text-decoration: none;
     min-width: 100%;
-    transition: .1s;
+    transition: .05s;
 }
 
 .sidebar .nav-list .genres .genre:hover {

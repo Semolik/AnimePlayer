@@ -226,6 +226,7 @@ def GenerateTitleResponse(response):
 	else:
 		data['shikimori'] = None
 	data['service_title'] = ModuleTitle
+	data['horny'] = hentai
 	return data
 @timed_lru_cache(60*60)
 def GetTitleById(title_id):
@@ -306,7 +307,7 @@ def GetTitles(Url):
 					title['current'] = current
 			title['count'] = count
 			output.append(title)
-		NavBar = soup.find_all(class_='block_4')
+		NavBar = soup.find(class_='block_4')
 		page = int([i for i in NavBar.select('span') if i.text.isdigit()][0].text) if NavBar else 1
 		pages = int(NavBar.select('a')[-1].text) if NavBar else 1
 		return {

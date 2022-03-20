@@ -331,6 +331,7 @@ def GetTitleById(title_id):
 		if description:
 			out['description'] = description[0].text
 		out['service_title'] = ModuleTitle
+		out['horny'] = hentai
 		return {
 			'status':200,
 			'data': out,

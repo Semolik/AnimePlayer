@@ -62,9 +62,6 @@ class HomePage extends React.Component {
 		});
 		
 	}
-	// componentWillReceiveProps(nextProps) {
-    //     console.log('componentWillReceiveProps', nextProps);
-    // }
 	LoadHorny(){
 		const self = this;
 		axios.post(`${settings.api}/home`, {horny: true})
@@ -106,15 +103,8 @@ class HomePage extends React.Component {
 		});
 		
 	}
-	// componentDidUpdate(prevProps, prevState) {
-	// 	console.log(prevState);
-	// 	console.log(this.state.horny_mode);
-	// 	// if (prevState.pokemons !== this.state.pokemons) {
-	// 	//   console.log('pokemons state has changed.')
-	// 	// }
-	// }
 	SetHornyMode(bool){
-		this.setState({horny_mode:bool});
+		this.setState({isLoaded: false,horny_mode:bool});
 		if (bool){
 			this.LoadHorny();
 		} else {

@@ -23,7 +23,7 @@ class App extends React.Component {
 								props.match.params.id,
 								props.match.params.PageType,
 								props.match.params.PageNumber,
-							]} {...props}/> 
+							]} ref={this.hormymoderef} {...props}/> 
 						)
 					}/>
 					<Route exact path='/'  render={(props) => (<HomePage ref={this.hormymoderef} {...props}/>)} />

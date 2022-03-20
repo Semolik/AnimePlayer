@@ -24,28 +24,57 @@ class ServicePage extends React.Component {
 			// api: `http://192.168.50.106:80/api/${this.props.match.params.service}/`,
 			page_type: '',
 			page_: 1,
+			horny_mode: localStorage['horny-mode']==="true",
 			
 		};
 	}
-  
-	componentDidMount() {
+	SetHornyMode(bool){
 		if (this.state.service==="favorites"){
-			var service_saved = localStorage.getItem('favorites');
-			if (!service_saved){
-				this.setState({
-					isLoaded: true,
-					data: {},
-					page_type: 'favorites',
-				});
-				return;
+			this.setState({horny_mode: bool})
+			
+		}
+	}
+	componentDidUpdate(prevProps, prevState) {
+		if (this.state.service==="favorites"){
+			if (prevState.horny_mode!==this.state.horny_mode){
+				this.loadFavorites();
 			}
-			service_saved = JSON.parse(service_saved);
+		}else if (prevState.id !== this.state.id) {
+			this.setState({
+				isLoaded: false,
+			});
+			this.loadData();
+		}
+	}
+	loadFavorites(){
+		var service_saved = localStorage.getItem('favorites');
+		if (!service_saved){
 			this.setState({
 				isLoaded: true,
-				data: service_saved,
+				data: {},
 				page_type: 'favorites',
 			});
-
+			return;
+		}
+		service_saved = JSON.parse(service_saved);
+		Object.keys(service_saved).forEach(service => {
+			Object.keys(service_saved[service]).forEach(id => {
+				var horny = service_saved[service][id]['horny'];
+				var favorite = service_saved[service][id]['favorite'];
+				if (favorite && horny!==this.state.horny_mode){
+					delete service_saved[service][id];
+				}
+			});
+		});
+		this.setState({
+			isLoaded: true,
+			data: service_saved,
+			page_type: 'favorites',
+		});
+	}
+	componentDidMount() {
+		if (this.state.service==="favorites"){
+			this.loadFavorites();
 		} else{
 			this.loadData()
 		}
@@ -53,7 +82,6 @@ class ServicePage extends React.Component {
 	}
 	loadData = ()=>{
 		 if (this.state.page===undefined | this.state.page==='page'){
-
 			fetch(`${settings.api}/${this.state.service}/`,{
 				method: 'post',
 				headers: {
@@ -239,14 +267,7 @@ class ServicePage extends React.Component {
 		const urlParams = new URLSearchParams(queryString);
 		return urlParams.get(name);
 	}
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.id !== this.state.id) {
-			// this.setState({
-			// 	load: false,
-			// });
-			this.loadData();
-		}
-	}
+	
 	loadMore = () => {
 		this.setState((prevState) => ({
 			id: prevState.id ? parseInt(prevState.id) + 1 : 2

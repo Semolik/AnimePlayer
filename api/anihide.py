@@ -319,7 +319,8 @@ def GetTitleById(title_id):
 		# 			related_list.append(related_data)
 		# 		if related_list:
 		# 			out['related'] = related_list
-		# out['service_title'] = ModuleTitle
+		out['service_title'] = ModuleTitle
+		out['horny'] = hentai
 		return {
 			'status':200,
 			'data': out,

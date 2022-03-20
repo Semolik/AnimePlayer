@@ -7,7 +7,7 @@ import settings from '../../settings';
 import Card from '../card/card';
 
 
-function Save(service,id,data,fav, series){
+function Save(service,id,data,fav, series, horny){
 	var service_saved = localStorage.getItem('favorites');
 	if (!service_saved){
 		service_saved = {}
@@ -23,21 +23,32 @@ function Save(service,id,data,fav, series){
 			service_saved[service][id].favorite= !service_saved[service][id].favorite;
 			favorite.classList.remove('active');
 		} else {
-			service_saved[service][id] = {
+			data = {
 				ru_title: data.ru_title,
 				en_title: data.en_title,
 				poster: data.poster,
 				service_title: data.service_title,
 				favorite: true,
-				series: series || 0,
+				horny: horny,
 			};
 			favorite.classList.add('active');
+			if (series){
+				data['series'] = !service_saved[service][id]['series'] ? 0: series;
+			} else if (service_saved[service][id] && service_saved[service][id]['series']){
+				data['series'] = service_saved[service][id]['series'];
+			} else {
+				data['series'] = 0
+			}
+			service_saved[service][id] = data
 		}
 	} else {
 		service_saved[service][id] = {
 			favorite: (service_saved[service][id] ? service_saved[service][id].favorite : false),
-			series:series || 0,
+			series: series || 0,
 		};
+		// if (!service_saved[service][id]['series'] && series){
+		// 	service_saved[service][id]['series'] = series;
+		// }
 	}
 	localStorage['favorites'] = JSON.stringify(service_saved);
 }
@@ -128,7 +139,7 @@ function Title(event) {
 						<div className='column'>
 							<div className="title-poster-container">
 								<img className='poster' src={data.poster} alt={data.ru_title}></img>
-								<div className='block button favorites' onClick={()=> Save(service,id,data, true,null)}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id = "favorite" className={(favorite? "active": "")}><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg></div>
+								<div className='block button favorites' onClick={()=> Save(service,id,data, true,null,data.horny)}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id = "favorite" className={(favorite? "active": "")}><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg></div>
 							</div>
 							{/* {data.genre && 
 								<div className='genres'>{data.genre.map((element, key) =>{
