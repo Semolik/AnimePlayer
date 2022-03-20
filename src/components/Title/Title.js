@@ -151,7 +151,7 @@ function Title(event) {
 									<span>Количество серий</span>{data.series.info[0]}
 								</div>
 							}
-							{data.series && data.series.info.length>1 &&
+							{data.series && data.series.info && data.series.info.length>1 &&
 								<div className='block'>
 									<span>Следующий эпизод</span>{data.series.info[1]}
 								</div>

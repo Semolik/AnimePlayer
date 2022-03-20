@@ -1,3 +1,5 @@
+from importlib.metadata import requires
+from pickle import FALSE
 import re
 import requests
 import json
@@ -45,6 +47,13 @@ def GenreRequest():
 				if genre_data.get('data'):
 					genre_data['data']['genre_name']=item[0].title()
 				return genre_data, genre_data.get('status')
+	if genre.isdigit() and len(genre)==4:
+		genre_data = GetGenre(f"/f/year={genre}/sort=date/order=desc/", params.get('page'))
+		if genre_data.get('status')!=200:
+			genre_data['message'] = 'Жанр не найден'
+		if genre_data.get('data'):
+			genre_data['data']['genre_name']=genre
+		return genre_data, genre_data.get('status')
 	return {'message': 'Жанр не найден', 'status': 404}, 404
 @Module.route(ApiPath+ModulePath+'icon')
 def icon():
@@ -60,6 +69,9 @@ def TitleRequest():
 	title = GetTitleById(id)
 	return title, title.get('status')
 
+def getId(url):
+	if url:
+		return url.split('/')[-1].split('.')[0]
 @timed_lru_cache(60*10)
 def GetGenre(GenreUrl, page=None):
 	Url = ModuleSiteLink+GenreUrl
@@ -109,7 +121,7 @@ def GetTitles(Url, html=None):
 				title_info['ru_title'] = ' '.join(title_text[0].split())
 				if len(title_text)>1:
 					title_info['en_title'] = ' '.join(title_text[1].split())
-				title_info['id'] = title_block[0].get('href').split('/')[-1].split('.')[0]
+				title_info['id'] = getId(title_block[0].get('href'))
 			desc = title.select('.card__desc')
 			if desc:
 				card_list = desc[0].select('.card__list > li')
@@ -187,7 +199,6 @@ def GetTitleById(title_id):
 		# 	f.write(response.text)
 		# 	f.close()
 		out = {}
-		# short_item = dle_content[0].select('article > .short-item')
 		subcols = dle_content[0].select('article > .page__subcols')
 		if not subcols:
 			return {
@@ -213,6 +224,107 @@ def GetTitleById(title_id):
 		desc = dle_content[0].select('article > .page__text')
 		if desc:
 			out['description'] = desc[0].text
+		related = dle_content[0].select('article > section.pmovie__related > .sect__content > a')
+		if related:
+			related_list = list()
+			for i in related:
+				related_title = {}
+				related_title['id'] = getId(i.get('href'))
+				related_poster = i.select('.poster__img > img')
+				if related_poster:
+					related_title['poster'] = ModuleSiteLink+related_poster[0].get('src')
+				related_title_block = i.select('.poster__title')
+				if related_title_block:
+					related_title['ru_title'] = related_title_block[0].text
+				related_list.append(related_title)
+			if related_list:
+				out['related'] = related_list
+		subcol_main = subcols[0].select('.page__subcol-main')
+		blocks = list()
+		if subcol_main:
+			year = subcol_main[0].select('.pmovie__year')
+			if year:
+				year_link = year[0].find('a')
+				if year_link:
+					year_text = [year_link.text]
+					if year_text[0].isdigit():
+						year_text*=2
+					out['year'] = year_text
+			
+			pmovie_header = subcol_main[0].select('ul.pmovie__header-list > li > div')
+			if pmovie_header:
+				for i in pmovie_header:
+					block = [i.text]
+					next_sibling = i.next_sibling
+					if next_sibling:
+						block.append(next_sibling.text)
+					blocks.append(block)
+
+			pmovie_bottom = subcol_main[0].select('.pmovie__bottom > .card__ratings > .card__rating-ext')
+			if pmovie_bottom:
+				for i in pmovie_bottom:
+					block_title = i.get('data-text')
+					if not block_title:
+						continue
+					block = [block_title]
+					block_text = i.findAll(text=True, recursive=False)
+					if block_text:
+						block.append(block_text[0].text)
+					blocks.append(block)
+		page_subcol2 = subcols[0].select('ul.page__subcol-side2 > li')
+		if page_subcol2:
+			for i in page_subcol2:
+				spans = i.select('span')
+				if len(spans)>1:
+					blocks.append([spans[0].text,spans[1].text])
+				else:
+					div = i.select('div')
+					if div:
+						block = [div[0].text]
+						next_sibling = div[0].next_sibling
+						if "Жанр:" == block[0]:
+							if next_sibling:
+								title_genres = next_sibling.text.split(' / ')
+								if title_genres:
+									title_genres[0] = ' '.join(title_genres[0].split())
+									title_genres[-1] = ' '.join(title_genres[-1].split())
+									title_genres_lower = [i.lower() for i in  title_genres]
+									genres = GetGenres()
+									out_genres = list()
+									for key, val in genres.items():
+										for item in val['links']:
+											if item[0].lower() in title_genres_lower:
+												index = title_genres_lower.index(item[0].lower())
+												title_genres_lower.pop(index)
+												out_genres.append(item)
+									if title_genres_lower:
+										for i in title_genres_lower:
+											out_genres.append([i])
+									out['genre'] = out_genres
+						else:
+							if next_sibling:
+								block.append(next_sibling.text)
+							blocks.append(block)
+		out['blocks'] = blocks
+		player = dle_content[0].select('.pmovie__player > .tabs-block__content > script')
+		if player:
+			urls = player[0].text.split('file:"')[-1].split('"}')[0].split(' or ')
+			series = None
+			for url in urls:
+				response = requests.get(url)
+				response.encoding = 'utf8'
+				if response:
+					response_series = response.json()
+					series = list()
+					for i in response_series:
+						episode=PlyrSource(i.get('file'),i.get('poster'))
+						episode['name'] = i.get('title')
+						series.append(episode)
+					break
+			out['series'] = {}
+			if series:
+				out['series']['direct_link']=False
+				out['series']['data'] = series
 		# mov_desc = short_item[0].select('.mov-desc')
 		# if mov_desc:
 		# 	description = mov_desc[0].select('.full-text')
