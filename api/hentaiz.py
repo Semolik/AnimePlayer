@@ -316,10 +316,20 @@ def GetTitleById(title_id):
 				first_splited_link = out_series[0]['link'].split('/')
 				first = GetVideoById(first_splited_link[-1],first_splited_link[-2])
 				if first.get('status')==200:
-					first = first.get('data')
+					first_data = first.get('data')
 					
-					first['name'] = out_series[0]['name']
-					out['series']['data'][0] = first
+					first_data['name'] = out_series[0]['name']
+					out['series']['data'][0] = first_data
+				out['series']['direct_link']=False
+		else:
+			series = dle_content[0].select('.embed-responsive > iframe')
+			if series:
+				splited_link = series[0].get('src').split('/')
+				episode = GetVideoById(splited_link[-1].split('=')[-1],splited_link[-2])
+				if episode.get('status')==200:
+					episode_data = episode.get('data')
+					episode_data['name'] = 'Видео'
+					out['series']['data'] = [episode_data]
 				out['series']['direct_link']=False
 		fmright = dle_content[0].select('.fmright')
 		if fmright:
