@@ -13,10 +13,10 @@ function Pagination (event){
 	var totalPages = event.totalPages;
 	let beforePage = page - 1;
 	let afterPage = page + 1;
-	if(page > 1){
+	if(totalPages>2 && page > 1){
 		liTags.push(<Link className="btn prev"  to={params!==undefined? `/${params.service}/search/${params.text}/${page - 1}`:url+(page - 1)} key={url+(page - 1)+'prev'}><span><i className="fas fa-angle-left"></i> Prev</span></Link>);
 	}
-	if(page > 2){
+	if(totalPages>4 && page > 2){
 		liTags.push(<Link className="first numb" to={params!==undefined? `/${params.service}/search/${params.text}/1`:url+1} key={url+1+'first'}><span>1</span></Link>);
 	}
 	if (page === totalPages && totalPages>3) {
@@ -38,11 +38,14 @@ function Pagination (event){
 		}
 		liTags.push(<Link className={`numb${page === plength ? ' active' : ''}`} to={params!==undefined? `/${params.service}/search/${params.text}/${plength}`:url+plength} key={url+plength}><span>{plength}</span></Link>);
 	}
-	if(page < totalPages - 1 || page === totalPages + 1){
-		liTags.push(<Link className={"last numb "+(page === totalPages + 1? ' active' : '')} to={params!==undefined? `/${params.service}/search/${params.text}/${totalPages}`:url+totalPages} key={url+totalPages+'last'}><span>{(page === totalPages + 1? totalPages+1 :totalPages)}</span></Link>);
+	console.log(page);
+	console.log(totalPages);
+
+	if(totalPages>2 && (page < totalPages - 1 || page === totalPages + 1)){
+		liTags.push(<Link className={"last numb "+(page === totalPages + 1? ' active' : '')} to={params!==undefined? `/${params.service}/search/${params.text}/${totalPages}`:url+totalPages} key={url+totalPages+'last'}><span>{totalPages}</span></Link>);
 	}
 	
-	if (page < totalPages) { //show the next button if the page value is less than totalPage(20)
+	if (totalPages>2 && page < totalPages) { //show the next button if the page value is less than totalPage(20)
 		liTags.push(<Link className="btn next" to={params!==undefined? `/${params.service}/search/${params.text}/${page + 1}`:url+(page + 1)} key={url+(page + 1)+'next'}><span>Next <i className="fas fa-angle-right"></i></span></Link>);
 	}
 	return(
