@@ -16,7 +16,7 @@ class HomePage extends React.Component {
 			isLoaded: false,
 			isShikimoriLoaded: false,
 			items: {},
-			shikimori: {},
+			shikimori: [],
 			horny_mode: localStorage['horny-mode']==="true",
 
 		};
@@ -56,8 +56,8 @@ class HomePage extends React.Component {
 		})
 		.catch(function (error) {
 			self.setState({
-				isShikimoriLoaded: false,
-				error
+				isShikimoriLoaded: true,
+				// error
 			});
 		});
 		
@@ -154,31 +154,33 @@ class HomePage extends React.Component {
 							))}
 						</div>
 					})}
-					<div className='shikimori-cards-container'>
-						<div className='block-title'>Shikimori news</div>
-						<Fancybox>
-							{shikimori.map((el, index)=>{
-								if (el.html_footer){
-									var parser = new DOMParser();
-									var footer = parser.parseFromString(el.html_footer, 'text/html');
-									var images = [...footer.querySelectorAll('img')];
-									if (images.length > 0){
-										return images.map((image,image_index)=>(
-											<div className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
-												<div className="poster" data-fancybox={`gallery-${index}`} data-src={image.attributes.src.nodeValue}>
-													<img src={image.attributes.src.nodeValue} alt={el.topic_title}/>
+					{shikimori.length>0 &&
+						<div className='shikimori-cards-container'>
+							<div className='block-title'>Shikimori news</div>
+							<Fancybox>
+								{shikimori.map((el, index)=>{
+									if (el.html_footer){
+										var parser = new DOMParser();
+										var footer = parser.parseFromString(el.html_footer, 'text/html');
+										var images = [...footer.querySelectorAll('img')];
+										if (images.length > 0){
+											return images.map((image,image_index)=>(
+												<div className="card-horizontal" title={el.topic_title} key={image_index} style={image_index>0 ? {'display': 'none'} : {}}>
+													<div className="poster" data-fancybox={`gallery-${index}`} data-src={image.attributes.src.nodeValue}>
+														<img src={image.attributes.src.nodeValue} alt={el.topic_title}/>
+													</div>
+													<div className="title">{el.topic_title}</div>
+													<a href={`https://shikimori.one${el.forum.url}/${el.id}`} className="btn" target="_blank" rel="noopener noreferrer">Открыть</a>
 												</div>
-												<div className="title">{el.topic_title}</div>
-												<a href={`https://shikimori.one${el.forum.url}/${el.id}`} className="btn" target="_blank" rel="noopener noreferrer">Открыть</a>
-											</div>
-										));
-									} 
+											));
+										} 
+										return null
+									}
 									return null
-								}
-								return null
-							})}
-						</Fancybox>
-					</div>
+								})}
+							</Fancybox>
+						</div>
+					}
 				</div> 
 			);
 		}

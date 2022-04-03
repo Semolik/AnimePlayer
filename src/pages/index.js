@@ -25,7 +25,7 @@ class ServicePage extends React.Component {
 			page_type: '',
 			page_: 1,
 			horny_mode: localStorage['horny-mode']==="true",
-			
+			LoadingButton: false,
 		};
 	}
 	SetHornyMode(bool){
@@ -41,7 +41,7 @@ class ServicePage extends React.Component {
 			}
 		}else if (prevState.id !== this.state.id) {
 			this.setState({
-				isLoaded: false,
+				LoadingButton: true,
 			});
 			this.loadData();
 		}
@@ -108,6 +108,7 @@ class ServicePage extends React.Component {
 								isLoaded: true,
 								data: result.data,
 								page_type: 'page',
+								LoadingButton: false,
 							}
 						});
 						
@@ -148,6 +149,7 @@ class ServicePage extends React.Component {
 							isLoaded: true,
 							data: result.data,
 							page_type: 'genre',
+							LoadingButton: false,
 						});
 					} else {
 						this.setState({
@@ -201,6 +203,7 @@ class ServicePage extends React.Component {
 							isLoaded: true,
 							data: result.data,
 							page_type: 'search',
+							LoadingButton: false,
 						});
 					} else {
 						this.setState({
@@ -236,6 +239,7 @@ class ServicePage extends React.Component {
 							isLoaded: true,
 							data: result.data,
 							page_type: 'title',
+							LoadingButton: false,
 						});
 					} else {
 						this.setState({
@@ -255,9 +259,9 @@ class ServicePage extends React.Component {
 			)
 		} else {
 			this.setState({
-				isLoaded: true,
+				isLoaded: false,
 				error: {
-					message:'asdasd'
+					message:'Шо'
 				}
 			});
 		}
@@ -274,7 +278,7 @@ class ServicePage extends React.Component {
 		}));
 	}
 	render() {
-		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page} = this.state;
+		const { error, isLoaded, data, service, id, page_type,PageType,  PageNumber, page, LoadingButton} = this.state;
 		if (error) {
 			return <div>Ошибка: {error.message}</div>;
 		} else if (!isLoaded) {
@@ -289,7 +293,11 @@ class ServicePage extends React.Component {
 					</div>
 					{page_type==='page' && data.pages > 1 && (id===undefined ? 1 : parseInt(id))!==data.pages &&
 						<div className="load_more_container">
-							<div className="load_more" onClick={this.loadMore}>Загрузить больше</div>
+							<div className={"load_more" +  (LoadingButton ? " loading-button" : "")} onClick={this.loadMore}>Загрузить больше
+								<svg viewBox="25 25 50 50">
+									<circle cx="50" cy="50" r="20"></circle>
+								</svg>
+							</div>
 						</div>
 					}
 					{page_type==='genre' &&

@@ -5,10 +5,11 @@ import animevost
 import anidub
 import hentaiz
 import anihide
+import os
 from config import ApiPath
 from flask_restful import reqparse
-# app = Flask(__name__, static_url_path="/app",static_folder='../build')
-app = Flask(__name__, static_url_path="/app", static_folder='app')
+app = Flask(__name__, static_url_path="/app",static_folder='../build')
+# app = Flask(__name__, static_url_path="/app", static_folder='app')
 from flask_cors import CORS
 CORS(app)
 
@@ -42,12 +43,12 @@ def index():
 			module_data['icon'] = "/"+module.ModulePath.split('/')[0]+'/icon'
 			data.append(module_data)
 	return {'data' :data}
-# @app.route('/', defaults={'path': ''})
-# @app.route('/<path:path>')
-# def serve(path):
-#     if path != "" and os.path.exists(app.static_folder + '/' + path):
-#         return send_from_directory(app.static_folder, path)
-#     else:
-#         return send_from_directory(app.static_folder, 'index.html')
-
-app.run(host='0.0.0.0',port=80,debug=True)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+	if path != "" and os.path.exists(app.static_folder + '/' + path):
+		return send_from_directory(app.static_folder, path)
+	else:
+		return send_from_directory(app.static_folder, 'index.html')
+if __name__ == "__main__":
+	app.run(host='0.0.0.0',port=80,debug=True)

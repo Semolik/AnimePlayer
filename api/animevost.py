@@ -41,10 +41,11 @@ def FindGenre(name):
 	if isinstance(name, str):
 		name_lower = name.lower()
 		genres = GetGenres()
-		for key, value  in genres.items():
-			for j in value.get('links'):
-				if j[0]==name_lower:
-					return [name, j[1]]
+		if genres:
+			for key, value  in genres.items():
+				for j in value.get('links'):
+					if j[0]==name_lower:
+						return [name, j[1]]
 @timed_lru_cache(60*60*6)
 def GetMirror():
 	if AnimevostMirrorLink:

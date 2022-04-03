@@ -214,7 +214,7 @@ def GetTitles(Url, html=None):
 				'ru_title': title.select('.sh-title')[0].text,
 				#en_title нет
 				'id': title.select('.sh-desc > a')[0].get('href').split('/')[-1].split('.')[0],
-				'poster': img if img.startswith('//') else HentaizLink+img,
+				'poster': img if img.startswith('//') else HentaizLink[:-1]+img,
 				'announce': bool(imgbox[0].select('.announce .announce-new')),
 				'ongoing': bool(imgbox[0].select('.announce .announce-ongoing')),
 				
@@ -295,7 +295,7 @@ def GetTitleById(title_id):
 				out['ru_title'] = title[0].text
 		poster = dle_content[0].select('.fposter > img')
 		if poster:
-			out['poster'] = HentaizLink+poster[0].get('src').replace('\n', '')
+			out['poster'] = HentaizLink[:-1]+poster[0].get('src').replace('\n', '')
 		description = dle_content[0].select('#fdesc')
 		if description:
 			out['description'] = description[0].text
@@ -393,7 +393,7 @@ def GetTitleById(title_id):
 					related_poster = i.select('img')
 					if related_poster:
 						related_poster = related_poster[0].get('src').replace('/thumbs/', '/')
-						related_data['poster'] = (related_poster if related_poster.startswith('//') else HentaizLink+related_poster)
+						related_data['poster'] = (related_poster if related_poster.startswith('//') else HentaizLink[:-1]+related_poster)
 					related_title = i.select('.tc-title')
 					if related_title:
 						related_data['ru_title'] = related_title[0].text

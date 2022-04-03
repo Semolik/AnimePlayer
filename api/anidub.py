@@ -191,7 +191,7 @@ def SibnetLink(sibnetid):
 		'message': 'Ошибка получения ссылки',
 	}
 def AnidubMirrorLink():
-	return 'https://online.anidub.club/'
+	return 'https://online.anidub.club'
 @timed_lru_cache(60*60)
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)

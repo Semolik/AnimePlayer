@@ -1,13 +1,9 @@
-from importlib.metadata import requires
-from pickle import FALSE
-import re
 import requests
 import json
 from bs4 import BeautifulSoup
 from flask_restful import reqparse
 from flask import Blueprint, send_from_directory
 from requests.utils import requote_uri
-from yarl import URL
 from config import ApiPath, UPLOAD_FOLDER
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
@@ -17,7 +13,7 @@ from utils.plyr import PlyrSource
 ModuleTitle = "Anihide"
 Moduleid = 'anihide'
 ModulePath = Moduleid+'/'
-ModuleSiteLink = 'http://anihide.com/'
+ModuleSiteLink = 'http://anihidex.org/'
 hentai = True
 Module = Blueprint(ModulePath, __name__)
 @Module.route(ApiPath+ModulePath,  methods = ['post'])
@@ -146,7 +142,7 @@ def GetTitles(Url, html=None):
 					title_info['info_blocks'] = blocks			
 			poster = title.select('.card__img > img')
 			if poster:
-				title_info['poster'] = ModuleSiteLink+poster[0].get('src')
+				title_info['poster'] = ModuleSiteLink[:-1]+poster[0].get('src')
 			outdata.append(title_info)
 		pages = data.select('.pagination > .pagination__pages > *')
 		return {
@@ -220,7 +216,7 @@ def GetTitleById(title_id):
 				out['en_title'] = ' '.join(title_text[1].split())
 		poster = subcols[0].select('.page__subcol-side > .pmovie__poster > img')
 		if poster:
-			out['poster'] = ModuleSiteLink+poster[0].get('src')
+			out['poster'] = ModuleSiteLink[:-1]+poster[0].get('src')
 		desc = dle_content[0].select('article > .page__text')
 		if desc:
 			out['description'] = desc[0].text
@@ -232,7 +228,7 @@ def GetTitleById(title_id):
 				related_title['id'] = getId(i.get('href'))
 				related_poster = i.select('.poster__img > img')
 				if related_poster:
-					related_title['poster'] = ModuleSiteLink+related_poster[0].get('src')
+					related_title['poster'] = ModuleSiteLink[:-1]+related_poster[0].get('src')
 				related_title_block = i.select('.poster__title')
 				if related_title_block:
 					related_title['ru_title'] = related_title_block[0].text
