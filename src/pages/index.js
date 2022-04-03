@@ -293,10 +293,16 @@ class ServicePage extends React.Component {
 					</div>
 					{page_type==='page' && data.pages > 1 && (id===undefined ? 1 : parseInt(id))!==data.pages &&
 						<div className="load_more_container">
-							<div className={"load_more" +  (LoadingButton ? " loading-button" : "")} onClick={this.loadMore}>Загрузить больше
-								<svg viewBox="25 25 50 50">
-									<circle cx="50" cy="50" r="20"></circle>
-								</svg>
+							<div className={"load_more" +  (LoadingButton ? " loading-button" : "")} onClick={this.loadMore}>
+								{LoadingButton && 
+									<svg viewBox="25 25 50 50">
+										<circle cx="50" cy="50" r="20"></circle>
+									</svg>
+								}
+								{!LoadingButton && 
+									<div className="text">Загрузить больше</div>
+								}
+								
 							</div>
 						</div>
 					}

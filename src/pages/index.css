@@ -27,13 +27,16 @@
 	background: rgba(255, 255, 255, 0.1);
 	transition: .2s;
 	position: relative;
+	color: white;
+	height: 55px;
+	width: 210px;
 }
 .load_more_container .load_more svg {
 	top:0;
 	left: 0;
-	padding: 10px;
 	width: 100%;
 	height: 100%;
+	padding: 6px;
 	display: none;
 	position: absolute;
     transform-origin: center;
@@ -68,7 +71,7 @@
 	background: rgba(255, 255, 255, 0.2);
 }
 .load_more_container .load_more.loading-button {
-	color: rgba(0, 0, 0, 0);
+	color: transparent;
 }
 .load_more_container .load_more.loading-button svg {
 	display: block;
