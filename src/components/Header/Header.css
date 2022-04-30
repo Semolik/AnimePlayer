@@ -148,8 +148,14 @@
 }
 
 @media screen and (min-width: 768px) {
-    .sidebar li .sidebar-item:not(.button):hover {
+    .sidebar li .sidebar-item:hover {
         background: var(--outline-default);
+    }
+    .sidebar li .sidebar-item.button:hover {
+        background: cornflowerblue;
+    }
+    .sidebar li .sidebar-item.settings:hover{
+        background-color:steelblue;
     }
 }
 

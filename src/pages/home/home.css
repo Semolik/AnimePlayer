@@ -178,11 +178,10 @@
     position: relative;
     padding-top: 2rem;
 }
-
 .cards-container .service-title {
-    position: absolute;
     top: 0;
     left: 1rem;
+    position: absolute;
     text-decoration: none;
     color: white;
     padding: 3px 5px;
@@ -192,40 +191,7 @@
 .cards-container .service-title:hover{
     background: var(--background-highest);
 }
-/* .cards .shikimori-card:hover {
-    filter: blur(3px);
-} */
-
-
-/* @media screen and (min-width: 1320px){
-	.cards {
-		grid-template-columns: repeat(5, 1fr);
-	}
+.cards-container .service-title.service-view-more {
+    left: auto;
+    right: 1rem;
 }
-@media screen and (max-width: 1320px) and (min-width: 1200px) {
-	.cards {
-		grid-template-columns: repeat(3, 1fr);
-	}
-} */
-
-
-/* @media screen and (max-width: 1200px) and (min-width: 768px){
-	.cards {
-		grid-template-columns: repeat(4, 1fr);
-	}
-}
-@media screen and (max-width: 768px) and (min-width: 576px){
-	.cards {
-		grid-template-columns: repeat(3, 1fr);
-	}
-}
-@media screen and (max-width: 576px) and (min-width: 350px){
-	.cards {
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
-@media screen and (max-width: 350px){
-	.cards {
-		grid-template-columns: 1fr;
-	}
-} */

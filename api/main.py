@@ -6,6 +6,7 @@ import anidub
 import hentaiz
 import anihide
 import os
+from utils import messages
 from config import ApiPath
 from flask_restful import reqparse
 app = Flask(__name__, static_url_path="/app",static_folder='../build')
@@ -41,6 +42,27 @@ def index():
 			module_data['title'] = module.ModuleTitle
 			module_data['id'] = module.ModulePath.replace('/', '')
 			module_data['icon'] = "/"+module.ModulePath.split('/')[0]+'/icon'
+			data.append(module_data)
+	return {'data' :data}
+@app.route(ApiPath+'search', methods=['POST'])
+def search():
+	parser = reqparse.RequestParser()
+	parser.add_argument("horny")
+	parser.add_argument("text")
+	params = parser.parse_args()
+	horny = params.get('horny') == 'True'
+	text = params.get('text')
+	if not text:
+		return messages['no_text'].format('text'),400
+	data = list()
+	for module in modules:
+		if module.hentai!=horny:
+			continue
+		module_data = module.search(text, 1)
+		if module_data.get('status')==200:
+			module_data = module_data.get('data')
+			module_data['title'] = module.ModuleTitle
+			module_data['id'] = module.ModulePath.replace('/', '')
 			data.append(module_data)
 	return {'data' :data}
 @app.route('/', defaults={'path': ''})
