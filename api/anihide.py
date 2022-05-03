@@ -313,7 +313,7 @@ def GetTitleById(title_id):
 					response_series = response.json()
 					series = list()
 					for i in response_series:
-						episode=PlyrSource(i.get('file'),i.get('poster'))
+						episode=PlyrSource(i.get('file').split(' and ')[-1],i.get('poster'))
 						episode['name'] = i.get('title')
 						series.append(episode)
 					break
