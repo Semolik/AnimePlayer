@@ -108,7 +108,7 @@ class Header extends React.Component {
 													})}>Horny mode</span>
 												</div>
 											</li>,
-											<li key={-1}>
+											<li key={-1} style={{display: 'none'}}>
 												<Link to="/settings" className={"sidebar-item settings" + (props.match.params.service === 'settings' ? " active" : "")} onClick={this.menuBtnChange}>
 													<div className="index"><span>Настройки</span></div>
 												</Link>

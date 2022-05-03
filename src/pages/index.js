@@ -82,9 +82,10 @@ class ServicePage extends React.Component {
 
 	}
 	componentDidMount() {
+		console.log(this.state.service)
 		if (this.state.service === "favorites") {
 			this.loadFavorites();
-		} if (this.state.service === "settings") {
+		}else if (this.state.service === "settings") {
 			this.loadSettings();
 		} else {
 			this.loadData()
