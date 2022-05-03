@@ -1,11 +1,10 @@
 import React from 'react';
 import './Title.css';
-import './plyr.css';
 import { Link } from 'react-router-dom';
 import Plyr from 'plyr-react';
 import settings from '../../settings';
 import Card from '../card/card';
-
+// import 'plyr-react/dist/plyr.css';
 
 function Save(service,id,data,fav, series, horny){
 	var service_saved = localStorage.getItem('favorites');
@@ -128,6 +127,7 @@ function Title(event) {
 	// console.log(GetVideoUrl(data.series.data[0]['link']));
 	return (
 		<div className='title-container'>
+			<link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" /> {/*  хз он не хочет билдить если просто импортить  */}
 			<div className='info-block'>
 				<h1 className='name ru-name'>{data.ru_title}</h1>
 				<h3 className='name en-name'>{data.en_title}</h3>
