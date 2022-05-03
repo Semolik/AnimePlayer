@@ -1,14 +1,10 @@
 import re
-from urllib import response
-from numpy import source
 import requests
 import json
 from bs4 import BeautifulSoup
-from lxml import etree
 from flask_restful import reqparse
 from flask import Blueprint,send_from_directory
 from requests.utils import requote_uri
-from soupsieve import select
 from config import ApiPath,ShikimoriLink
 from utils.lru_cache import timed_lru_cache
 from utils.messages import messages
