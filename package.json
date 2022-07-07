@@ -1,43 +1,31 @@
 {
-  "name": "react-spa",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fancyapps/ui": "^4.0.26",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "axios": "^0.26.1",
-    "bootstrap": "^5.1.3",
-    "hls.js": "^1.1.5",
-    "plyr-react": "^3.2.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
-    "react-scroll-horizontal": "^1.6.6"
-  },
+  "name": "anime-player",
+  "version": "0.0.0",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start-api": "cd api && python main.py"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "@vueuse/components": "^8.7.4",
+    "axios": "^0.27.2",
+    "v-click-outside": "^3.2.0",
+    "vue": "^3.2.36",
+    "vue-marquee-text-component": "^2.0.1",
+    "vue-router": "^4.0.15",
+    "vue-snip": "^2.0.0",
+    "vuex": "^4.0.2"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.0",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.5.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "prettier": "^2.5.1",
+    "sass": "^1.52.3",
+    "sass-loader": "^13.0.0",
+    "vite": "^2.9.9"
   }
 }
