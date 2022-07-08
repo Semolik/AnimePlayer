@@ -43,7 +43,7 @@ export default {
 
 .random_titles {
     display: flex;
-    height: 300px;
+    height: 200px;
     overflow: hidden;
     margin: 1rem 0px;
 }

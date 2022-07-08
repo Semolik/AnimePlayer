@@ -9,6 +9,7 @@
 <style scoped>
 .container {
   display: flex;
+  background-color: red;
   width: 100%;
   height: 100%;
 }

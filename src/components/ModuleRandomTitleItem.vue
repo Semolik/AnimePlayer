@@ -41,13 +41,17 @@ export default {
 }
 
 .random_title_card .random_title_card__poster_container {
+
+    aspect-ratio: 2 / 3;
+
     border-radius: 10px;
     overflow: hidden;
-    /* aspect-ratio: 3 / 2; */
 }
+
 .random_title_card .random_title_card__poster_container img {
     object-fit: cover;
     width: 100%;
+
     height: 100%;
 }
 </style>

@@ -119,7 +119,7 @@ header {
   --padding: 13px;
   --bittons-transition: 0.4s;
   width: 100%;
-  height: 70px;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,7 +132,7 @@ header {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 650px;
+  width: min(650px, 100%);
   height: 100%;
 }
 
