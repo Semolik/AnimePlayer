@@ -113,13 +113,13 @@ export default {
   </header>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/assets/breakpoints.scss";
 header {
   --border-radius: 5px;
   --padding: 13px;
   --bittons-transition: 0.4s;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,6 +167,7 @@ header {
   display: flex;
   overflow: hidden;
   border-radius: var(--border-radius);
+  z-index: 99;
 }
 
 .search-form .dropdown-container .dropdown-relative-container {
@@ -194,11 +195,16 @@ header {
 
 .search-form .search-dropdown .tabs {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   width: 100%;
   background-color: var(--vt-c-text-dark-3);
   border-radius: 0.5rem;
+  @include sm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
 }
+
 
 .search-form .search-dropdown .tabs label {
   padding: 5px;

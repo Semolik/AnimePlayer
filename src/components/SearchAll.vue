@@ -1,3 +1,8 @@
+
+<template>
+  <AutocompleteModuleItem v-for="(item, i) in this.items" v-bind:moduleData="item" v-bind:key="i" />
+</template>
+
 <script>
 import { HTTP } from "../http-common.vue";
 
@@ -42,13 +47,9 @@ export default {
   watch: {
     text() {
       this.search();
-      
+
     },
   },
 };
 </script>
 
-<template>
-  <AutocompleteModuleItem v-for="(item, i) in this.items" v-bind:moduleData="item" v-bind:key="i" />
-
-</template>

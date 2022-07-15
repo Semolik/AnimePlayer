@@ -1,20 +1,22 @@
 <template>
-    <MarqueeText :duration="titles.length * 3" :paused="hovered" v-on:mouseover="hovered = true" v-on:mouseleave="hovered = false">
-        <div class="random_titles" v-if="titles">
-            <ModuleRandomTitleItem v-for="(title, key) in titles" :titleData="title" :moduleId="this.moduleId"
+    <div class="random_titles" v-if="titles">
+        <Flicking :plugins="plugins" :options="{ moveType: 'freeScroll', bound: true, circular: true }">
+            <ModuleRandomTitleItem v-for="(title, key, index) in titles" :titleData="title" :moduleId="this.moduleId"
                 :key="key" />
-        </div>
-    </MarqueeText>
+        </Flicking>
+    </div>
 </template>
 
 <script>
 import { HTTP } from "../http-common.vue";
 import ModuleRandomTitleItem from "./ModuleRandomTitleItem.vue";
-import MarqueeText from 'vue-marquee-text-component'
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+import { AutoPlay } from "@egjs/flicking-plugins";
 export default {
     components: {
         ModuleRandomTitleItem,
-        MarqueeText
+        Flicking: Flicking,
     },
     props: {
         moduleId: String,
@@ -24,9 +26,14 @@ export default {
         return {
             titles: [],
             hovered: false,
+            pauseOnHover: false,
+            plugins: [new AutoPlay({ duration: 800, direction: "NEXT", stopOnHover: true })],
         };
     },
     mounted() {
+        this.$nextTick(() => {
+            window.addEventListener('resize', this.onResize);
+        })
         HTTP.get(this.moduleId + "/random")
             .then((response) => {
                 this.titles = response.data;
@@ -35,16 +42,21 @@ export default {
                 this.setStatusCode(error.response.status);
             });
     },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.onResize);
+    },
+    methods: {
+        onResize() {
+            this.pauseOnHover = window.innerWidth > 576;
+        }
+    }
 };
 </script>
 
-<style scoped lang="scss">
-@import "@/assets/breakpoints.scss";
-
+<style scoped>
 .random_titles {
     display: flex;
     height: 200px;
-    overflow: hidden;
     margin: 1rem 0px;
 }
 </style>

@@ -8,13 +8,22 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@egjs/flicking-plugins": "^4.4.0",
+    "@egjs/vue3-flicking": "^4.9.0",
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-brands-svg-icons": "^6.1.1",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/vue-fontawesome": "^3.0.1",
     "@vueuse/components": "^8.7.4",
     "axios": "^0.27.2",
+    "blurhash": "^1.1.5",
     "v-click-outside": "^3.2.0",
     "vue": "^3.2.36",
     "vue-marquee-text-component": "^2.0.1",
     "vue-router": "^4.0.15",
     "vue-snip": "^2.0.0",
+    "vue3-blurhash": "^1.0.1",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
