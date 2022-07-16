@@ -20,6 +20,7 @@
     "v-click-outside": "^3.2.0",
     "vue": "^3.2.36",
     "vue-marquee-text-component": "^2.0.1",
+    "vue-mobile-detection": "^2.0.1",
     "vue-router": "^4.0.15",
     "vue-snip": "^2.0.0",
     "vue3-blurhash": "^1.0.1"

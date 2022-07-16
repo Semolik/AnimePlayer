@@ -1,5 +1,6 @@
 <template>
-    <router-link :to="{ path: `/${this.moduleId}/title/${id}` }" class="random_title_card">
+    <router-link :to="{ path: `/${this.moduleId}/title/${id}` }"
+        :class="['random_title_card', is_mobile ? '' : 'desktop']">
         <div v-bind:class="['random_title_card__poster_container', poster.blurhash ? 'canvas-blur' : '']">
             <img :src="poster.url" />
             <vue3-blurhash-canvas v-if="poster.blurhash" :hash="poster.blurhash" :height="10" :width="10" />
@@ -31,6 +32,7 @@ export default {
     props: {
         titleData: Object,
         moduleId: String,
+        is_mobile: Boolean,
     },
 
     data() {
@@ -52,8 +54,6 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "@/assets/breakpoints.scss";
-
 .random_title_card {
     display: flex;
     height: 100%;
@@ -104,7 +104,7 @@ export default {
     text-align: center;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 7px;
-    // margin-top: 10px;
+
 }
 
 .random_title_card .random_title_card__poster_container .info .rating {
@@ -119,19 +119,19 @@ export default {
     margin-left: 5px;
 }
 
-@include sm {
-    .random_title_card .random_title_card__poster_container.canvas-blur:hover img {
-        opacity: 0;
-    }
 
-    .random_title_card .random_title_card__poster_container:not(.canvas-blur):hover img {
-        filter: blur(20px);
-    }
-
-    .random_title_card .random_title_card__poster_container:hover .info {
-        opacity: 1;
-    }
+.random_title_card.desktop .random_title_card__poster_container.canvas-blur:hover img {
+    opacity: 0;
 }
+
+.random_title_card.desktop .random_title_card__poster_container:not(.canvas-blur):hover img {
+    filter: blur(20px);
+}
+
+.random_title_card.desktop .random_title_card__poster_container:hover .info {
+    opacity: 1;
+}
+
 
 .random_title_card .random_title_card__poster_container.canvas-blur img,
 .random_title_card .random_title_card__poster_container.canvas-blur .info {

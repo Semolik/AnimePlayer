@@ -1,7 +1,7 @@
 <template>
     <div class="random_titles" v-if="titles">
         <Flicking :plugins="plugins" :options="{ moveType: 'freeScroll', bound: true, circular: true }">
-            <ModuleRandomTitleItem v-for="(title, key, index) in titles" :titleData="title" :moduleId="this.moduleId"
+            <ModuleRandomTitleItem v-bind:is_mobile="is_mobile" v-for="(title, key, index) in titles" :titleData="title" :moduleId="this.moduleId"
                 :key="key" />
         </Flicking>
     </div>
@@ -23,17 +23,16 @@ export default {
         setStatusCode: Function,
     },
     data() {
+        const is_mobile = this.$isMobile();
         return {
             titles: [],
             hovered: false,
-            pauseOnHover: false,
-            plugins: [new AutoPlay({ duration: 800, direction: "NEXT", stopOnHover: true })],
+            plugins: [new AutoPlay({ duration: 800, direction: "NEXT", stopOnHover: !is_mobile })],
+            is_mobile: is_mobile,
         };
     },
     mounted() {
-        this.$nextTick(() => {
-            window.addEventListener('resize', this.onResize);
-        })
+
         HTTP.get(this.moduleId + "/random")
             .then((response) => {
                 this.titles = response.data;
@@ -42,14 +41,6 @@ export default {
                 this.setStatusCode(error.response.status);
             });
     },
-    beforeDestroy() {
-        window.removeEventListener('resize', this.onResize);
-    },
-    methods: {
-        onResize() {
-            this.pauseOnHover = window.innerWidth > 576;
-        }
-    }
 };
 </script>
 

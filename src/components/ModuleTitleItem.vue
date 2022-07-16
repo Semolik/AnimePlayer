@@ -1,6 +1,7 @@
 <template>
-  <router-link :to="{ path: `/${this.moduleId}/title/${id}` }" class="title__card" @mouseover.native="handlemouseover"
-    @mousemove.native="handlemousemove" @mouseleave.native="handlemouseleave">
+  <router-link :to="{ path: `/${this.moduleId}/title/${id}` }" :class="['title__card', is_mobile ? '' : 'desktop']"
+    @[!is_mobile&&`mouseover`]="handlemouseover" @[!is_mobile&&`mousemove`]="handlemousemove"
+    @[!is_mobile&&`mouseleave`]="handlemouseleave">
     <div className="poster-container">
       <div v-if="announce" className="announce">Анонс</div>
       <div v-if="series_info" className="series-info">{{ series_info }}</div>
@@ -25,6 +26,7 @@ export default {
   props: {
     titleData: Object,
     moduleId: String,
+    is_mobile: Boolean,
   },
 
   data() {
@@ -41,7 +43,6 @@ export default {
       series_info: data.series_info,
       description: data.description,
       other_info: data.other_info,
-
       qtip_position: false,
       hovered: false,
       timeout: null,
@@ -54,20 +55,17 @@ export default {
       }
     },
     handlemouseover() {
-      this.timeout = setTimeout(() => { this.hovered = true }, 300);
+      this.timeout = setTimeout(() => { this.hovered = true }, 500);
     },
     handlemouseleave() {
       clearTimeout(this.timeout);
       this.qtip_position = false;
       this.hovered = false;
-
     }
   }
 };
 </script>
-<style lang="scss">
-@import "@/assets/breakpoints.scss";
-
+<style>
 .title__card {
   display: flex;
   flex-direction: column;
@@ -80,7 +78,13 @@ export default {
 .title__card .qtip {
   position: absolute;
   z-index: 9;
-  background-color: #006dd1;
+  background-color: var(--color-background-soft);
+  max-width: 280px;
+  min-width: 50px;
+  box-shadow: 0 1px 5px #000;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
 }
 
 .title__card .title {
@@ -108,15 +112,15 @@ export default {
   background-color: #01c03a;
 }
 
-@include sm {
-  .title__card:hover .poster-container {
-    transform: translateY(-5px);
-  }
 
-  .title__card:hover .title {
-    color: white;
-  }
+.title__card.desktop:hover .poster-container {
+  transform: translateY(-5px);
 }
+
+.title__card.desktop:hover .title {
+  color: white;
+}
+
 
 .title__card .poster-container canvas {
   position: absolute;

@@ -1,7 +1,6 @@
 <template>
   <div class="titles-container" v-if="titles">
-    <ModuleTitleItem v-for="(title, key) in titles" :titleData="title" :moduleId="this.moduleId" :key="key" />
-
+    <ModuleTitleItem v-for="(title, key) in titles" v-bind:is_mobile="is_mobile" :titleData="title" :moduleId="this.moduleId" :key="key" />
   </div>
 </template>
 
@@ -17,13 +16,14 @@ export default {
     setStatusCode: Function,
   },
   data() {
+    const is_mobile = this.$isMobile();
     return {
       titles: [],
       pages: null,
+      is_mobile: is_mobile,
     };
   },
   mounted() {
-    console.log('mouted')
     HTTP.get(this.moduleId + "/")
       .then((response) => {
         const { titles, pages } = response.data;
