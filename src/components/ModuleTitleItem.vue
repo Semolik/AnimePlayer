@@ -1,6 +1,6 @@
 <template>
-  <router-link :to="{ path: `/${this.moduleId}/title/${id}` }" class="title__card" @mouseenter="handlemouseover"
-    @mouseleave.native="handlemouseleave">
+  <router-link :to="{ path: `/${this.moduleId}/title/${id}` }" class="title__card" @mouseover.native="handlemouseover"
+    @mousemove.native="handlemousemove" @mouseleave.native="handlemouseleave">
     <div className="poster-container">
       <div v-if="announce" className="announce">Анонс</div>
       <div v-if="series_info" className="series-info">{{ series_info }}</div>
@@ -10,9 +10,9 @@
     <div className="title" v-snip="{ lines: 2 }">
       {{ ru_title }}
     </div>
-    {{ qtip_position }}
-    <div class="qtip" v-if="qtip_position" v-bind:style="{ top: qtip_position.y + 'px', left: qtip_position.x + 'px' }">
-      asdadas</div>
+    <div class="qtip" v-if="hovered && qtip_position"
+      v-bind:style="{ top: qtip_position.y + 'px', left: qtip_position.x + 'px' }">
+      {{ ru_title }}</div>
   </router-link>
 </template>
 
@@ -41,23 +41,26 @@ export default {
       series_info: data.series_info,
       description: data.description,
       other_info: data.other_info,
+
       qtip_position: false,
       hovered: false,
+      timeout: null,
     };
   },
   methods: {
-    handlemouseover(event) {
-      this.hovered = true;
-      setTimeout(() => {
-        if (this.hovered) {
-          console.log(event)
-          this.qtip_position = { x: event.pageX, y: event.pageY };
-        }
-      }, 500)
+    handlemousemove(event) {
+      if (!this.hovered || !this.qtip_position) {
+        this.qtip_position = { x: event.layerX, y: event.layerY };
+      }
+    },
+    handlemouseover() {
+      this.timeout = setTimeout(() => { this.hovered = true }, 300);
     },
     handlemouseleave() {
+      clearTimeout(this.timeout);
       this.qtip_position = false;
       this.hovered = false;
+
     }
   }
 };
@@ -121,14 +124,13 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: -1;
 }
 
 .title__card .poster-container img {
   height: 100%;
   object-fit: cover;
   width: 100%;
-  z-index: 2;
 }
 
 .title__card .poster-container .series-info {
