@@ -1,10 +1,13 @@
 <script setup>
 import { RouterView } from "vue-router";
 import AppHeader from "./components/AppHeader.vue";
+import "@fontsource/open-sans";
+import AppSettings from "./components/AppSettings.vue";
 </script>
 
 <template>
-  <AppHeader></AppHeader>
+  <AppHeader />
+  <AppSettings />
   <div class="app-content">
     <RouterView v-slot="{ Component }" :key="$route.fullPath">
       <transition name="fade" mode="out-in">
@@ -15,7 +18,9 @@ import AppHeader from "./components/AppHeader.vue";
 </template>
 
 <style lang="scss">
-@import "@/assets/base.css";
+@import "@/assets/styles/base.css";
+@import "@/assets/styles/breakpoints";
+@import "@/assets/styles/MoveTransitions.css";
 
 #app {
   margin: 0 auto;
@@ -25,11 +30,15 @@ import AppHeader from "./components/AppHeader.vue";
   grid-template-columns: 1fr;
   grid-template-rows: 70px 1fr;
 }
+
 .app-content {
   grid-row: 2;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
+
+  @include sm {
+    padding-top: 10px;
+  }
 }
 </style>

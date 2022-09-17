@@ -14,7 +14,6 @@ export default {
   },
   props: {
     text: String,
-    setLoading: Function,
   },
   data() {
     return {
@@ -28,7 +27,7 @@ export default {
         this.items = [];
         return;
       }
-      this.setLoading(true);
+      this.$emit('loading', true);
       HTTP.post("/index/autocomplete", {
         text: this.text,
       })
@@ -36,11 +35,11 @@ export default {
           this.items = response.data.items || [];
         })
         .catch((error) => {
-          console.log(error);
+          this.$emit('error', error);
           this.items = [];
         })
         .finally(() => {
-          this.setLoading(false);
+          this.$emit('loading', false);
         });
     },
   },

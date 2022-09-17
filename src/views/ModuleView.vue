@@ -1,6 +1,6 @@
 <template>
-  <ModuleRandomTitles v-if="moduleId && !errored" v-bind:moduleId="moduleId" v-bind:setStatusCode="setStatusCode" />
-  <ModuleTitles v-if="moduleId && !errored" v-bind:moduleId="moduleId" v-bind:setStatusCode="setStatusCode" />
+  <ModuleRandomTitles v-if="moduleId && !errored" @error="setStatusCode" />
+  <ModuleTitles v-if="moduleId && !errored" @error="setStatusCode" />
   <ErrorStatusCode v-if="StatusCode !== false" v-bind:StatusCode="StatusCode"></ErrorStatusCode>
 </template>
 
@@ -18,16 +18,19 @@ export default {
   data() {
     return {
       StatusCode: false,
-      moduleId: null,
+      moduleId: this.$router.currentRoute.value.params.module,
     };
   },
-  mounted() {
-    this.moduleId = this.$router.currentRoute.value.params.module;
+  provide() {
+    // use function syntax so that we can access `this`
+    return {
+      moduleId: this.moduleId,
+    }
   },
-
   methods: {
     setStatusCode(code) {
-      this.StatusCode = code;
+      console.log(code);
+      this.StatusCode = code.request.status;
     },
   },
   computed: {

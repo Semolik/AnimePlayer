@@ -1,150 +1,181 @@
 <template>
-  <router-link :to="{ path: `/${this.moduleId}/title/${id}` }" :class="['title__card', is_mobile ? '' : 'desktop']"
-    @[!is_mobile&&`mouseover`]="handlemouseover" @[!is_mobile&&`mousemove`]="handlemousemove"
-    @[!is_mobile&&`mouseleave`]="handlemouseleave">
-    <div className="poster-container">
-      <div v-if="announce" className="announce">Анонс</div>
-      <div v-if="series_info" className="series-info">{{ series_info }}</div>
-      <img :src="poster.url" :alt="ru_title" />
-      <vue3-blurhash-canvas v-if="poster.blurhash" :hash="poster.blurhash || ''" :height="10" :width="10" />
+  <router-link :to="!onlyLoading ? { path: `/${this.moduleId}/title/${id}` } : {}"
+    :class="['title__card', $isMobile() ? '' : 'desktop']">
+    <div class="poster-container">
+      <template v-if="!onlyLoading">
+        <div v-if="announce" class="announce">Анонс</div>
+        <div v-if="series_info" class="series-info">{{ series_info }}</div>
+        <vue3-blurhash-canvas v-if="poster && poster.blurhash" :hash="poster.blurhash || ''" :height="10" :width="10" />
+        <vue-load-image>
+          <template v-slot:image>
+            <img :src="poster.url" v-if="poster && poster.url" :alt="ru_title" />
+          </template>
+          <template v-slot:preloader>
+            <Skeletor slot="preloader" size="100%" />
+          </template>
+        </vue-load-image>
+      </template>
+      <template v-else>
+        <Skeletor slot="preloader" size="100%" />
+      </template>
     </div>
-    <div className="title" v-snip="{ lines: 2 }">
-      {{ ru_title }}
+    <div :class="['title', { 'loader': onlyLoading }]">
+      <template v-if="onlyLoading">
+        <Skeletor slot="preloader" width="100%" />
+        <Skeletor slot="preloader" width="80%" />
+      </template>
+      <template v-else>
+        {{ ru_title }}
+      </template>
     </div>
-    <div class="qtip" v-if="hovered && qtip_position"
-      v-bind:style="{ top: qtip_position.y + 'px', left: qtip_position.x + 'px' }">
-      {{ ru_title }}</div>
   </router-link>
 </template>
 
 <script>
 import { Vue3BlurhashCanvas } from "vue3-blurhash";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+library.add(faStar);
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { Skeletor } from 'vue-skeletor';
+import 'vue-skeletor/dist/vue-skeletor.css';
+import VueLoadImage from 'vue-load-image';
+
 export default {
   components: {
     Vue3BlurhashCanvas,
+    FontAwesomeIcon,
+    Skeletor,
+    VueLoadImage
   },
   props: {
     titleData: Object,
-    moduleId: String,
-    is_mobile: Boolean,
+    onlyLoading: Boolean,
   },
-
+  inject: ['moduleId'],
   data() {
-    const data = this.titleData;
     return {
-      id: data.id,
-      ru_title: data.ru_title,
-      en_title: data.en_title,
-      poster: data.poster,
-      rating: data.rating,
-      year: data.year,
-      genre: data.genre,
-      announce: data.announce,
-      series_info: data.series_info,
-      description: data.description,
-      other_info: data.other_info,
-      qtip_position: false,
-      hovered: false,
-      timeout: null,
+      id: null,
+      ru_title: null,
+      en_title: null,
+      poster: null,
+      rating: null,
+      year: null,
+      genre: null,
+      announce: null,
+      series_info: null,
+      description: null,
+      other_info: null,
+
     };
   },
-  methods: {
-    handlemousemove(event) {
-      if (!this.hovered || !this.qtip_position) {
-        this.qtip_position = { x: event.layerX, y: event.layerY };
-      }
-    },
-    handlemouseover() {
-      this.timeout = setTimeout(() => { this.hovered = true }, 500);
-    },
-    handlemouseleave() {
-      clearTimeout(this.timeout);
-      this.qtip_position = false;
-      this.hovered = false;
+  updated() {
+    const data = this.titleData;
+    if (data) {
+      this.id = data.id;
+      this.ru_title = data.ru_title;
+      this.en_title = data.en_title;
+      this.poster = data.poster;
+      this.rating = data.rating;
+      this.year = data.year;
+      this.genre = data.genre;
+      this.announce = data.announce;
+      this.series_info = data.series_info;
+      this.description = data.description;
+      this.other_info = data.other_info;
     }
-  }
+  },
 };
 </script>
-<style>
+<style lang="scss">
+@use "@/assets/styles/text";
+
 .title__card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--color-text);
   height: min-content;
   position: relative;
-}
-
-.title__card .qtip {
-  position: absolute;
-  z-index: 9;
-  background-color: var(--color-background-soft);
-  max-width: 280px;
-  min-width: 50px;
-  box-shadow: 0 1px 5px #000;
-  padding: 10px;
-  border-radius: 5px;
   width: 100%;
-}
 
-.title__card .title {
-  color: #d9d7e0;
-  width: 100%;
-  margin: 0.5rem;
-  transition: color 0.2s;
-}
+  .title {
+    color: var(--color-text);
+    margin: 10px;
+    transition: color 0.2s;
+    @include text.snip-text(2);
 
-.title__card .poster-container {
-  position: relative;
-  display: flex;
-  width: 100%;
-  aspect-ratio: 0.7;
-  transition: transform 0.2s;
-  border-radius: 10px;
-  overflow: hidden;
-}
+    &.loader {
+      margin: 10px 5px;
+      display: grid;
+      gap: 5px;
 
+      .vue-skeletor {
+        border-radius: 5px;
+        height: 13px;
+      }
+    }
+  }
 
-.title__card .poster-container .announce {
-  position: absolute;
-  padding: 2px 5px;
-  border-bottom-right-radius: 10px;
-  background-color: #01c03a;
-}
+  &.desktop:hover {
+    .poster-container {
+      transform: translateY(-5px);
+    }
 
+    &:active .poster-container {
+      transform: scale(99%);
+    }
+  }
 
-.title__card.desktop:hover .poster-container {
-  transform: translateY(-5px);
-}
+  .poster-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    aspect-ratio: 0.7;
+    transition: transform 0.2s;
+    border-radius: 10px;
+    overflow: hidden;
 
-.title__card.desktop:hover .title {
-  color: white;
-}
+    .announce {
+      position: absolute;
+      padding: 2px 5px;
+      border-bottom-right-radius: 10px;
+      background-color: #01c03a;
+    }
 
+    .vue-load-image,
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-.title__card .poster-container canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
+    .vue-load-image {
+      z-index: -1;
+    }
 
-.title__card .poster-container img {
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
+    canvas {
+      z-index: -2;
+    }
 
-.title__card .poster-container .series-info {
-  position: absolute;
-  bottom: 1rem;
-  right: 0;
-  max-width: 80%;
-  padding: 5px 10px;
-  background: #006dd1;
-  border-radius: 10px 0px 0px 10px;
-  color: white;
+    img {
+      height: 100%;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .series-info {
+      position: absolute;
+      bottom: 1rem;
+      right: 0;
+      max-width: 80%;
+      padding: 5px 10px;
+      background: #006dd1;
+      border-radius: 10px 0px 0px 10px;
+      color: white;
+    }
+  }
 }
 </style>

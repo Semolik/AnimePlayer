@@ -1,19 +1,92 @@
+<template>
+  <header>
+    <div class="buttons left">
+      <div :class="['button', { active: sidebar_opened }]" @click="toggleSidebar">
+        <FontAwesomeIcon icon="fa-bars" class="closed-icon" />
+        <FontAwesomeIcon icon="fa-bars-staggered" class="opened-icon" />
+      </div>
+    </div>
+    <div :class="['sidebar', { active: sidebar_opened }]">
+      <div class="item" @click="openSettingsOnMobile">
+        <div class="text">Настройки</div>
+        <FontAwesomeIcon icon="fa-gear" />
+      </div>
+    </div>
+    <div v-bind:class="[{ active: open }, 'search-form']" v-on-click-outside="closeDropdown">
+      <input type="text" @input="debounceSearch" :class="{ 'not-empty': textViewModel }" v-model="textViewModel"
+        @focusin="openDropdown" placeholder="Введите название" />
+      <div class="dropdown-container">
+        <div class="dropdown-relative-container">
+          <div v-bind:class="[loading ? 'loading' : '', 'search-dropdown']" v-show="txt && currentModule && open">
+            <div class="tabs">
+              <label :class="{ active: current == 'SearchAll' }">
+                <input type="radio" v-model="current" value="SearchAll" />
+                Все результаты
+              </label>
+              <label :class="{ active: current == 'CompB' }" v-if="currentModule">
+                <input type="radio" v-model="current" value="CompB" />
+                {{ currentModule.module_title }}
+              </label>
+            </div>
+            <KeepAlive>
+              <component :is="current" v-bind:text="this.text" @loading="setLoading" />
+            </KeepAlive>
+          </div>
+          <LoadingAnimation v-if="this.loading" />
+        </div>
+      </div>
+    </div>
+    <div class="buttons right">
+      <div class="button" @click="toggleSettings">
+        <FontAwesomeIcon icon="fa-gear" />
+      </div>
+    </div>
+  </header>
+</template>
+
+
 <script>
 import SearchAll from "./SearchAll.vue";
 import CompB from "./CompB.vue";
 import { vOnClickOutside } from "@vueuse/components";
 import { HTTP } from "../http-common.vue";
 import LoadingAnimation from "./LoadingAnimation.vue";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBars, faBarsStaggered, faGear } from '@fortawesome/free-solid-svg-icons';
+library.add([faBars, faBarsStaggered, faGear]);
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { useMainStore } from '../stores/main';
+
 export default {
+  setup() {
+    const store = useMainStore();
+    const { toggleSettings, openSettings } = store;
+    return {
+      toggleSettings,
+      openSettings
+    }
+  },
+  components: {
+    CompB,
+    SearchAll,
+    LoadingAnimation,
+    FontAwesomeIcon,
+  },
+  directives: {
+    OnClickOutside: vOnClickOutside,
+  },
   data() {
     return {
       open: false,
       current: "SearchAll",
       currentModule: null,
       text: "",
+      textViewModel: "",
       txt: "",
       moduleId: null,
       loading: false,
+      settings_opened: false,
+      sidebar_opened: false,
     };
   },
   watch: {
@@ -26,22 +99,30 @@ export default {
     moduleId(value) {
       this.getModuleData(value);
     },
+    sidebar_opened(value) {
+      document.body.style.overflow = value === true ? 'hidden' : null;
+    }
   },
-
   mounted() {
     this.getModuleData(this.$router.currentRoute.value.params.module);
   },
-  components: {
-    CompB,
-    SearchAll,
-    LoadingAnimation,
-  },
+
   methods: {
     closeDropdown() {
       this.open = false;
     },
     openDropdown() {
       this.open = true;
+    },
+    openSettingsOnMobile() {
+      this.closeSidebar();
+      this.openSettings({ mobile: true });
+    },
+    closeSidebar() {
+      this.sidebar_opened = false;
+    },
+    toggleSidebar() {
+      this.sidebar_opened = !this.sidebar_opened;
     },
     getModuleData(module_id) {
       if (!module_id) {
@@ -79,149 +160,224 @@ export default {
       }, 400);
     },
   },
-  directives: {
-    OnClickOutside: vOnClickOutside,
-  },
+
 };
 </script>
-
-<template>
-  <header>
-    <div v-bind:class="[{ active: open }, 'search-form']" v-on-click-outside="closeDropdown">
-      <input type="text" @input="debounceSearch" @focusin="openDropdown" placeholder="Введите название" />
-      <div class="dropdown-container">
-        <div class="dropdown-relative-container">
-          <div v-bind:class="[loading ? 'loading' : '', 'search-dropdown']" v-show="txt && currentModule && open">
-            <div class="tabs">
-              <label :class="{ active: current == 'SearchAll' }">
-                <input type="radio" v-model="current" value="SearchAll" />
-                Все результаты
-              </label>
-              <label :class="{ active: current == 'CompB' }" v-if="currentModule">
-                <input type="radio" v-model="current" value="CompB" />
-                {{ currentModule.module_title }}
-              </label>
-            </div>
-            <KeepAlive>
-              <component :is="current" v-bind:text="this.text" v-bind:setLoading="setLoading" />
-            </KeepAlive>
-          </div>
-          <LoadingAnimation v-if="this.loading" />
-        </div>
-      </div>
-    </div>
-  </header>
-</template>
-
 <style scoped lang="scss">
-@import "@/assets/breakpoints.scss";
+@use "@/assets/styles/breakpoints";
+@use "@/assets/styles/shadows";
+
 header {
-  --border-radius: 5px;
-  --padding: 13px;
-  --bittons-transition: 0.4s;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  --border-radius: 10px;
+  --padding: 10px;
+  --transition: 0.4s;
+  display: grid;
+  grid-template-columns: 1fr min(650px, 100%) 1fr;
   background-color: var(--color-background-soft);
   padding: var(--padding);
   color: var(--color-text-rev);
-}
-
-.search-form {
-  display: flex;
-  flex-direction: column;
   position: relative;
-  width: min(650px, 100%);
-  height: 100%;
-}
 
-.search-form input {
-  width: 100%;
-  height: 100%;
-  outline: none;
-  border: none;
-  padding: var(--padding);
-  font-size: 1.3em;
-  font-weight: 400;
-  line-height: normal;
-  border-radius: var(--border-radius);
-  background-color: var(--vt-c-white);
-  color: var(--vt-c-divider-dark-2);
-  transition: color 0.2s;
-}
-
-.search-form input:active,
-.search-form input:focus {
-  outline: none;
-}
-
-.search-form.active input {
-  color: var(--text-color);
-}
-
-.search-form .dropdown-container {
-  position: absolute;
-  top: calc(100% + 5px);
-  width: 100%;
-  display: flex;
-  overflow: hidden;
-  border-radius: var(--border-radius);
-  z-index: 99;
-}
-
-.search-form .dropdown-container .dropdown-relative-container {
-  position: relative;
-  display: flex;
-  width: 100%;
-}
-
-.search-form .search-dropdown {
-  background-color: var(--vt-c-white);
-  width: 100%;
-  padding: var(--padding);
-  z-index: 2;
-}
-
-.search-form .search-dropdown.loading {
-  filter: blur(10px);
-}
-
-.search-dropdown .results {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.search-form .search-dropdown .tabs {
-  display: grid;
-  grid-template-columns: 1fr;
-  width: 100%;
-  background-color: var(--vt-c-text-dark-3);
-  border-radius: 0.5rem;
-  @include sm {
-    grid-template-columns: repeat(2, 1fr);
+  @include breakpoints.lg(true) {
+    grid-template-columns: 60px 1fr;
   }
 
-}
+  .sidebar {
+    position: absolute;
+    background: var(--color-background-soft);
+    z-index: 10;
+    top: 100%;
+    left: -100%;
+    height: calc(100vh - 100%);
+    transition: .2s left;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    &.active {
+      left: 0;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      color: var(--color-text);
+      background: var(--color-background-mute-2);
+
+      .text {
+        font-size: 1.2em;
+      }
+    }
+  }
 
 
-.search-form .search-dropdown .tabs label {
-  padding: 5px;
-  position: relative;
-  text-align: center;
-  user-select: none;
-  transition: background-color var(--bittons-transition), color var(--bittons-transition);
-  font-size: 1.3em;
-  border-radius: 0.5rem;
-}
+  .buttons {
+    display: flex;
+    gap: 10px;
 
-.search-form .search-dropdown .tabs label.active {
-  color: var(--color-text);
-  background-color: var(--color-background-soft);
-}
+    .button {
+      background-color: var(--color-background-mute-3);
+      height: 100%;
+      aspect-ratio: 1;
+      display: grid;
+      place-content: center;
+      border-radius: var(--border-radius);
+      transition: .2s transform;
+      color: var(--color-text);
+      cursor: pointer;
 
-.search-form .search-dropdown .tabs label input {
-  display: none;
+      svg {
+        width: 25px;
+        height: 25px;
+        color: black;
+      }
+
+      &:active {
+        transform: scale(1.05);
+      }
+    }
+
+    &.right {
+      justify-content: right;
+
+      @include breakpoints.lg(true) {
+        display: none;
+      }
+    }
+
+    &.left {
+      @include breakpoints.lg {
+        display: none;
+      }
+
+      .button {
+
+        .closed-icon {
+          display: block;
+        }
+
+        .opened-icon {
+          display: none;
+        }
+
+        &.active {
+          .closed-icon {
+            display: none;
+          }
+
+          .opened-icon {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    grid-column: 2;
+    // margin-inline: auto;
+
+    input {
+      width: 100%;
+      height: 100%;
+      outline: none;
+      border: none;
+      padding: 10px;
+      font-size: 1.3em;
+      font-weight: 400;
+      line-height: normal;
+      border-radius: var(--border-radius);
+      background-color: var(--color-background-mute-2);
+      color: var(--color-text);
+      transition: color 0.2s;
+
+      &:active,
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &.active {
+      input.not-empty {
+        background-color: var(--color-text);
+        color: var(--color-text-rev);
+      }
+    }
+
+    .dropdown-container {
+      position: absolute;
+      top: calc(100% + 5px);
+      width: 100%;
+      display: flex;
+      overflow: hidden;
+      border-radius: var(--border-radius);
+      z-index: 99;
+
+      .dropdown-relative-container {
+        position: relative;
+        display: flex;
+        width: 100%;
+
+        .search-dropdown {
+          background-color: var(--color-background-mute);
+          width: 100%;
+          padding: var(--padding);
+          z-index: 2;
+
+          &.loading {
+            filter: blur(10px);
+          }
+
+          .results {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+          }
+
+          .tabs {
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 100%;
+            background-color: var(--color-background-mute-2);
+            border-radius: 0.5rem;
+
+            @include breakpoints.sm {
+              grid-template-columns: repeat(2, 1fr);
+            }
+
+            label {
+              padding: 5px;
+              position: relative;
+              text-align: center;
+              user-select: none;
+              transition: background-color var(--transition), color var(--transition);
+              font-size: 1.3em;
+              border-radius: 0.5rem;
+
+              &.active {
+                color: var(--color-text);
+                background-color: var(--color-background-soft);
+              }
+
+              input {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 </style>
