@@ -8,10 +8,6 @@
             <nuxt-link to="/search" class="mobile">
                 <Icon name="material-symbols:search" />
             </nuxt-link>
-            <!-- <nuxt-link to="/account">
-                <Icon name="ph:user-fill" class="active" />
-                <Icon name="ph:user" class="default" />
-            </nuxt-link> -->
             <nuxt-link to="/favorites" class="mobile">
                 <Icon name="ph:heart-fill" class="active" />
                 <Icon name="ph:heart" class="default" />
@@ -29,11 +25,13 @@
             <nuxt-link class="menu" to="/mobile-menu">
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
-            <div class="logout">
+            <nuxt-link class="login" to="/login">
                 <Icon name="material-symbols:logout" />
-            </div>
+            </nuxt-link>
         </aside>
-        <slot></slot>
+        <div class="app-content">
+            <slot></slot>
+        </div>
     </div>
 </template>
 <style lang="scss">
@@ -56,7 +54,7 @@
             padding: 20px 30px;
         }
         .menu,
-        .logout,
+        .login,
         a {
             @include flex-center;
             width: 45px;
@@ -106,10 +104,16 @@
                 color: $primary-text;
                 transition: color 0s;
             }
-            &.logout {
+            &.login {
                 margin-top: auto;
             }
         }
+    }
+    .app-content {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 }
 </style>
