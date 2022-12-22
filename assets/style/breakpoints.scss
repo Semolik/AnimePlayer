@@ -1,0 +1,36 @@
+$screen-xs-min: 360px;
+$screen-sm-min: 576px;
+$screen-md-min: 768px;
+$screen-lg-min: 992px;
+$screen-xl-min: 1200px;
+
+@mixin xs($max: false) {
+    @media (#{if($max, max-width, min-width)} : #{$screen-xs-min}) {
+        @content;
+    }
+}
+@mixin sm($max: false) {
+    @media (#{if($max, max-width, min-width)} : #{if($max, $screen-sm-min, $screen-sm-min + 1)}) {
+        @content;
+    }
+}
+@mixin md($max: false) {
+    @media (#{if($max, max-width, min-width)} : #{if($max, $screen-md-min, $screen-md-min + 1)}) {
+        @content;
+    }
+}
+@mixin lg($max: false) {
+    @media (#{if($max, max-width, min-width)} : #{if($max, $screen-lg-min, $screen-lg-min + 1)}) {
+        @content;
+    }
+}
+@mixin xl($max: false) {
+    @media (#{if($max, max-width, min-width)} : #{if($max, $screen-xl-min, $screen-xl-min + 1)}) {
+        @content;
+    }
+}
+@mixin rwd($screen, $max: false) {
+    @media (#{if($max, max-width, min-width)} : (#{if($max, $screen, $screen + 1)} + "px")) {
+        @content;
+    }
+}

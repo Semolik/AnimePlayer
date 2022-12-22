@@ -1,3 +1,16 @@
+#__nuxt,
+html,
+body {
+    height: 100%;
+}
 body {
     background-color: $primary-bg;
+    margin: 0;
+    padding: 0;
+}
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    transition: color 0.2s, background-color 0.2s;
 }
