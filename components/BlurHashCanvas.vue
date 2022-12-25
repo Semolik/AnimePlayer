@@ -3,9 +3,7 @@
 </template>
 
 <script>
-import { decode } from "blurhash";
-import { parseNumber } from "./utils";
-
+import { decodeBlurHash } from "fast-blurhash";
 export default {
     props: {
         hash: {
@@ -13,11 +11,11 @@ export default {
             required: true,
         },
         width: {
-            type: [Number, String],
+            type: Number,
             default: 128,
         },
         height: {
-            type: [Number, String],
+            type: Number,
             default: 128,
         },
         punch: {
@@ -27,27 +25,41 @@ export default {
     },
     data() {
         return {
-            currentWidth: parseNumber(this.width),
-            currentHeight: parseNumber(this.height),
-            currentPunch: parseNumber(this.punch),
+            currentWidth: this.width,
+            currentHeight: this.height,
+            currentPunch: this.punch,
         };
+    },
+    watch: {
+        width(value) {
+            this.currentWidth = value;
+            this.draw();
+        },
+        height(value) {
+            this.currentHeight = value;
+            this.draw();
+        },
+        punch(value) {
+            this.currentPunch = value;
+            this.draw();
+        },
+        hash(value) {
+            this.draw();
+        },
     },
     mounted() {
         this.draw();
     },
     methods: {
         draw() {
-            const pixels = decode(
+            const pixels = decodeBlurHash(
                 this.hash,
-                this.currentWidth,
-                this.currentHeight,
+                this.width,
+                this.height,
                 this.punch
             );
             const ctx = this.$refs.canvas.getContext("2d");
-            const imageData = ctx.createImageData(
-                this.currentWidth,
-                this.currentHeight
-            );
+            const imageData = ctx.createImageData(this.width, this.height);
             imageData.data.set(pixels);
             ctx.putImageData(imageData, 0, 0);
         },

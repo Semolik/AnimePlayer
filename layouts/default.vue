@@ -110,7 +110,7 @@
         }
     }
     .app-content {
-        padding: 10px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         gap: 10px;

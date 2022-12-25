@@ -1,15 +1,21 @@
 <template>
     <nuxt-link class="small-card">
         <div class="picture">
-            <img :src="card.poster.url" alt="" />
+            <BlurHashCanvas
+                :hash="card.poster.blurhash"
+                :width="pictureSize.x"
+                :height="pictureSize.y"
+            />
+            <!-- <img :src="card.poster.url" :alt="card.ru_title" /> -->
         </div>
-        <BlurHashCanvas :hash="card.poster.blurhash" />
         <div class="title">{{ card.ru_title }}</div>
     </nuxt-link>
 </template>
 <script setup>
 import BlurHashCanvas from "../BlurHashCanvas.vue";
-
+const pictureSize = { x: 170, y: 250 };
+const pictureHeight = pictureSize.y + "px";
+const pictureWidth = pictureSize.x + "px";
 const { card } = defineProps({
     card: Object,
 });
@@ -18,16 +24,18 @@ const { card } = defineProps({
 .small-card {
     display: flex;
     flex-direction: column;
-    max-width: 170px;
+    max-width: v-bind(pictureWidth);
     widows: 100%;
     gap: 8px;
     cursor: pointer;
     .picture {
-        height: 250px;
-        width: 100%;
+        height: v-bind(pictureHeight);
+        aspect-ratio: 2 / 3;
+        // min-width: v-bind(pictureWidth);
         border-radius: 8px;
         overflow: hidden;
         position: relative;
+        isolation: isolate;
         &::after {
             content: "";
             position: absolute;
@@ -40,6 +48,11 @@ const { card } = defineProps({
             height: 100%;
             object-fit: cover;
             user-select: none;
+        }
+        canvas {
+            z-index: -1;
+            position: absolute;
+            inset: 0;
         }
     }
 

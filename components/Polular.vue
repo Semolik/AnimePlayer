@@ -5,7 +5,11 @@
         </div>
         <Flicking
             ref="flicking"
-            :options="{ align: 'prev', bound: true, bounce: '5%' }"
+            :options="{
+                align: 'prev',
+                bound: true,
+                bounce: '5%',
+            }"
         >
             <CardSmall
                 v-for="(card, index) in [...data.titles, ...data.titles]"
@@ -27,6 +31,7 @@ import data from "../test-titles";
     display: flex;
     overflow: hidden;
     gap: 12px;
+    width: 100%;
     .flicking-camera {
         gap: 12px;
     }
