@@ -7,7 +7,7 @@ export default defineNuxtConfig({
         "@nuxtjs/supabase",
     ],
     css: [
-        "@/assets/style/global.scss",
+        "@/assets/styles/global.scss",
         "@egjs/vue3-flicking/dist/flicking.css",
     ],
     googleFonts: {
@@ -22,9 +22,9 @@ export default defineNuxtConfig({
             preprocessorOptions: {
                 scss: {
                     additionalData: [
-                        '@use "@/assets/style/_colors.scss" as *;',
-                        '@use "@/assets/style/helpers.scss" as *;',
-                        '@use "@/assets/style/breakpoints.scss" as *;',
+                        '@use "@/assets/styles/_colors.scss" as *;',
+                        '@use "@/assets/styles/helpers.scss" as *;',
+                        '@use "@/assets/styles/breakpoints.scss" as *;',
                     ].join(""),
                 },
             },

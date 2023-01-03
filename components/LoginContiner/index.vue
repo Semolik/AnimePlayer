@@ -27,6 +27,7 @@ const { welcome } = defineProps({
 const welcomeText = ref(welcome ? "Добро пожаловать" : "Войти в систему");
 </script>
 <style lang="scss" scoped>
+@use "@/assets/styles/breakpoints";
 .login-container-wrapper {
     height: 100%;
     width: 100%;
@@ -73,13 +74,19 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
             text-decoration: none;
             cursor: pointer;
             padding: 10px;
-            // background-color: $secondary-bg;
+            //
             text-align: center;
-
-            &:hover {
-                box-shadow: $primary-box-shadow;
+            @include breakpoints.md(true) {
                 background-color: $secondary-bg;
+                box-shadow: $primary-box-shadow;
                 color: $secondary-text;
+            }
+            @include breakpoints.md {
+                &:hover {
+                    box-shadow: $primary-box-shadow;
+                    background-color: $secondary-bg;
+                    color: $secondary-text;
+                }
             }
         }
     }

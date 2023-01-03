@@ -17,11 +17,14 @@ const handleClick = () => {
 };
 </script>
 <style lang="scss">
+@use "@/assets/styles/breakpoints";
 .button {
     &.active {
         background-color: $tertiary-bg;
-        &:hover {
-            background-color: $quaternary-bg;
+        @include breakpoints.md {
+            &:hover {
+                background-color: $quaternary-bg;
+            }
         }
     }
     color: $primary-text;
