@@ -11,6 +11,9 @@
             <div class="form">
                 <slot></slot>
             </div>
+            <router-link :to="welcome ? '/login' : '/sign-in'" class="link">
+                {{ welcome ? "Уже есть аккаунт?" : "Нет аккаунта?" }}
+            </router-link>
         </div>
     </div>
 </template>
@@ -54,11 +57,30 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
         .form {
             background-color: $secondary-bg;
             box-shadow: $primary-box-shadow;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .link {
+            border-radius: 10px;
+            font-size: 14px;
+
+            color: $tertiary-text;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 10px;
+            // background-color: $secondary-bg;
+            text-align: center;
+
+            &:hover {
+                box-shadow: $primary-box-shadow;
+                background-color: $secondary-bg;
+                color: $secondary-text;
+            }
         }
     }
 }
