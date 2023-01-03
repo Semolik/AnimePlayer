@@ -1,11 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ["nuxt-icon"],
+    modules: [
+        "nuxt-icon",
+        "@nuxtjs/google-fonts",
+        "@formkit/nuxt",
+        "@nuxtjs/supabase",
+    ],
     css: [
         "@/assets/style/global.scss",
         "@egjs/vue3-flicking/dist/flicking.css",
     ],
-    // plugins: [{ src: "@/plugins/blurhash", mode: "client" }],
+    googleFonts: {
+        families: {
+            "Open+Sans": true,
+        },
+        // download: true,
+        // inject: true,
+    },
     vite: {
         css: {
             preprocessorOptions: {

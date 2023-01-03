@@ -8,11 +8,14 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nuxtjs/supabase": "^0.3.0",
     "nuxt": "3.0.0",
     "nuxt-icon": "^0.1.8"
   },
   "dependencies": {
     "@egjs/vue3-flicking": "^4.10.4",
+    "@formkit/nuxt": "^1.0.0-beta.12",
+    "@nuxtjs/google-fonts": "^3.0.0-1",
     "blurhash": "^2.0.4",
     "fast-blurhash": "^1.1.2",
     "sass": "^1.57.1"
