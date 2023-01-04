@@ -20,18 +20,20 @@ const handleClick = () => {
 @use "@/assets/styles/breakpoints";
 .button {
     &.active {
-        background-color: $tertiary-bg;
+        cursor: pointer;
         @include breakpoints.md {
             &:hover {
                 background-color: $quaternary-bg;
+                color: $primary-text;
             }
         }
     }
-    color: $primary-text;
-    background-color: $primary-text;
+    user-select: none;
+    color: $secondary-text;
+    background-color: $tertiary-bg;
     padding: 10px 20px;
     border-radius: 5px;
-    cursor: pointer;
+
     transition: all 0.2s ease-in-out;
     text-align: center;
 }

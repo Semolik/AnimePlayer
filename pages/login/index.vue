@@ -3,7 +3,7 @@
         <FormInput
             v-model="login"
             label="Логин"
-            placeholder="Введите имя пользователя"
+            placeholder="Введите имя пользователя или e-mail"
         />
         <FormInput
             v-model="password"

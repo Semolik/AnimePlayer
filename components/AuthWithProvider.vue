@@ -30,18 +30,16 @@ const handleGithubLogin = async () => {
     display: flex;
     gap: 10px;
     .provider-button {
+        @include flex-center;
         width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         cursor: pointer;
         padding: 10px 20px;
         border-radius: 5px;
-        transition: all 0.2s ease-in-out;
         color: $secondary-text;
         background-color: $tertiary-bg;
         &:hover {
             background-color: $quaternary-bg;
+            color: $primary-text;
         }
         span {
             margin-left: 10px;
