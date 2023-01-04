@@ -10,6 +10,8 @@
             </div>
             <div class="form">
                 <slot></slot>
+                <div class="auth-with-provider-text">или с помощью</div>
+                <auth-with-provider />
             </div>
             <router-link :to="welcome ? '/login' : '/sign-in'" class="link">
                 {{ welcome ? "Уже есть аккаунт?" : "Нет аккаунта?" }}
@@ -58,12 +60,17 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
         .form {
             background-color: $secondary-bg;
             box-shadow: $primary-box-shadow;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 10px;
+            .auth-with-provider-text {
+                font-size: 14px;
+                color: $secondary-text;
+                text-align: center;
+            }
         }
 
         .link {
