@@ -25,7 +25,11 @@
             <nuxt-link class="menu" to="/mobile-menu">
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
-            <nuxt-link class="login" to="/login">
+            <nuxt-link class="login" to="/profile" v-if="isLogined">
+                <Icon name="material-symbols:person" class="active" />
+                <Icon name="material-symbols:person-outline" class="default" />
+            </nuxt-link>
+            <nuxt-link class="login" to="/login" v-else>
                 <Icon name="material-symbols:logout" />
             </nuxt-link>
         </aside>
@@ -34,6 +38,11 @@
         </div>
     </div>
 </template>
+<script setup>
+const user = useSupabaseUser();
+console.log(user.value);
+const isLogined = computed(() => user.value !== null);
+</script>
 <style lang="scss">
 .default-layout {
     display: flex;

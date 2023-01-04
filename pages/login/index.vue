@@ -15,6 +15,11 @@
     </LoginContiner>
 </template>
 <script setup>
+definePageMeta({
+    title: "Вход",
+    description: "Вход в систему",
+    middleware: ["authorized"],
+});
 const supabase = useSupabaseClient();
 const login = ref("");
 const password = ref("");

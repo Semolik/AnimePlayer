@@ -5,9 +5,13 @@
     </LoginContiner>
 </template>
 <script setup>
+definePageMeta({
+    title: "Вход",
+    description: "Вход в систему",
+    middleware: ["authorized"],
+});
 const supabase = useSupabaseClient();
 const email = ref("");
-
 const loading = ref(false);
 const handleLogin = async () => {
     try {
