@@ -1,28 +1,21 @@
 <template>
     <div class="providers-buttons">
-        <div class="provider-button" @click="handlebLogin('discord')">
+        <div class="provider-button" @click="useLoginWithProvider('discord')">
             <Icon name="logos:discord-icon" />
             <span>Discord</span>
         </div>
-        <div class="provider-button" @click="handlebLogin('github')">
+        <div class="provider-button" @click="useLoginWithProvider('github')">
             <Icon name="logos:github-icon" />
             <span>Github</span>
         </div>
-        <div class="provider-button" @click="handlebLogin('google')">
+        <div class="provider-button" @click="useLoginWithProvider('google')">
             <Icon name="logos:google-icon" />
             <span>Google</span>
         </div>
     </div>
 </template>
 <script setup>
-const supabase = useSupabaseClient();
-
-const handlebLogin = async (provider) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: provider,
-    });
-    if (error) alert(error.message);
-};
+import { useLoginWithProvider } from "@/composables/loginWithProvider";
 </script>
 <style lang="scss">
 .providers-buttons {

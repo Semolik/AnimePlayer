@@ -5,7 +5,12 @@ export default defineNuxtConfig({
         "@nuxtjs/google-fonts",
         "@formkit/nuxt",
         "@nuxtjs/supabase",
+        "nuxt-headlessui",
+        "@nuxtjs/tailwindcss",
     ],
+    headlessui: {
+        prefix: "Headless",
+    },
     css: [
         "@/assets/styles/global.scss",
         "@egjs/vue3-flicking/dist/flicking.css",

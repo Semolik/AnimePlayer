@@ -9,7 +9,9 @@
   },
   "devDependencies": {
     "@nuxtjs/supabase": "^0.3.0",
+    "@nuxtjs/tailwindcss": "^6.2.0",
     "nuxt": "3.0.0",
+    "nuxt-headlessui": "^1.0.4",
     "nuxt-icon": "^0.1.8"
   },
   "dependencies": {

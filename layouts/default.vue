@@ -40,7 +40,6 @@
 </template>
 <script setup>
 const user = useSupabaseUser();
-console.log(user.value);
 const isLogined = computed(() => user.value !== null);
 </script>
 <style lang="scss">
@@ -50,7 +49,7 @@ const isLogined = computed(() => user.value !== null);
     @include sm(true) {
         flex-direction: column-reverse;
     }
-    aside {
+    & > aside {
         background-color: $secondary-bg;
         padding: 20px;
         display: flex;
@@ -80,7 +79,7 @@ const isLogined = computed(() => user.value !== null);
                 }
             }
 
-            &.router-link-exact-active {
+            &.router-link-active {
                 @include sm {
                     background-color: $tertiary-bg;
                 }
@@ -91,7 +90,7 @@ const isLogined = computed(() => user.value !== null);
                     }
                 }
             }
-            &:not(.router-link-exact-active) {
+            &:not(.router-link-active) {
                 svg {
                     color: $tertiary-text;
                     &.active {

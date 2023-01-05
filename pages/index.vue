@@ -1,4 +1,1 @@
-<template>
-    <Slider />
-    <!-- <Polular /> -->
-</template>
+<template></template>
