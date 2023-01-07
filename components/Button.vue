@@ -1,5 +1,12 @@
 <template>
-    <div :class="['button', { active: active }]" @click="handleClick">
+    <div
+        :class="[
+            'button',
+            { active: active },
+            { 'highlight-active': highlightActive },
+        ]"
+        @click="handleClick(active)"
+    >
         <slot></slot>
     </div>
 </template>
@@ -9,9 +16,13 @@ const { active } = defineProps({
         type: Boolean,
         default: true,
     },
+    highlightActive: {
+        type: Boolean,
+        default: false,
+    },
 });
 const emit = defineEmits(["clicked"]);
-const handleClick = () => {
+const handleClick = (active) => {
     if (active) {
         emit("clicked");
     }
@@ -22,10 +33,20 @@ const handleClick = () => {
 .button {
     &.active {
         cursor: pointer;
-        @include breakpoints.md {
+        &.highlight-active {
+            background-color: $quaternary-bg;
+            color: $primary-text;
             &:hover {
-                background-color: $quaternary-bg;
+                background-color: $quinary-bg;
                 color: $primary-text;
+            }
+        }
+        &:not(.highlight-active) {
+            @include breakpoints.md {
+                &:hover {
+                    background-color: $quaternary-bg;
+                    color: $primary-text;
+                }
             }
         }
     }
@@ -34,7 +55,6 @@ const handleClick = () => {
     background-color: $tertiary-bg;
     padding: 10px 20px;
     border-radius: 5px;
-
     transition: all 0.2s ease-in-out;
     text-align: center;
 }

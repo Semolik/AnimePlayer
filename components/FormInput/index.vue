@@ -2,10 +2,11 @@
     <FormKit
         :label="label"
         :value="value"
+        v-model="modelValue"
         :placeholder="placeholder"
         :type="type"
         :classes="{
-            input: error ? 'error' : '',
+            input: wrong ? 'wrong' : '',
         }"
     />
 </template>
@@ -24,13 +25,20 @@ const { label, value, placeholder, type } = defineProps({
         type: String,
         default: "text",
     },
-    error: {
+    wrong: {
         type: Boolean,
+        default: false,
     },
 });
+const emit = defineEmits(["update:modelValue", "update:wrong"]);
 const modelValue = ref(value);
 watch(modelValue, (val) => {
-    $emit("update:modelValue", val);
+    emit("update:modelValue", val);
+    if (type === "email" && !/^[^@]+@\w+(\.\w+)+\w$/.test(val)) {
+        emit("update:wrong", true);
+    } else {
+        emit("update:wrong", false);
+    }
 });
 </script>
 <style lang="scss">
@@ -58,13 +66,13 @@ watch(modelValue, (val) => {
                 width: 100%;
                 color: $primary-text;
                 font-size: 14px;
-                &.error {
+                &.wrong {
                     border-color: $accent-error;
                     box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
                         0 0 8px $accent-error;
                     outline: 0;
                 }
-                &:not(.error):focus {
+                &:not(.wrong):focus {
                     border-color: #66afe9;
                     box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
                         0 0 8px rgb(102 175 233 / 60%);

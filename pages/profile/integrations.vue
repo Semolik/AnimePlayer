@@ -56,7 +56,7 @@ const googleConnected = computed(() => {
     .integration {
         border-radius: 8px;
         background-color: $tertiary-bg;
-        padding: 16px;
+        padding: 20px;
         flex-grow: 1;
         display: flex;
         gap: 20px;

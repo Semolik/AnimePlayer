@@ -7,15 +7,16 @@
             type="password"
         />
         <div class="password-strength">
-            <div
-                v-for="i in 4"
-                :key="i"
-                :class="{
-                    'password-strength__item': true,
-                    'password-strength__item--active':
-                        strength.id >= i - 1 && password.length !== 0,
-                }"
-            ></div>
+            <div class="bar">
+                <div
+                    :class="['progress', `id-${strength.id}`]"
+                    :style="{
+                        width: `${
+                            strength.length > 0 ? (strength.id + 1) * 25 : 0
+                        }%`,
+                    }"
+                ></div>
+            </div>
         </div>
         <div class="password-contain">
             <div
@@ -75,11 +76,12 @@
 </template>
 <script setup>
 import { passwordStrength } from "check-password-strength";
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "update:wrong"]);
 const { modelValue } = defineProps({
     modelValue: {
         type: String,
         default: "",
+        required: true,
     },
 });
 const password = ref(modelValue);
@@ -101,6 +103,14 @@ const containsSymbols = computed(() => {
 const containsMoreThan10 = computed(() => {
     return strength.value?.length >= 10;
 });
+watch(strength, (value) => {
+    if (!value) return;
+    if (value.id < 1) {
+        emit("update:wrong", true);
+    } else {
+        emit("update:wrong", false);
+    }
+});
 </script>
 <style lang="scss">
 .input-password {
@@ -114,22 +124,25 @@ const containsMoreThan10 = computed(() => {
         margin: 0 2px;
         overflow: hidden;
 
-        .password-strength__item {
-            width: 25%;
+        .bar {
+            width: 100%;
             height: 5px;
             background-color: $primary-bg;
-        }
-        @mixin strength-progress($color, $count) {
-            &:has(.password-strength__item--active:nth-child(#{$count})) {
-                .password-strength__item--active {
-                    background-color: $color;
+            .progress {
+                height: 100%;
+                background-color: $accent-success;
+                transition: width 0.3s ease;
+                &.id-0 {
+                    background-color: $accent-error;
+                }
+                &.id-1 {
+                    background-color: $accent-warning;
+                }
+                &.id-2 {
+                    background-color: $accent-success;
                 }
             }
         }
-        @include strength-progress($accent-error, 1);
-        @include strength-progress($accent-warning, 2);
-        @include strength-progress($accent-success, 3);
-        @include strength-progress($accent-success, 4);
     }
     .password-contain {
         display: flex;

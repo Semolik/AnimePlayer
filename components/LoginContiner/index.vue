@@ -50,14 +50,17 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
                 font-size: 1.25rem;
                 line-height: 1.75rem;
                 color: $primary-text;
+                text-align: center;
             }
             .description {
                 font-size: 14px;
                 color: $secondary-text;
+                text-align: center;
             }
         }
 
         .form {
+            position: relative;
             background-color: $secondary-bg;
             box-shadow: $primary-box-shadow;
             padding: 20px;
@@ -66,6 +69,7 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
             flex-direction: column;
             gap: 10px;
             margin-bottom: 10px;
+            overflow: hidden;
             .auth-with-provider-text {
                 font-size: 14px;
                 color: $secondary-text;
