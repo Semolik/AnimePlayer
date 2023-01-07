@@ -13,7 +13,7 @@
                 <div class="auth-with-provider-text">или с помощью</div>
                 <auth-with-provider />
             </div>
-            <router-link :to="welcome ? '/login' : '/sign-in'" class="link">
+            <router-link :to="welcome ? '/login' : '/register'" class="link">
                 {{ welcome ? "Уже есть аккаунт?" : "Нет аккаунта?" }}
             </router-link>
         </div>

@@ -12,3 +12,9 @@ $secondary-text: rgb(179, 179, 179);
 $tertiary-text: rgb(102, 102, 102);
 $primary-reverse-text: rgb(0, 0, 0);
 $primary-box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+
+$accent: hwb(155 0% 14%);
+$accent-error: hwb(0 0% 14%);
+$accent-warning: hwb(40 0% 14%);
+$accent-success: hwb(120 0% 14%);
+$accent-hover: hwb(155 0% 16%);

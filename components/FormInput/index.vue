@@ -4,6 +4,9 @@
         :value="value"
         :placeholder="placeholder"
         :type="type"
+        :classes="{
+            input: error ? 'error' : '',
+        }"
     />
 </template>
 <script setup>
@@ -20,6 +23,9 @@ const { label, value, placeholder, type } = defineProps({
     type: {
         type: String,
         default: "text",
+    },
+    error: {
+        type: Boolean,
     },
 });
 const modelValue = ref(value);
@@ -48,15 +54,18 @@ watch(modelValue, (val) => {
                 height: 40px;
                 padding: 6px 12px;
                 transition: border-color 0.15s ease-in-out,
-                    box-shadow 0.15s ease-in-out,
-                    -webkit-box-shadow 0.15s ease-in-out;
+                    box-shadow 0.15s ease-in-out;
                 width: 100%;
                 color: $primary-text;
                 font-size: 14px;
-                &:focus {
+                &.error {
+                    border-color: $accent-error;
+                    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
+                        0 0 8px $accent-error;
+                    outline: 0;
+                }
+                &:not(.error):focus {
                     border-color: #66afe9;
-                    -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
-                        0 0 8px rgb(102 175 233 / 60%);
                     box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
                         0 0 8px rgb(102 175 233 / 60%);
                     outline: 0;

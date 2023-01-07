@@ -56,7 +56,7 @@ const googleConnected = computed(() => {
     .integration {
         border-radius: 8px;
         background-color: $tertiary-bg;
-        padding: 20px;
+        padding: 16px;
         flex-grow: 1;
         display: flex;
         gap: 20px;
@@ -67,8 +67,8 @@ const googleConnected = computed(() => {
             background-color: $quaternary-bg;
         }
         svg {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
         }
         span {
             text-align: center;

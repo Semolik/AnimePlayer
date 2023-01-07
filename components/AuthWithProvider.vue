@@ -24,7 +24,6 @@ import { useLoginWithProvider } from "@/composables/loginWithProvider";
     gap: 10px;
     .provider-button {
         @include flex-center;
-        // width: 100%;
         flex-grow: 1;
         cursor: pointer;
         padding: 10px 20px;

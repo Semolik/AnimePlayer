@@ -10,9 +10,10 @@ const { active } = defineProps({
         default: true,
     },
 });
+const emit = defineEmits(["clicked"]);
 const handleClick = () => {
     if (active) {
-        $emit("clicked");
+        emit("clicked");
     }
 };
 </script>

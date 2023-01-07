@@ -1,10 +1,6 @@
 <template>
     <LoginContiner>
-        <FormInput
-            v-model="login"
-            label="Логин"
-            placeholder="Введите имя пользователя или e-mail"
-        />
+        <FormInput v-model="email" label="Почта" placeholder="Введите e-mail" />
         <FormInput
             v-model="password"
             label="Пароль"
@@ -15,25 +11,28 @@
     </LoginContiner>
 </template>
 <script setup>
+import { useToast } from "vue-toastification";
+const toast = useToast();
+
 definePageMeta({
     title: "Вход",
     description: "Вход в систему",
     middleware: ["authorized"],
 });
 const supabase = useSupabaseClient();
-const login = ref("");
+const email = ref("");
 const password = ref("");
 const loading = ref(false);
 const handleLogin = async () => {
     try {
         loading.value = true;
-        const { error } = await supabase.auth.signInWithOtp({
-            email: login.value,
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email.value,
+            password: password.value,
         });
         if (error) throw error;
-        alert("Check your email for the login link!");
     } catch (error) {
-        alert(error.error_description || error.message);
+        toast.error(error.error_description || error.message);
     } finally {
         loading.value = false;
     }

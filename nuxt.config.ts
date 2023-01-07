@@ -22,6 +22,7 @@ export default defineNuxtConfig({
         // download: true,
         // inject: true,
     },
+    plugins: [{ src: "~/plugins/vue-toastification.js", mode: "client" }],
     vite: {
         css: {
             preprocessorOptions: {
