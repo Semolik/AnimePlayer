@@ -5,6 +5,7 @@
         v-model="modelValue"
         :placeholder="placeholder"
         :type="type"
+        :disabled="disabled"
         :classes="{
             input: wrong ? 'wrong' : '',
         }"
@@ -29,6 +30,10 @@ const { label, value, placeholder, type } = defineProps({
         type: Boolean,
         default: false,
     },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
 });
 const emit = defineEmits(["update:modelValue", "update:wrong"]);
 const modelValue = ref(value);
@@ -44,6 +49,7 @@ watch(modelValue, (val) => {
 <style lang="scss">
 .formkit-outer {
     color: $primary-text;
+    width: 100%;
 
     .formkit-wrapper {
         display: flex;

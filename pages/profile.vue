@@ -3,7 +3,7 @@
         <template #aside>
             <AsidePageItem to="/profile">
                 <Icon name="material-symbols:person" />
-                <span>Данные</span>
+                <span>Информация</span>
             </AsidePageItem>
             <AsidePageItem to="/profile/integrations">
                 <Icon name="carbon:ibm-cloud-direct-link-1-connect" />

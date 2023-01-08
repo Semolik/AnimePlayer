@@ -1,8 +1,5 @@
 <template>
-    <AsidePageHeadline
-        title="Интеграции"
-        subtitle="Подключите свои аккаунты для удобства"
-    />
+    <AsidePageHeadline title="Интеграции" />
     <div class="integrations-container">
         <div
             class="integration"
