@@ -2,7 +2,7 @@
     <div class="profile-container">
         <div class="headlines">
             <AsidePageHeadline title="Информация" />
-            <AsidePageHeadline title="Фото профиля" :size="18" />
+            <AsidePageHeadline title="Фото профиля" />
         </div>
         <div class="profile-wrapper">
             <div class="profile">
@@ -61,6 +61,7 @@ console.log(user.value);
         }
     }
     .profile-photo {
+        padding: 10px;
         .profile-photo__title {
             white-space: nowrap;
             font-weight: 500;
