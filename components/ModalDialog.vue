@@ -1,0 +1,181 @@
+<template>
+    <ClientOnly>
+        <Teleport to="body" v-if="active">
+            <Transition name="modal">
+                <div
+                    :class="[
+                        'modal-bg',
+                        { open: isActive },
+                        { close: isClosing },
+                    ]"
+                    v-if="isActive"
+                    @click.self="closeModal"
+                >
+                    {{ isClosing }}
+                    <div class="modal">
+                        <div class="headline">
+                            <h3 class="text">{{ headline }}</h3>
+                        </div>
+                        <div class="description">
+                            {{ description }}
+                        </div>
+                        <div class="modal-content">
+                            <slot></slot>
+                        </div>
+                        <div class="modal-buttons">
+                            <slot name="buttons"></slot>
+                        </div>
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
+    </ClientOnly>
+</template>
+<script setup>
+const props = defineProps({
+    active: Boolean,
+    headline: String,
+    yesButton: Boolean,
+    yesLoading: Boolean,
+    noButton: Boolean,
+    description: String,
+    maxWidth: {
+        type: Number,
+        default: 400,
+    },
+    transition: {
+        type: Number,
+        default: 250,
+    },
+    maxWidth: {
+        type: Number,
+        default: 10,
+    },
+});
+const description = ref(props.description);
+const emit = defineEmits(["update:active"]);
+const transitionString = computed(() => {
+    return `${props.transition}ms`;
+});
+const width = computed(() => {
+    return `${props.maxWidth}px`;
+});
+const paddingString = computed(() => {
+    return `${props.padding}px`;
+});
+const isClosing = ref(false);
+const isActive = ref(true);
+const closeModal = () => {
+    isClosing.value = true;
+    setTimeout(() => {
+        emit("update:active", false);
+        isActive.value = false;
+        isClosing.value = false;
+    }, props.transition);
+};
+const openModal = () => {
+    isActive.value = true;
+};
+watch(
+    () => props.active,
+    (value) => {
+        if (value) {
+            openModal();
+        } else {
+            closeModal();
+        }
+    }
+);
+</script>
+<style lang="scss">
+.modal-enter-active,
+.modal-leave-active {
+    transition: all v-bind(transitionString) ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+    @include flex-center;
+    z-index: 99;
+    opacity: 0;
+    transition: opacity v-bind(transitionString) ease-in-out;
+    &.open {
+        animation: open v-bind(transitionString) ease-in-out;
+        opacity: 1;
+    }
+    &.close {
+        animation: close v-bind(transitionString) ease-in-out;
+        opacity: 0;
+    }
+    @keyframes open {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    @keyframes close {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    .modal {
+        background-color: $secondary-bg;
+        max-width: v-bind(width);
+        width: 100%;
+        padding: 1.5rem;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+
+        .headline {
+            display: flex;
+            margin-bottom: 10px;
+
+            .text {
+                flex-grow: 1;
+
+                line-height: 1.5rem;
+
+                font-size: 1.2rem;
+                color: $primary-text;
+            }
+
+            .close-button {
+                border-radius: 15px;
+                padding: 5px;
+
+                svg {
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+        }
+        .description {
+            font-size: 0.875rem;
+            color: $secondary-text;
+        }
+
+        .modal-content {
+            padding: v-bind(paddingString);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 5px;
+        }
+    }
+}
+</style>

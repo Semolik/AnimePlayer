@@ -1,6 +1,6 @@
 <template>
     <div class="avatar-container">
-        <div class="avatar">
+        <div class="avatar" @click="openModal">
             <img
                 src="https://cdn.dribbble.com/users/7924768/avatars/small/c3500eb7d5e9dcfc014ba324d1d7fb01.jpg?1653814588"
                 alt=""
@@ -9,9 +9,24 @@
         <div class="edit">
             <Icon name="material-symbols:edit" />
         </div>
+
+        <ModalDialog
+            v-model:active="modalOpened"
+            headline="Заголовок"
+            description="Описание"
+            yes-button
+            no-button
+            :max-width="500"
+            :padding="20"
+        />
     </div>
 </template>
-<script setup></script>
+<script setup>
+const modalOpened = ref(false);
+const openModal = () => {
+    modalOpened.value = true;
+};
+</script>
 <style lang="scss">
 .avatar-container {
     display: flex;
