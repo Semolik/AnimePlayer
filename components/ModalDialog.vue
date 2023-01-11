@@ -13,10 +13,10 @@
                 >
                     {{ isClosing }}
                     <div class="modal">
-                        <div class="headline">
+                        <div class="headline" v-if="headline">
                             <h3 class="text">{{ headline }}</h3>
                         </div>
-                        <div class="description">
+                        <div class="description" v-if="description">
                             {{ description }}
                         </div>
                         <div class="modal-content">
@@ -48,6 +48,10 @@ const props = defineProps({
         default: 250,
     },
     maxWidth: {
+        type: Number,
+        default: 10,
+    },
+    padding: {
         type: Number,
         default: 10,
     },
@@ -135,7 +139,7 @@ watch(
         background-color: $secondary-bg;
         max-width: v-bind(width);
         width: 100%;
-        padding: 1.5rem;
+
         border-radius: 20px;
         display: flex;
         flex-direction: column;

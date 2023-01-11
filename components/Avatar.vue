@@ -9,16 +9,13 @@
         <div class="edit">
             <Icon name="material-symbols:edit" />
         </div>
-
         <ModalDialog
             v-model:active="modalOpened"
-            headline="Заголовок"
-            description="Описание"
-            yes-button
-            no-button
             :max-width="500"
-            :padding="20"
-        />
+            :padding="10"
+        >
+            <SelectFile />
+        </ModalDialog>
     </div>
 </template>
 <script setup>
