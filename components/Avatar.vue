@@ -16,8 +16,8 @@
         >
             <SelectFile is-picture v-model="file" v-if="!cropAvatarReady" />
             <CropAvatar
-                v-if="base64Url"
-                v-model="base64Url"
+                v-if="avatarUrl"
+                v-model="avatarUrl"
                 @ready="cropAvatarReady = true"
             />
             <template v-slot:buttons="{ closeModal }">
@@ -42,25 +42,27 @@
 <script setup>
 const modalOpened = ref(false);
 const cropAvatarReady = ref(false);
+const file = ref(null);
+
 const openModal = () => {
     modalOpened.value = true;
 };
+
 const reset = () => {
     file.value = null;
     cropAvatarReady.value = false;
 };
+
+const avatarUrl = computed(() => {
+    if (!file.value) return;
+    return URL.createObjectURL(file.value);
+});
+
 watch(modalOpened, (value) => {
     if (!value) {
         reset();
     }
 });
-const base64Url = computed(() => {
-    if (file.value) {
-        return URL.createObjectURL(file.value);
-    }
-    return null;
-});
-const file = ref(null);
 </script>
 <style lang="scss">
 .avatar-container {
