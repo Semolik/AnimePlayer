@@ -9,12 +9,25 @@
                         { close: isClosing },
                     ]"
                     v-if="isActive"
-                    @click.self="closeModal"
+                    @click.self="
+                        props.closeButton || props.offOutsideClickClose
+                            ? null
+                            : closeModal()
+                    "
                 >
-                    {{ isClosing }}
                     <div class="modal">
-                        <div class="headline" v-if="headline">
+                        <div
+                            class="headline"
+                            v-if="headline || props.closeButton"
+                        >
                             <h3 class="text">{{ headline }}</h3>
+                            <div
+                                class="close-button"
+                                v-if="props.closeButton"
+                                @click="closeModal"
+                            >
+                                <Icon name="material-symbols:close" />
+                            </div>
                         </div>
                         <div class="description" v-if="description">
                             {{ description }}
@@ -23,7 +36,10 @@
                             <slot></slot>
                         </div>
                         <div class="modal-buttons">
-                            <slot name="buttons"></slot>
+                            <slot
+                                name="buttons"
+                                :closeModal="closeModal"
+                            ></slot>
                         </div>
                     </div>
                 </div>
@@ -49,9 +65,25 @@ const props = defineProps({
     },
     maxWidth: {
         type: Number,
-        default: 10,
+        default: 500,
+    },
+    maxHeight: {
+        type: Number,
+        default: 800,
     },
     padding: {
+        type: Number,
+        default: 10,
+    },
+    offOutsideClickClose: {
+        type: Boolean,
+        default: false,
+    },
+    closeButton: {
+        type: Boolean,
+        default: false,
+    },
+    gap: {
         type: Number,
         default: 10,
     },
@@ -64,8 +96,14 @@ const transitionString = computed(() => {
 const width = computed(() => {
     return `${props.maxWidth}px`;
 });
+const height = computed(() => {
+    return `${props.maxHeight}px`;
+});
 const paddingString = computed(() => {
     return `${props.padding}px`;
+});
+const gapString = computed(() => {
+    return `${props.gap}px`;
 });
 const isClosing = ref(false);
 const isActive = ref(true);
@@ -138,32 +176,42 @@ watch(
     .modal {
         background-color: $secondary-bg;
         max-width: v-bind(width);
+        max-height: v-bind(height);
         width: 100%;
-
         border-radius: 20px;
         display: flex;
         flex-direction: column;
-
+        padding: v-bind(paddingString);
+        gap: v-bind(gapString);
         .headline {
-            display: flex;
-            margin-bottom: 10px;
+            @include flex-center;
+
+            padding-bottom: 0;
 
             .text {
                 flex-grow: 1;
-
                 line-height: 1.5rem;
-
                 font-size: 1.2rem;
-                color: $primary-text;
+                color: $secondary-text;
+                text-align: center;
             }
 
             .close-button {
-                border-radius: 15px;
+                border-radius: 50%;
                 padding: 5px;
+                background-color: $quaternary-bg;
+                width: 30px;
+                height: 30px;
+                @include flex-center;
+                cursor: pointer;
 
                 svg {
-                    width: 15px;
-                    height: 15px;
+                    width: 18px;
+                    height: 18px;
+                    color: $secondary-text;
+                }
+                &:hover {
+                    background-color: $quinary-bg;
                 }
             }
         }
@@ -173,7 +221,6 @@ watch(
         }
 
         .modal-content {
-            padding: v-bind(paddingString);
         }
 
         .modal-buttons {

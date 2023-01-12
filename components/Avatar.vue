@@ -11,18 +11,56 @@
         </div>
         <ModalDialog
             v-model:active="modalOpened"
-            :max-width="500"
             :padding="10"
+            off-outside-click-close
         >
-            <SelectFile />
+            <SelectFile is-picture v-model="file" v-if="!cropAvatarReady" />
+            <CropAvatar
+                v-if="base64Url"
+                v-model="base64Url"
+                @ready="cropAvatarReady = true"
+            />
+            <template v-slot:buttons="{ closeModal }">
+                <Button
+                    @click="cropAvatarReady ? reset() : closeModal()"
+                    :border-radius="10"
+                    :highlight-active="cropAvatarReady"
+                >
+                    {{ cropAvatarReady ? "Назад" : "Отмена" }}
+                </Button>
+                <Button
+                    :border-radius="10"
+                    highlight-active
+                    v-if="cropAvatarReady"
+                >
+                    Сохранить
+                </Button>
+            </template>
         </ModalDialog>
     </div>
 </template>
 <script setup>
 const modalOpened = ref(false);
+const cropAvatarReady = ref(false);
 const openModal = () => {
     modalOpened.value = true;
 };
+const reset = () => {
+    file.value = null;
+    cropAvatarReady.value = false;
+};
+watch(modalOpened, (value) => {
+    if (!value) {
+        reset();
+    }
+});
+const base64Url = computed(() => {
+    if (file.value) {
+        return URL.createObjectURL(file.value);
+    }
+    return null;
+});
+const file = ref(null);
 </script>
 <style lang="scss">
 .avatar-container {

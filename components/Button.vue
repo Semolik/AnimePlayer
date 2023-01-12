@@ -11,7 +11,7 @@
     </div>
 </template>
 <script setup>
-const { active } = defineProps({
+const { active, highlightActive, borderRadius } = defineProps({
     active: {
         type: Boolean,
         default: true,
@@ -20,6 +20,10 @@ const { active } = defineProps({
         type: Boolean,
         default: false,
     },
+    borderRadius: {
+        type: Number,
+        default: 5,
+    },
 });
 const emit = defineEmits(["clicked"]);
 const handleClick = (active) => {
@@ -27,6 +31,7 @@ const handleClick = (active) => {
         emit("clicked");
     }
 };
+const borderRadiusString = computed(() => borderRadius + "px");
 </script>
 <style lang="scss">
 @use "@/assets/styles/breakpoints";
@@ -54,8 +59,10 @@ const handleClick = (active) => {
     color: $secondary-text;
     background-color: $tertiary-bg;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: v-bind(borderRadiusString);
     transition: all 0.2s ease-in-out;
     text-align: center;
+    flex-grow: 1;
+    width: 100%;
 }
 </style>

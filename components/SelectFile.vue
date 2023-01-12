@@ -16,17 +16,42 @@
                 :accept="supportedExtensionsString"
             />
             <Icon name="material-symbols:upload-sharp" />
-            <div class="text">Выбрать файл</div>
+            <div class="text">
+                Перетащите {{ isPicture ? "изображение" : "файл" }} сюда или
+                нажмите, чтобы выбрать
+            </div>
+            <div class="max-size">
+                Максимальный размер файла: {{ maxSize }} МБ
+            </div>
         </div>
         <label for="file"></label>
     </div>
 </template>
 <script setup>
 import { useToast } from "vue-toastification";
+const { supportedExtensions, isPicture, maxSize, modelValue } = defineProps({
+    supportedExtensions: {
+        type: Array,
+        default: ["jpg", "jpeg", "png"],
+    },
+    isPicture: {
+        type: Boolean,
+        default: false,
+    },
+    maxSize: {
+        type: Number,
+        default: 50,
+    },
+    modelValue: {
+        type: File,
+        default: null,
+    },
+});
 const toast = useToast();
 const file = ref(null);
 const isDragging = ref(false);
-const supportedExtensions = ["jpg", "jpeg", "png"];
+const emit = defineEmits(["update:modelValue"]);
+
 const supportedExtensionsString = supportedExtensions
     .map((e) => "." + e)
     .join(", ");
@@ -44,7 +69,10 @@ const drop = (e) => {
     onChange();
     isDragging.value = false;
 };
-
+const resetInput = () => {
+    file.value.files = new DataTransfer().files;
+    emit("update:modelValue", null);
+};
 const onChange = () => {
     var files = file.value.files;
     if (
@@ -53,9 +81,15 @@ const onChange = () => {
         )
     ) {
         toast.error("Неподдерживаемый формат файла");
-        file.value.files = new DataTransfer().files;
+        resetInput();
         return;
     }
+    if (files[0].size > maxSize * 1024 * 1024) {
+        toast.error("Файл слишком большой");
+        resetInput();
+        return;
+    }
+    emit("update:modelValue", files[0]);
 };
 </script>
 <style lang="scss">
@@ -77,7 +111,7 @@ const onChange = () => {
         @include flex-center;
         flex-direction: column;
         width: 100%;
-        --color: #{$secondary-text};
+
         input {
             display: none;
         }
@@ -85,18 +119,19 @@ const onChange = () => {
             width: 50px;
             height: 50px;
             margin-bottom: 10px;
-            color: var(--color);
+            color: $secondary-text;
         }
         .text {
             cursor: pointer;
             font-size: 14px;
             width: 100%;
             text-align: center;
-            color: var(--color);
+            color: $secondary-text;
         }
-
-        &:hover {
-            --color: #{$accent};
+        .max-size {
+            font-size: 12px;
+            color: $tertiary-text;
+            margin-top: 10px;
         }
     }
     label {
