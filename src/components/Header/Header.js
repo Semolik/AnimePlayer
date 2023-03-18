@@ -96,7 +96,7 @@ class Header extends React.Component {
 													<div className="index"><span>Избранное</span></div>
 												</Link>
 											</li>,
-											<li key={-2}>
+											<li key={-2} style={{'display': 'none'}}>
 												<div className={"sidebar-item button" + (localStorage['horny-mode'] === "true" ? " active" : "")}>
 													<span className="index" onClick={(e => {
 														var hornymode = e.target.parentNode.classList.toggle('active');

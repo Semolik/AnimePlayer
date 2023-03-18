@@ -21,10 +21,14 @@ for module in modules:
 def servises():
 	out = {}
 	for module in modules:
-		out[module.Moduleid] = {}
-		out[module.Moduleid]['title'] = module.ModuleTitle
-		out[module.Moduleid]['genres'] = module.GetGenres()
-		out[module.Moduleid]['horny'] = module.hentai
+		try:
+			out[module.Moduleid] = {
+				'title': module.ModuleTitle,
+				'genres': module.GetGenres(),
+				'horny': module.hentai
+			}
+		except:
+			pass
 	return out
 @app.route(ApiPath+'home', methods=['POST'])
 def index():

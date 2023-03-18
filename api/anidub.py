@@ -15,7 +15,7 @@ from utils.shikimori import SearchOnShikimori
 
 Moduleid = 'anidub'
 ModulePath = Moduleid+'/'
-AnidubLink = 'https://online.anidub.club/'
+AnidubLink = 'https://anidub.life/'
 LinkSplitter = '~'
 ModuleTitle = "Anidub"
 hentai = False
@@ -187,7 +187,7 @@ def SibnetLink(sibnetid):
 		'message': 'Ошибка получения ссылки',
 	}
 def AnidubMirrorLink():
-	return 'https://online.anidub.club'
+	return AnidubLink[:-1]
 @timed_lru_cache(60*60)
 def GetTitleById(title_id):
 	response = requests.get(AnidubLink+'/'.join(title_id.split(LinkSplitter))+'.html', headers=headers)
@@ -223,7 +223,7 @@ def GetTitleById(title_id):
 		if fleft:
 			poster = dle_content[0].select('.fposter > img')
 			if poster:
-				poster = poster[0].get('data-src')
+				poster = poster[0].get('src')
 				out['poster'] = (poster if 'http' in poster else AnidubMirrorLink()+poster)
 			related_list = list()
 			related = dle_content[0].select('.related > .th-item')
@@ -236,7 +236,7 @@ def GetTitleById(title_id):
 						continue
 					related_poster = i.select('img')
 					if related_poster:
-						related_poster = related_poster[0].get('data-src').replace('/small/', '/')
+						related_poster = related_poster[0].get('src').replace('/small/', '/')
 						related_data['poster'] = (related_poster if 'http' in related_poster else AnidubMirrorLink()+related_poster)
 					related_title = i.select('.th-title')
 					if related_title:
@@ -346,7 +346,7 @@ def GetPage(page):
 			'status': 400,
 			'message': messages.get('error_page_number'),
 		}
-	return GetTitles(AnidubLink+'anime'+(f'/page/{page}' if page else ''))
+	return GetTitles(AnidubLink[:-1]+(f'/page/{page}' if page else ''))
 @timed_lru_cache(60*60*6)
 def GetGenres():
 	response = requests.get(AnidubLink, headers=headers)
@@ -402,18 +402,18 @@ def GetTitles(Url, html=None):
 		}
 		for title in titles:
 			th_in = title.select('.th-in')
-			poster = th_in[0].select('.th-img > img')[0].get('data-src').replace('thumbs/', '')
+			poster = th_in[0].select('.th-img > img')[0].get('src').replace('thumbs/', '')
 			title_info = {
 				'poster': (poster if 'http' in poster else AnidubMirrorLink()+poster),
 				'id': LinkSplitter.join(th_in[0].get('href').split('/')[3:]).split('.')[0],#на конце кажой ссылки есть .html
 			}
-			ru_title = th_in[1].select('.th-title')
+			ru_title = th_in[0].select('.th-title')
 			if ru_title:
 				ru_title_content = ru_title[0].text.split('[')
 				if len(ru_title_content)>1:
 					title_info['series'] = ru_title_content[-1][:-1]
 				title_info['ru_title'] = ' '.join(ru_title_content[0].split())
-			en_title = th_in[1].select('.th-subtitle')
+			en_title = th_in[0].select('.th-subtitle')
 			if en_title:
 				title_info['en_title'] = ' '.join(en_title[0].text.split())
 			outdata.append(title_info)
