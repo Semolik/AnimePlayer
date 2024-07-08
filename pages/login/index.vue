@@ -18,17 +18,12 @@ const router = useRouter();
 definePageMeta({
     title: "Вход",
     description: "Вход в систему",
-    middleware: ["authorized"],
 });
-const supabase = useSupabaseAuthClient();
+
 const email = ref("");
 const password = ref("");
 const handleLogin = async () => {
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email.value,
-            password: password.value,
-        });
         if (error) throw error;
         router.push("/");
     } catch (error) {

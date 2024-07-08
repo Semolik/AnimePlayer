@@ -1,28 +1,33 @@
 {
-  "private": true,
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "devDependencies": {
-    "@nuxtjs/supabase": "^0.3.0",
-    "@nuxtjs/tailwindcss": "^6.2.0",
-    "nuxt": "3.0.0",
-    "nuxt-headlessui": "^1.0.4",
-    "nuxt-icon": "^0.1.8"
-  },
-  "dependencies": {
-    "@egjs/vue3-flicking": "^4.10.4",
-    "@formkit/nuxt": "^1.0.0-beta.12",
-    "@nuxtjs/google-fonts": "^3.0.0-1",
-    "blurhash": "^2.0.4",
-    "check-password-strength": "^2.0.7",
-    "fast-blurhash": "^1.1.2",
-    "sass": "^1.57.1",
-    "vue-advanced-cropper": "^2.8.6",
-    "vue-toastification": "^2.0.0-rc.5"
-  }
+    "name": "nuxt-app",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare",
+        "generate-client": "openapi --input http://localhost:8000/api/v1/openapi.json --output ./client --client axios"
+    },
+    "dependencies": {
+        "@egjs/vue3-flicking": "^4.11.3",
+        "@formkit/nuxt": "^1.6.5",
+        "@nuxt/fonts": "^0.7.1",
+        "@nuxt/icon": "^1.0.0",
+        "@nuxtjs/tailwindcss": "^6.12.0",
+        "axios": "^1.7.2",
+        "check-password-strength": "^2.0.10",
+        "nuxt": "^3.12.3",
+        "openapi-typescript-codegen": "^0.29.0",
+        "vue": "latest",
+        "vue-toastification": "^2.0.0-rc.5"
+    },
+    "devDependencies": {
+        "@iconify-json/logos": "^1.1.43",
+        "@iconify-json/material-symbols": "^1.1.83",
+        "@iconify-json/ph": "^1.1.13",
+        "nuxt-headlessui": "^1.2.0",
+        "sass": "^1.77.6"
+    }
 }

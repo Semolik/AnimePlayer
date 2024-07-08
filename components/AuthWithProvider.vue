@@ -1,22 +1,20 @@
 <template>
     <div class="providers-buttons">
-        <div class="provider-button" @click="useLoginWithProvider('discord')">
+        <div class="provider-button" @click="">
             <Icon name="logos:discord-icon" />
             <span>Discord</span>
         </div>
-        <div class="provider-button" @click="useLoginWithProvider('github')">
+        <div class="provider-button" @click="">
             <Icon name="logos:github-icon" />
             <span>Github</span>
         </div>
-        <div class="provider-button" @click="useLoginWithProvider('google')">
+        <div class="provider-button" @click="">
             <Icon name="logos:google-icon" />
             <span>Google</span>
         </div>
     </div>
 </template>
-<script setup>
-import { useLoginWithProvider } from "@/composables/loginWithProvider";
-</script>
+<script setup></script>
 <style lang="scss">
 .providers-buttons {
     display: flex;

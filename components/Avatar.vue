@@ -14,12 +14,6 @@
             :padding="10"
             off-outside-click-close
         >
-            <SelectFile is-picture v-model="file" v-if="!cropAvatarReady" />
-            <CropAvatar
-                v-if="avatarUrl"
-                v-model="avatarUrl"
-                @ready="cropAvatarReady = true"
-            />
             <template v-slot:buttons="{ closeModal }">
                 <Button
                     @click="cropAvatarReady ? reset() : closeModal()"

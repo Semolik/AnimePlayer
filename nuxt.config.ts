@@ -1,28 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    compatibilityDate: "2024-04-03",
+    devtools: { enabled: true },
     modules: [
-        "nuxt-icon",
-        "@nuxtjs/google-fonts",
-        "@formkit/nuxt",
-        "@nuxtjs/supabase",
-        "nuxt-headlessui",
         "@nuxtjs/tailwindcss",
+        "nuxt-headlessui",
+        "@formkit/nuxt",
+        "@nuxt/fonts",
+        "@nuxt/icon",
     ],
-    headlessui: {
-        prefix: "Headless",
-    },
     css: [
         "@/assets/styles/global.scss",
         "@egjs/vue3-flicking/dist/flicking.css",
     ],
-    googleFonts: {
-        families: {
-            "Open+Sans": true,
-        },
-        // download: true,
-        // inject: true,
-    },
-    plugins: [{ src: "~/plugins/vue-toastification.js", mode: "client" }],
     vite: {
         css: {
             preprocessorOptions: {
@@ -35,5 +25,13 @@ export default defineNuxtConfig({
                 },
             },
         },
+    },
+    icon: {
+        size: "24px",
+        class: "icon",
+        mode: "svg",
+    },
+    formkit: {
+        autoImport: true,
     },
 });

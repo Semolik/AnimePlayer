@@ -39,8 +39,7 @@
     </div>
 </template>
 <script setup>
-const user = useSupabaseUser();
-const isLogined = computed(() => user.value !== null);
+const isLogined = false;
 </script>
 <style lang="scss">
 .default-layout {
@@ -123,6 +122,7 @@ const isLogined = computed(() => user.value !== null);
         flex-direction: column;
         gap: 10px;
         width: 100%;
+        min-height: 100%;
     }
 }
 </style>
