@@ -1,0 +1,91 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { FavoriteTitle } from '../models/FavoriteTitle';
+import type { Title } from '../models/Title';
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
+export class TitlesService {
+    /**
+     * Get Favorite Titles
+     * @param page
+     * @returns FavoriteTitle Successful Response
+     * @throws ApiError
+     */
+    public static getFavoriteTitlesApiV1TitlesFavoritesGet(
+        page: number = 1,
+    ): CancelablePromise<Array<FavoriteTitle>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/titles/favorites',
+            query: {
+                'page': page,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Favorite Title
+     * @param titleId
+     * @returns void
+     * @throws ApiError
+     */
+    public static favoriteTitleApiV1TitlesFavoritesTitleIdPost(
+        titleId: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/titles/favorites/{title_id}',
+            path: {
+                'title_id': titleId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Unfavorite Title
+     * @param titleId
+     * @returns void
+     * @throws ApiError
+     */
+    public static unfavoriteTitleApiV1TitlesFavoritesTitleIdDelete(
+        titleId: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/titles/favorites/{title_id}',
+            path: {
+                'title_id': titleId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Title
+     * @param titleId
+     * @returns Title Successful Response
+     * @throws ApiError
+     */
+    public static getTitleApiV1TitlesTitleIdGet(
+        titleId: string,
+    ): CancelablePromise<Title> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/titles/{title_id}',
+            path: {
+                'title_id': titleId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+}
