@@ -2,7 +2,24 @@
 export default defineNuxtConfig({
     compatibilityDate: "2024-04-03",
     devtools: { enabled: true },
-
+    ui: {
+        primary: "amber",
+        gray: "slate",
+    },
+    tailwindcss: {
+        config: {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        custom: ["Open Sans"],
+                    },
+                },
+            },
+        },
+    },
+    fonts: {
+        families: [{ name: "Open Sans", provider: "google" }],
+    },
     modules: ["nuxt-headlessui", "@formkit/nuxt", "@nuxt/fonts", "@nuxt/ui"],
     css: ["@/assets/styles/global.scss"],
     vite: {

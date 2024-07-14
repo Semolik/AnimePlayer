@@ -63,7 +63,7 @@ watch(modelValue, (val) => {
         .formkit-inner {
             .formkit-input {
                 border-radius: 5px;
-                background-color: #181818;
+
                 border: 1px solid #363636;
                 height: 40px;
                 padding: 6px 12px;
@@ -79,9 +79,8 @@ watch(modelValue, (val) => {
                     outline: 0;
                 }
                 &:not(.wrong):focus {
-                    border-color: #66afe9;
-                    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),
-                        0 0 8px rgb(102 175 233 / 60%);
+                    border-color: $accent;
+                    box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px $accent;
                     outline: 0;
                 }
             }

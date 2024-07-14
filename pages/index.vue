@@ -1,7 +1,7 @@
 <template>
     <div class="index-page">
         <div class="parser" v-for="parser in parsers">
-            <h2>{{ parser.name }}</h2>
+            <div class="parser-name">{{ parser.name }}</div>
             <titles-last
                 :parser-id="parser.id"
                 :key="parser.id"
@@ -11,7 +11,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ParsersService } from "~/client";
 const parsers = await ParsersService.getParsersApiV1ParsersGet();
 </script>
@@ -27,14 +27,15 @@ const parsers = await ParsersService.getParsersApiV1ParsersGet();
         flex-direction: column;
         gap: 16px;
 
-        h2 {
+        .parser-name {
             font-size: 24px;
             line-height: 32px;
-            font-weight: bold;
+            font-weight: 600;
             color: $primary-text;
         }
 
         .main-titles {
+            padding-top: 8px;
             grid-template-rows: auto auto;
             grid-auto-rows: 0px;
             position: relative;

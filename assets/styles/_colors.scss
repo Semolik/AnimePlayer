@@ -13,8 +13,9 @@ $tertiary-text: rgb(102, 102, 102);
 $primary-reverse-text: rgb(0, 0, 0);
 $primary-box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
 
-$accent: hsl(155, 100%, 43%);
-$accent-hover: hsl(155, 100%, 30%);
 $accent-error: hsl(0, 100%, 43%);
 $accent-warning: hsl(40, 100%, 43%);
 $accent-success: hsl(120, 100%, 43%);
+$accent: hsl(39, 100%, 50%);
+
+$accent-hover: hsl(39, 100%, 60%);

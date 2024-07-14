@@ -91,7 +91,7 @@ const isLogined = false;
                     background-color: $tertiary-bg;
                 }
                 svg {
-                    color: $primary-text;
+                    color: $accent;
                     &.default {
                         display: none;
                     }
@@ -116,7 +116,7 @@ const isLogined = false;
             svg {
                 width: 25px;
                 height: 25px;
-                color: $primary-text;
+                color: $accent;
                 transition: color 0s;
             }
             &.login {
@@ -130,7 +130,7 @@ const isLogined = false;
         flex-direction: column;
         gap: 10px;
         width: 100%;
-        min-height: 100%;
+        min-height: 100vh;
         @include sm {
             margin-left: 85px;
         }

@@ -5,22 +5,28 @@
                 :src="title.image_url"
                 @load="image_loaded = true"
                 v-show="image_loaded"
-                v-if="!asPlaceholder"
+                v-if="title"
             />
-
             <div class="placeholder animate-pulse bg-cool-700"></div>
+            <div class="series-info" v-if="title">
+                {{ title.additional_info }}
+            </div>
         </div>
-        <div class="title" v-if="!asPlaceholder">{{ title.name }}</div>
+        <div class="title" v-if="title">{{ title.name }}</div>
         <div
             class="title-placeholder animate-pulse bg-cool-700 p-1.5 rounded-full"
             v-else
-        />
+        ></div>
     </nuxt-link>
 </template>
-<script setup>
+<script setup lang="ts">
+import type { TitleShort } from "~/client";
 const props = defineProps({
-    title: Object,
-    asPlaceholder: Boolean,
+    title: {
+        type: Object as PropType<TitleShort>,
+        default: null,
+        required: true,
+    },
 });
 const image_loaded = ref(false);
 watch(
@@ -43,7 +49,19 @@ watch(
     gap: 8px;
     cursor: pointer;
     margin-inline: auto;
+    @include sm {
+        &:hover {
+            .picture {
+                transform: translateY(-2%);
+            }
+            .title {
+                color: $primary-text;
+            }
+        }
+    }
+
     .picture {
+        transition: transform 0.2s;
         aspect-ratio: 2 / 3;
         border-radius: 8px;
         overflow: hidden;
@@ -71,6 +89,20 @@ watch(
                 opacity: 0 !important;
             }
         }
+        .series-info {
+            position: absolute;
+            top: 1rem;
+            right: 0;
+            max-width: 80%;
+            padding: 5px 10px;
+            background: $accent;
+            border-radius: 10px 0 0 10px;
+            color: black;
+
+            &:empty {
+                display: none;
+            }
+        }
     }
 
     .title {
@@ -81,11 +113,6 @@ watch(
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-    &:hover {
-        .title {
-            color: $primary-text;
-        }
     }
 }
 </style>
