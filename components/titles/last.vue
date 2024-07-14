@@ -1,5 +1,5 @@
 <template>
-    <titles :titles="titlesPage.titles" />
+    <titles :titles="titlesData" :as-placeholder="loading" />
 </template>
 <script setup>
 import { ParsersService } from "~/client";
@@ -9,8 +9,17 @@ const { parserId } = defineProps({
         required: true,
     },
 });
-const titlesPage = await ParsersService.getTitlesApiV1ParsersParserIdTitlesGet(
-    parserId,
-    1
+const loading = ref(true);
+const titlesData = ref(
+    markRaw(Array.from({ length: 16 }, (_, i) => ({ id: i })))
 );
+
+onMounted(async () => {
+    const page =
+        await ParsersService.getMainTitlesApiV1ParsersParserIdTitlesMainGet(
+            parserId
+        );
+    titlesData.value = page.titles;
+    loading.value = false;
+});
 </script>

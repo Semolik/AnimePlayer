@@ -49,16 +49,24 @@ const isLogined = false;
         flex-direction: column-reverse;
     }
     & > aside {
+        @include flex-center;
         background-color: $secondary-bg;
+        position: fixed;
+        height: 100%;
         padding: 20px;
-        display: flex;
         gap: 15px;
+        z-index: 100;
         @include sm {
             flex-direction: column;
+            width: 85px;
         }
+
         @include sm(true) {
             justify-content: space-between;
             padding: 20px 30px;
+            width: 100%;
+            height: 60px;
+            bottom: 0;
         }
         .menu,
         .login,
@@ -123,6 +131,13 @@ const isLogined = false;
         gap: 10px;
         width: 100%;
         min-height: 100%;
+        @include sm {
+            margin-left: 85px;
+        }
+
+        @include sm(true) {
+            padding: 15px;
+        }
     }
 }
 </style>

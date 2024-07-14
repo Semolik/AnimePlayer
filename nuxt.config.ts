@@ -2,17 +2,9 @@
 export default defineNuxtConfig({
     compatibilityDate: "2024-04-03",
     devtools: { enabled: true },
-    modules: [
-        "@nuxtjs/tailwindcss",
-        "nuxt-headlessui",
-        "@formkit/nuxt",
-        "@nuxt/fonts",
-        "@nuxt/icon",
-    ],
-    css: [
-        "@/assets/styles/global.scss",
-        "@egjs/vue3-flicking/dist/flicking.css",
-    ],
+
+    modules: ["nuxt-headlessui", "@formkit/nuxt", "@nuxt/fonts", "@nuxt/ui"],
+    css: ["@/assets/styles/global.scss"],
     vite: {
         css: {
             preprocessorOptions: {

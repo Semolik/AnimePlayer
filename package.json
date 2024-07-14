@@ -4,17 +4,17 @@
     "type": "module",
     "scripts": {
         "build": "nuxt build",
-        "dev": "nuxt dev",
+        "dev": "nuxt dev --host",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
         "generate-client": "openapi --input http://localhost:8000/api/v1/openapi.json --output ./client --client axios"
     },
     "dependencies": {
-        "@egjs/vue3-flicking": "^4.11.3",
         "@formkit/nuxt": "^1.6.5",
         "@nuxt/fonts": "^0.7.1",
         "@nuxt/icon": "^1.0.0",
+        "@nuxt/ui": "^2.17.0",
         "@nuxtjs/tailwindcss": "^6.12.0",
         "axios": "^1.7.2",
         "check-password-strength": "^2.0.10",
