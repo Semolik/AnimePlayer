@@ -1,5 +1,8 @@
 <template>
-    <nuxt-link class="small-card">
+    <nuxt-link
+        class="small-card"
+        :to="title ? `/titles/${title.id}` : undefined"
+    >
         <div :class="['picture', { loaded: image_loaded }]">
             <img
                 :src="title.image_url"
@@ -23,23 +26,30 @@
 import type { TitleShort } from "~/client";
 const props = defineProps({
     title: {
-        type: Object as PropType<TitleShort>,
+        type: Object as PropType<TitleShort | null>,
         default: null,
-        required: true,
     },
 });
+
 const image_loaded = ref(false);
-watch(
-    () => props.title,
-    () => {
-        image_loaded.value = false;
-        var image = new Image();
-        image.src = props.title.image_url;
-        image.onload = () => {
-            image_loaded.value = true;
-        };
-    }
-);
+
+onMounted(() => {
+    watch(
+        () => props.title,
+        () => {
+            if (!props.title) {
+                return;
+            }
+            image_loaded.value = false;
+            var image = new Image();
+            image.src = props.title.image_url;
+            image.onload = () => {
+                image_loaded.value = true;
+            };
+        },
+        { immediate: true }
+    );
+});
 </script>
 <style lang="scss">
 .small-card {

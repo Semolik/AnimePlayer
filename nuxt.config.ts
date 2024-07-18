@@ -6,21 +6,27 @@ export default defineNuxtConfig({
         primary: "amber",
         gray: "slate",
     },
-    tailwindcss: {
-        config: {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        custom: ["Open Sans"],
-                    },
-                },
-            },
-        },
-    },
     fonts: {
         families: [{ name: "Open Sans", provider: "google" }],
     },
-    modules: ["nuxt-headlessui", "@formkit/nuxt", "@nuxt/fonts", "@nuxt/ui"],
+    nitro: {
+        devProxy: {
+            "/api": {
+                target: "http://localhost:8000",
+                changeOrigin: true,
+                prependPath: true,
+                cookieDomainRewrite: false,
+            },
+        },
+    },
+    modules: [
+        "@pinia/nuxt",
+        "nuxt-headlessui",
+        "@formkit/nuxt",
+        "@nuxt/fonts",
+        "@nuxt/ui",
+        "@vueuse/nuxt",
+    ],
     css: ["@/assets/styles/global.scss"],
     vite: {
         css: {

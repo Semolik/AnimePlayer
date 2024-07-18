@@ -1,18 +1,13 @@
 <template>
     <div class="profile-container">
-        <div class="headlines">
-            <AsidePageHeadline title="Информация" />
-            <AsidePageHeadline title="Фото профиля" />
-        </div>
+        <div class="headlines"></div>
         <div class="profile-wrapper">
             <div class="profile">
                 <div class="description">
                     В этом разделе вы можете изменить свои персональные данные.
                 </div>
                 <div class="profile__info">
-                    {{ firstName }}
                     <FormInput label="Имя" placeholder="Введите имя" />
-                    <FormInput label="Фамилия" placeholder="Введите фамилию" />
                 </div>
             </div>
             <div class="profile-photo">
@@ -22,9 +17,8 @@
     </div>
 </template>
 <script setup>
-const user = useSupabaseUser();
-console.log(user.value);
-// const firstName = ref(user.user_metadata.first_name);
+import { useAuthStore } from "~~/stores/auth";
+const authStore = useAuthStore();
 </script>
 <style lang="scss">
 .profile-container {

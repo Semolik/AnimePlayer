@@ -25,7 +25,7 @@
             <nuxt-link class="menu" to="/mobile-menu">
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
-            <nuxt-link class="login" to="/profile" v-if="isLogined">
+            <nuxt-link class="login" to="/profile" v-if="logined">
                 <Icon name="material-symbols:person" class="active" />
                 <Icon name="material-symbols:person-outline" class="default" />
             </nuxt-link>
@@ -39,7 +39,10 @@
     </div>
 </template>
 <script setup>
-const isLogined = false;
+import { useAuthStore } from "@/stores/auth";
+import { storeToRefs } from "pinia";
+const authStore = useAuthStore();
+const { logined } = storeToRefs(authStore);
 </script>
 <style lang="scss">
 .default-layout {
@@ -136,7 +139,8 @@ const isLogined = false;
         }
 
         @include sm(true) {
-            padding: 15px;
+            padding: 0px;
+            padding-bottom: 70px;
         }
     }
 }

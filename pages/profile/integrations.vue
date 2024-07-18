@@ -30,21 +30,7 @@
         </div>
     </div>
 </template>
-<script setup>
-const user = useSupabaseUser();
-const findIdentity = (user, provider) => {
-    return user.value?.identities?.find((i) => i.provider === provider);
-};
-const discordConnected = computed(() => {
-    return !!findIdentity(user, "discord");
-});
-const githubConnected = computed(() => {
-    return !!findIdentity(user, "github");
-});
-const googleConnected = computed(() => {
-    return !!findIdentity(user, "google");
-});
-</script>
+<script setup></script>
 <style lang="scss" scoped>
 .integrations-container {
     display: flex;

@@ -4,14 +4,17 @@
             :title="title"
             v-for="(title, index) in titles"
             :key="index"
-            :as-placeholder="asPlaceholder"
+            :class="cardClass"
         />
     </div>
 </template>
 <script setup>
 defineProps({
     titles: Array,
-    asPlaceholder: Boolean,
+    cardClass: {
+        type: String,
+        default: "",
+    },
 });
 </script>
 <style lang="scss">
@@ -20,8 +23,9 @@ defineProps({
     gap: 10px;
     row-gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    @include sm {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+    @include md {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 }
 </style>

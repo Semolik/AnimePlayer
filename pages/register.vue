@@ -23,32 +23,30 @@
     </LoginContiner>
 </template>
 <script setup>
-import { useToast } from "vue-toastification";
 definePageMeta({
     title: "Вход",
     description: "Вход в систему",
     middleware: ["authorized"],
 });
-const toast = useToast();
-const supabase = useSupabaseClient();
 
 const showWait = ref(false);
 const email = ref("");
 const password = ref("");
 const wrongEmail = ref(false);
 const isWrong = ref(true);
+const submited = ref(true);
+
 const handleSignUp = async () => {
-    try {
-        const { data, error } = await supabase.auth.signUp({
-            email: email.value,
-            password: password.value,
-        });
-        if (error) throw error;
-        console.log(data);
-        showWait.value = true;
-    } catch (error) {
-        toast.error(error.error_description || error.message);
+    if (submited.value) return;
+    submited.value = true;
+    const error = await authStore.login(email.value, password.value);
+    if (error) {
+        form.value.showMessage(HandleOpenApiError(error).message);
+    } else {
+        const router = useRouter();
+        router.push("/");
     }
+    submited.value = false;
 };
 </script>
 <style lang="scss">
@@ -62,7 +60,7 @@ const handleSignUp = async () => {
     opacity: 0;
     transition: opacity 0.3s ease;
     @include flex-center;
-    background-color: $secondary-2-bg;
+    background-color: $tertiary-bg;
     padding: 20px;
     &.active {
         opacity: 1;

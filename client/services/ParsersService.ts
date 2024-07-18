@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Genre } from '../models/Genre';
+import type { MainPage } from '../models/MainPage';
 import type { ParserInfo } from '../models/ParserInfo';
 import type { TitlesPage } from '../models/TitlesPage';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -68,12 +69,12 @@ export class ParsersService {
     /**
      * Get Main Titles
      * @param parserId
-     * @returns TitlesPage Successful Response
+     * @returns MainPage Successful Response
      * @throws ApiError
      */
     public static getMainTitlesApiV1ParsersParserIdTitlesMainGet(
         parserId: 'anidub' | 'animevost',
-    ): CancelablePromise<TitlesPage> {
+    ): CancelablePromise<MainPage> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/parsers/{parser_id}/titles/main',

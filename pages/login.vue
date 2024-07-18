@@ -1,5 +1,5 @@
 <template>
-    <LoginContiner>
+    <LoginContainer>
         <FormInput v-model="email" label="Почта" placeholder="Введите e-mail" />
         <FormInput
             v-model="password"
@@ -8,26 +8,29 @@
             type="password"
         />
         <Button @click="handleLogin">Войти</Button>
-    </LoginContiner>
+    </LoginContainer>
 </template>
 <script setup>
-import { useToast } from "vue-toastification";
-const toast = useToast();
-const router = useRouter();
-
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
+const { $toast } = useNuxtApp();
 definePageMeta({
     title: "Вход",
     description: "Вход в систему",
 });
-
+const submited = ref(false);
 const email = ref("");
 const password = ref("");
 const handleLogin = async () => {
-    try {
-        if (error) throw error;
+    if (submited.value) return;
+    submited.value = true;
+    const error = await authStore.login(email.value, password.value);
+    if (error) {
+        $toast.error(HandleOpenApiError(error).message);
+    } else {
+        const router = useRouter();
         router.push("/");
-    } catch (error) {
-        toast.error(error.error_description || error.message);
     }
+    submited.value = false;
 };
 </script>

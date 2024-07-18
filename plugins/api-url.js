@@ -1,5 +1,5 @@
 import { OpenAPI } from "@/client";
 export default defineNuxtPlugin((nuxtApp) => {
-    OpenAPI.BASE = "http://localhost:8000";
+    OpenAPI.BASE = import.meta.server ? "http://localhost:3000/api" : "/api";
     OpenAPI.WITH_CREDENTIALS = true;
 });
