@@ -7,7 +7,9 @@
             placeholder="Введите пароль"
             type="password"
         />
-        <Button @click="handleLogin">Войти</Button>
+        <Button @clicked="handleLogin" :active="formIsValid" highlight-active>
+            Войти
+        </Button>
     </LoginContainer>
 </template>
 <script setup>
@@ -21,6 +23,7 @@ definePageMeta({
 const submited = ref(false);
 const email = ref("");
 const password = ref("");
+const formIsValid = computed(() => !!email.value && !!password.value);
 const handleLogin = async () => {
     if (submited.value) return;
     submited.value = true;

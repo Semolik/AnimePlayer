@@ -56,7 +56,7 @@ const borderRadiusString = computed(() => borderRadius + "px");
         }
     }
     user-select: none;
-    color: $secondary-text;
+    color: $tertiary-text;
     background-color: $tertiary-bg;
     padding: 10px 20px;
     border-radius: v-bind(borderRadiusString);

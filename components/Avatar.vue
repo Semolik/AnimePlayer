@@ -1,113 +1,96 @@
 <template>
-    <div class="avatar-container">
-        <div class="avatar" @click="openModal">
-            <img
-                src="https://cdn.dribbble.com/users/7924768/avatars/small/c3500eb7d5e9dcfc014ba324d1d7fb01.jpg?1653814588"
-                alt=""
-            />
+    <div class="app-input-image">
+        <img v-if="image" :src="image" />
+        <div class="placeholder">
+            <Icon :name="icon" v-if="!image" />
+            <span class="message" v-else> Изменить </span>
         </div>
-        <div class="edit">
-            <Icon name="material-symbols:edit" />
-        </div>
-        <ModalDialog
-            v-model:active="modalOpened"
-            :padding="10"
-            off-outside-click-close
-        >
-            <template v-slot:buttons="{ closeModal }">
-                <Button
-                    @click="cropAvatarReady ? reset() : closeModal()"
-                    :border-radius="10"
-                    :highlight-active="cropAvatarReady"
-                >
-                    {{ cropAvatarReady ? "Назад" : "Отмена" }}
-                </Button>
-                <Button
-                    :border-radius="10"
-                    highlight-active
-                    v-if="cropAvatarReady"
-                >
-                    Сохранить
-                </Button>
-            </template>
-        </ModalDialog>
+        <input type="file" accept="image/*" @change="onFileChange" />
     </div>
 </template>
 <script setup>
-const modalOpened = ref(false);
-const cropAvatarReady = ref(false);
-const file = ref(null);
-
-const openModal = () => {
-    modalOpened.value = true;
-};
-
-const reset = () => {
-    file.value = null;
-    cropAvatarReady.value = false;
-};
-
-const avatarUrl = computed(() => {
-    if (!file.value) return;
-    return URL.createObjectURL(file.value);
+const props = defineProps({
+    image: {
+        type: String,
+        default: null,
+    },
+    icon: {
+        type: String,
+        default: "material-symbols:image",
+    },
 });
-
-watch(modalOpened, (value) => {
-    if (!value) {
-        reset();
+const { image } = toRefs(props);
+const emit = defineEmits(["change"]);
+const { $toast } = useNuxtApp();
+const onFileChange = (e) => {
+    const files = e.target.files;
+    if (!files.length) return;
+    const file = files[0];
+    if (!file.type.startsWith("image/") || file.type.indexOf("svg+xml") > -1) {
+        $toast.error("Этот тип файла не поддерживается");
+        return;
     }
-});
+    emit("change", file);
+};
 </script>
-<style lang="scss">
-.avatar-container {
+<style lang="scss" scoped>
+.app-input-image {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 3px;
+    max-width: 150px;
+    width: 100%;
     position: relative;
-    .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        overflow: hidden;
-        position: relative;
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        &:hover {
-            &::after {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: transparent;
+    border: 2px dashed $secondary-text;
+    @include flex-center;
+    transition: border-color 0.3s, background-color 0.3s;
+    aspect-ratio: 1;
+
+    &:hover {
+        border-color: $accent;
+
+        .placeholder {
+            background-color: rgba(0, 0, 0, 0.5);
+
+            svg {
+                color: $accent;
+            }
+
+            .message {
                 opacity: 1;
             }
         }
-        &::after {
-            content: "Изменить аватар";
-            position: absolute;
-            inset: 0;
-            @include flex-center;
-            color: $primary-text;
-            text-align: center;
-            font-size: 14px;
-            background-color: rgba(0, 0, 0, 0.7);
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .placeholder {
+        inset: 0;
+        position: absolute;
+        @include flex-center;
+        .message {
             opacity: 0;
-            transition: opacity 0.3s ease;
-            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        svg {
+            width: 40px;
+            height: 40px;
+            color: $secondary-text;
+            transition: color 0.1s;
         }
     }
-    &:has(.avatar:hover) .edit {
-        background-color: $accent-hover;
-    }
-    .edit {
-        @include flex-center;
+
+    input {
         position: absolute;
-        top: 75%;
-        right: 30%;
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background-color: $accent;
-        font-size: 14px;
-        font-weight: 500;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
     }
 }
 </style>

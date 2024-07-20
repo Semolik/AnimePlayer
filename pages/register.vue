@@ -1,14 +1,21 @@
 <template>
-    <LoginContiner :welcome="true">
+    <LoginContainer :welcome="true">
+        <FormInput
+            v-model="name"
+            label="Имя"
+            placeholder="Введите имя"
+            validation="required"
+        />
         <FormInput
             v-model="email"
             label="Почта"
             placeholder="Введите e-mail"
             v-model:wrong="wrongEmail"
+            validation="required|email"
             type="email"
         />
         <FormInputPassword v-model="password" v-model:wrong="isWrong" />
-        <Button @clicked="handleSignUp" :active="!isWrong" highlight-active>
+        <Button :active="formIsValid" highlight-active @clicked="handleSignUp">
             Зарегистрироваться
         </Button>
         <div :class="['wait-wrapper', { active: showWait }]">
@@ -20,28 +27,37 @@
                 </div>
             </div>
         </div>
-    </LoginContiner>
+    </LoginContainer>
 </template>
 <script setup>
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
 definePageMeta({
     title: "Вход",
     description: "Вход в систему",
-    middleware: ["authorized"],
 });
 
+const name = ref("");
 const showWait = ref(false);
 const email = ref("");
 const password = ref("");
 const wrongEmail = ref(false);
 const isWrong = ref(true);
-const submited = ref(true);
-
+const formIsValid = computed(() => {
+    return !!name.value && !wrongEmail.value && !isWrong.value;
+});
+const submited = ref(false);
+const { $toast } = useNuxtApp();
 const handleSignUp = async () => {
     if (submited.value) return;
     submited.value = true;
-    const error = await authStore.login(email.value, password.value);
+    const error = await authStore.registerRequest(
+        email.value,
+        password.value,
+        name.value
+    );
     if (error) {
-        form.value.showMessage(HandleOpenApiError(error).message);
+        $toast.error(HandleOpenApiError(error).message);
     } else {
         const router = useRouter();
         router.push("/");

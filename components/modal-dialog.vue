@@ -26,7 +26,7 @@
                                 v-if="props.closeButton"
                                 @click="closeModal"
                             >
-                                <Icon name="material-symbols:close" />
+                                <NuxtIcon name="material-symbols:close" />
                             </div>
                         </div>
                         <div class="description" v-if="description">

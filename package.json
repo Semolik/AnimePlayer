@@ -13,7 +13,6 @@
     "dependencies": {
         "@formkit/nuxt": "^1.6.5",
         "@nuxt/fonts": "^0.7.1",
-        "@nuxt/icon": "^1.0.0",
         "@nuxt/ui": "^2.17.0",
         "@nuxtjs/tailwindcss": "^6.12.0",
         "@pinia/nuxt": "^0.5.1",

@@ -26,8 +26,14 @@
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
             <nuxt-link class="login" to="/profile" v-if="logined">
-                <Icon name="material-symbols:person" class="active" />
-                <Icon name="material-symbols:person-outline" class="default" />
+                <img :src="userData.image" alt="avatar" v-if="userData.image" />
+                <template v-else>
+                    <Icon name="material-symbols:person" class="active" />
+                    <Icon
+                        name="material-symbols:person-outline"
+                        class="default"
+                    />
+                </template>
             </nuxt-link>
             <nuxt-link class="login" to="/login" v-else>
                 <Icon name="material-symbols:logout" />
@@ -42,7 +48,7 @@
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 const authStore = useAuthStore();
-const { logined } = storeToRefs(authStore);
+const { logined, userData } = storeToRefs(authStore);
 </script>
 <style lang="scss">
 .default-layout {
@@ -70,6 +76,14 @@ const { logined } = storeToRefs(authStore);
             width: 100%;
             height: 60px;
             bottom: 0;
+        }
+        .login {
+            overflow: hidden;
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
         }
         .menu,
         .login,

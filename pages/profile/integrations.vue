@@ -1,5 +1,4 @@
 <template>
-    <AsidePageHeadline title="Интеграции" />
     <div class="integrations-container">
         <div
             class="integration"
@@ -36,6 +35,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    width: 100%;
     .integration {
         border-radius: 8px;
         background-color: $tertiary-bg;

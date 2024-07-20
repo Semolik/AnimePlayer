@@ -4,12 +4,7 @@
         :to="title ? `/titles/${title.id}` : undefined"
     >
         <div :class="['picture', { loaded: image_loaded }]">
-            <img
-                :src="title.image_url"
-                @load="image_loaded = true"
-                v-show="image_loaded"
-                v-if="title"
-            />
+            <img :src="title.image_url" v-show="image_loaded" v-if="title" />
             <div class="placeholder animate-pulse bg-cool-700"></div>
             <div class="series-info" v-if="title">
                 {{ title.additional_info }}

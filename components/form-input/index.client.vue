@@ -1,7 +1,6 @@
 <template>
     <FormKit
         :label="label"
-        :value="value"
         v-model="modelValue"
         :placeholder="placeholder"
         :type="type"
@@ -9,14 +8,15 @@
         :classes="{
             input: wrong ? 'wrong' : '',
         }"
+        v-bind="$attrs"
     />
 </template>
 <script setup>
-const { label, value, placeholder, type } = defineProps({
+const props = defineProps({
     label: {
         type: String,
     },
-    value: {
+    modelValue: {
         type: String,
     },
     placeholder: {
@@ -35,21 +35,32 @@ const { label, value, placeholder, type } = defineProps({
         default: false,
     },
 });
+const { label, placeholder, type } = props;
 const emit = defineEmits(["update:modelValue", "update:wrong"]);
-const modelValue = ref(value);
-watch(modelValue, (val) => {
-    emit("update:modelValue", val);
-    if (type === "email" && !/^[^@]+@\w+(\.\w+)+\w$/.test(val)) {
-        emit("update:wrong", true);
-    } else {
-        emit("update:wrong", false);
-    }
+const modelValue = computed({
+    get: () => props.modelValue,
+    set: (val) => {
+        emit("update:modelValue", val);
+        if (type === "email" && !/^[^@]+@\w+(\.\w+)+\w$/.test(val)) {
+            emit("update:wrong", true);
+        } else {
+            emit("update:wrong", false);
+        }
+    },
 });
 </script>
 <style lang="scss">
 .formkit-outer {
     color: $primary-text;
     width: 100%;
+
+    .formkit-messages {
+        padding-top: 3px;
+        .formkit-message {
+            color: $secondary-text;
+            font-size: 14px;
+        }
+    }
 
     .formkit-wrapper {
         display: flex;

@@ -18,19 +18,36 @@
 
     .selection-page {
         background-color: $tertiary-bg;
-        max-width: 1200px;
+        max-width: 1000px;
         width: 100%;
         display: grid;
         grid-template-columns: 250px 1fr;
-        border-radius: 20px;
-        padding: 20px;
-        gap: 20px;
+        border-radius: 30px;
+        overflow: hidden;
         min-height: 500px;
+        @include lg(true) {
+            grid-template-columns: min-content 1fr;
+        }
+        @include md(true) {
+            grid-template-columns: 1fr;
+        }
 
         aside {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            padding: 20px;
+            @include md(true) {
+                flex-direction: row;
+            }
+        }
+
+        .page-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            background-color: $quaternary-bg;
         }
     }
 }

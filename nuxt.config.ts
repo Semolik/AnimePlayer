@@ -9,15 +9,11 @@ export default defineNuxtConfig({
     fonts: {
         families: [{ name: "Open Sans", provider: "google" }],
     },
-    nitro: {
-        devProxy: {
-            "/api": {
-                target: "http://localhost:8000",
-                changeOrigin: true,
-                prependPath: true,
-                cookieDomainRewrite: false,
-            },
-        },
+    routeRules: {
+        "/api/**": { proxy: { to: "http://127.0.0.1:8000/api/**" } },
+    },
+    icon: {
+        componentName: "NuxtIcon",
     },
     modules: [
         "@pinia/nuxt",
@@ -41,11 +37,7 @@ export default defineNuxtConfig({
             },
         },
     },
-    icon: {
-        size: "24px",
-        class: "icon",
-        mode: "svg",
-    },
+
     formkit: {
         autoImport: true,
     },

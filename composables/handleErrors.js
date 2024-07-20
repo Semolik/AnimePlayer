@@ -2,6 +2,7 @@ const messages = {
     RESET_PASSWORD_BAD_TOKEN: "Запрос на сброс пароля устарел.",
     VERIFY_USER_ALREADY_VERIFIED: "Пользователь уже подтвержден.",
     LOGIN_BAD_CREDENTIALS: "Неверный логин или пароль.",
+    REGISTER_USER_ALREADY_EXISTS: "Пользователь с таким email уже существует.",
 };
 const getErrorMessage = (error_code) => {
     return messages[error_code] || error_code;

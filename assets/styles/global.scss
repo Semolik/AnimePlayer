@@ -12,4 +12,5 @@ body {
 *:after {
     box-sizing: border-box;
     transition: color 0.2s, background-color 0.2s;
+    --color-primary-DEFAULT: 255 166 0;
 }
