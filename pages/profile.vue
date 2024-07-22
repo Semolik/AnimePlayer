@@ -30,6 +30,11 @@ const asideLinks = [
         to: "/profile/edit",
     },
     {
+        title: "Сменить пароль",
+        icon: "carbon:locked",
+        to: "/profile/change-password",
+    },
+    {
         title: "Интеграции",
         icon: "carbon:ibm-cloud-direct-link-1-connect",
         to: "/profile/integrations",

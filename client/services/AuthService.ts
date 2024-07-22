@@ -7,6 +7,7 @@ import type { Body_reset_forgot_password_api_v1_auth_forgot_password_post } from
 import type { Body_reset_reset_password_api_v1_auth_reset_password_post } from '../models/Body_reset_reset_password_api_v1_auth_reset_password_post';
 import type { Body_verify_request_token_api_v1_auth_request_verify_token_post } from '../models/Body_verify_request_token_api_v1_auth_request_verify_token_post';
 import type { Body_verify_verify_api_v1_auth_verify_post } from '../models/Body_verify_verify_api_v1_auth_verify_post';
+import type { ChangePassword } from '../models/ChangePassword';
 import type { OAuth2AuthorizeResponse } from '../models/OAuth2AuthorizeResponse';
 import type { UserCreate } from '../models/UserCreate';
 import type { UserRead } from '../models/UserRead';
@@ -245,6 +246,26 @@ export class AuthService {
             },
             errors: {
                 400: `Bad Request`,
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Change Password
+     * Изменение пароля пользователя
+     * @param requestBody
+     * @returns void
+     * @throws ApiError
+     */
+    public static changePasswordApiV1AuthChangePasswordPut(
+        requestBody: ChangePassword,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/auth/change-password',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
                 422: `Validation Error`,
             },
         });

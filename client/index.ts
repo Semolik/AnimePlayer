@@ -13,6 +13,7 @@ export type { Body_reset_reset_password_api_v1_auth_reset_password_post } from '
 export type { Body_update_user_me_image_api_v1_users_me_image_put } from './models/Body_update_user_me_image_api_v1_users_me_image_put';
 export type { Body_verify_request_token_api_v1_auth_request_verify_token_post } from './models/Body_verify_request_token_api_v1_auth_request_verify_token_post';
 export type { Body_verify_verify_api_v1_auth_verify_post } from './models/Body_verify_verify_api_v1_auth_verify_post';
+export type { ChangePassword } from './models/ChangePassword';
 export type { Episode } from './models/Episode';
 export type { ErrorModel } from './models/ErrorModel';
 export type { FavoriteTitle } from './models/FavoriteTitle';
