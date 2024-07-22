@@ -29,19 +29,21 @@ const { welcome } = defineProps({
 const welcomeText = ref(welcome ? "Добро пожаловать" : "Войти в систему");
 </script>
 <style lang="scss" scoped>
-@use "@/assets/styles/breakpoints";
 .login-container-wrapper {
     height: 100%;
     width: 100%;
     @include flex-center;
     flex-direction: column;
+
     .login-container {
         max-width: 400px;
         width: 100%;
         display: flex;
         flex-direction: column;
+
         .welcome-text {
             padding: 1.25rem;
+
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -56,20 +58,30 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
                 font-size: 14px;
                 color: $secondary-text;
                 text-align: center;
+
+                @include sm(true) {
+                    display: none;
+                }
             }
         }
 
         .form {
             position: relative;
-            background-color: $secondary-bg;
-            box-shadow: $primary-box-shadow;
-            padding: 20px;
+            padding: 10px;
+            @include sm {
+                background-color: $secondary-bg;
+                box-shadow: $primary-box-shadow;
+                padding: 20px;
+                margin-bottom: 10px;
+            }
+
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 10px;
+
             overflow: hidden;
+
             .auth-with-provider-text {
                 font-size: 14px;
                 color: $secondary-text;
@@ -80,19 +92,20 @@ const welcomeText = ref(welcome ? "Добро пожаловать" : "Войт�
         .link {
             border-radius: 10px;
             font-size: 14px;
-
             color: $tertiary-text;
             text-decoration: none;
             cursor: pointer;
             padding: 10px;
-            //
+
             text-align: center;
-            @include breakpoints.md(true) {
+            @include md(true) {
+                border-radius: 5px;
+                margin-inline: 10px;
                 background-color: $secondary-bg;
                 box-shadow: $primary-box-shadow;
                 color: $secondary-text;
             }
-            @include breakpoints.md {
+            @include md {
                 &:hover {
                     box-shadow: $primary-box-shadow;
                     background-color: $secondary-bg;

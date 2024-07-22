@@ -1,4 +1,5 @@
 <template>
+    <NuxtLoadingIndicator />
     <div class="default-layout">
         <aside>
             <nuxt-link to="/" class="mobile">
@@ -8,7 +9,7 @@
             <nuxt-link to="/search" class="mobile">
                 <Icon name="material-symbols:search" />
             </nuxt-link>
-            <nuxt-link to="/favorites" class="mobile">
+            <nuxt-link to="/favorites">
                 <Icon name="ph:heart-fill" class="active" />
                 <Icon name="ph:heart" class="default" />
             </nuxt-link>
@@ -25,8 +26,12 @@
             <nuxt-link class="menu" to="/mobile-menu">
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
-            <nuxt-link class="login" to="/profile" v-if="logined">
-                <img :src="userData.image" alt="avatar" v-if="userData.image" />
+            <nuxt-link class="login" to="/profile" v-if="userData">
+                <img
+                    :src="userData.image"
+                    alt="avatar"
+                    v-if="userData?.image"
+                />
                 <template v-else>
                     <Icon name="material-symbols:person" class="active" />
                     <Icon
@@ -36,7 +41,7 @@
                 </template>
             </nuxt-link>
             <nuxt-link class="login" to="/login" v-else>
-                <Icon name="material-symbols:logout" />
+                <Icon name="material-symbols:login" />
             </nuxt-link>
         </aside>
         <div class="app-content">
@@ -53,10 +58,8 @@ const { logined, userData } = storeToRefs(authStore);
 <style lang="scss">
 .default-layout {
     display: flex;
-    height: 100%;
-    @include sm(true) {
-        flex-direction: column-reverse;
-    }
+    min-height: 100%;
+
     & > aside {
         @include flex-center;
         background-color: $secondary-bg;
@@ -72,7 +75,7 @@ const { logined, userData } = storeToRefs(authStore);
 
         @include sm(true) {
             justify-content: space-between;
-            padding: 20px 30px;
+            padding: 10px;
             width: 100%;
             height: 60px;
             bottom: 0;
@@ -95,6 +98,7 @@ const { logined, userData } = storeToRefs(authStore);
             background-color: transparent;
             cursor: pointer;
             @include sm(true) {
+                width: 100%;
                 &:not(.mobile) {
                     display: none;
                 }
@@ -105,8 +109,8 @@ const { logined, userData } = storeToRefs(authStore);
 
             &.router-link-active {
                 @include sm {
-                    background-color: $tertiary-bg;
                 }
+                background-color: $tertiary-bg;
                 svg {
                     color: $accent;
                     &.default {
@@ -147,9 +151,12 @@ const { logined, userData } = storeToRefs(authStore);
         flex-direction: column;
         gap: 10px;
         width: 100%;
-        min-height: 100vh;
+
         @include sm {
             margin-left: 85px;
+        }
+        @include md(true) {
+            min-height: 100%;
         }
 
         @include sm(true) {

@@ -5,7 +5,9 @@
                 В этом разделе вы можете изменить свои персональные данные.
             </div>
             <div class="profile__info_row">
-                <Avatar @change="onImageUpdate" :image="image" />
+                <div class="avatar-container">
+                    <Avatar @change="onImageUpdate" :image="image" />
+                </div>
                 <div class="profile__info">
                     <FormInput
                         label="Имя"
@@ -108,6 +110,10 @@ const handleSave = async () => {
         width: 100%;
         height: 100%;
         gap: 20px;
+
+        .avatar-container {
+            @include flex-center;
+        }
         .description {
             font-size: 14px;
             line-height: 20px;

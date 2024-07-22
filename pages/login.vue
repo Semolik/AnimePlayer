@@ -7,7 +7,7 @@
             placeholder="Введите пароль"
             type="password"
         />
-        <Button @clicked="handleLogin" :active="formIsValid" highlight-active>
+        <Button @click="handleLogin" :active="formIsValid" highlight-active>
             Войти
         </Button>
     </LoginContainer>

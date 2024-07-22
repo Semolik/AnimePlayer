@@ -22,6 +22,7 @@ export default defineNuxtConfig({
         "@nuxt/fonts",
         "@nuxt/ui",
         "@vueuse/nuxt",
+        "nuxt-viewport",
     ],
     css: ["@/assets/styles/global.scss"],
     vite: {

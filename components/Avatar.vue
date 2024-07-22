@@ -38,7 +38,7 @@ const onFileChange = (e) => {
     display: flex;
     flex-direction: column;
     gap: 3px;
-    max-width: 150px;
+    max-width: 250px;
     width: 100%;
     position: relative;
     border-radius: 10px;

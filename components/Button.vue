@@ -34,7 +34,6 @@ const handleClick = (active) => {
 const borderRadiusString = computed(() => borderRadius + "px");
 </script>
 <style lang="scss">
-@use "@/assets/styles/breakpoints";
 .button {
     &.active {
         cursor: pointer;
@@ -47,7 +46,7 @@ const borderRadiusString = computed(() => borderRadius + "px");
             }
         }
         &:not(.highlight-active) {
-            @include breakpoints.md {
+            @include md {
                 &:hover {
                     background-color: $quaternary-bg;
                     color: $primary-text;

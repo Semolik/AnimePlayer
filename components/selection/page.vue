@@ -30,6 +30,7 @@
         }
         @include md(true) {
             grid-template-columns: 1fr;
+            grid-template-rows: min-content 1fr;
         }
 
         aside {
