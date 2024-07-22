@@ -9,8 +9,15 @@ export default defineNuxtConfig({
     fonts: {
         families: [{ name: "Open Sans", provider: "google" }],
     },
-    routeRules: {
-        "/api/**": { proxy: { to: "http://127.0.0.1:8000/api/**" } },
+    nitro: {
+        devProxy: {
+            "/api": {
+                target: "http://localhost:8000/api",
+                changeOrigin: true,
+                prependPath: true,
+                cookieDomainRewrite: "http://localhost:3000",
+            },
+        },
     },
     icon: {
         componentName: "NuxtIcon",

@@ -4,6 +4,7 @@
         <span>
             <slot></slot>
         </span>
+        <Icon name="material-symbols:chevron-right" class="chevron" />
     </component>
 </template>
 <script setup>
@@ -42,9 +43,20 @@ defineProps({
         height: 24px;
     }
 
+    .chevron {
+        display: none;
+        margin-left: auto;
+    }
+
     @include md(true) {
-        span {
-            display: none;
+        padding: 15px;
+
+        svg {
+            width: 32px;
+            height: 32px;
+        }
+        .chevron {
+            display: block;
         }
     }
 }

@@ -76,9 +76,11 @@ const handleSave = async () => {
     var error = await authStore.updateProfile(email.value, name.value);
     try {
         if (imageBlob.value) {
-            await UsersService.updateUserMeImageApiV1UsersMeImagePut({
-                userPicture: imageBlob.value,
-            });
+            const new_image =
+                await UsersService.updateUserMeImageApiV1UsersMeImagePut({
+                    userPicture: imageBlob.value,
+                });
+            userData.value.image = new_image.url;
             imageBlob.value = null;
         }
     } catch (e) {

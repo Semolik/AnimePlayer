@@ -16,17 +16,11 @@
             <nuxt-link to="/history">
                 <Icon name="material-symbols:history" />
             </nuxt-link>
-            <nuxt-link to="/settings">
-                <Icon name="material-symbols:settings" class="active" />
-                <Icon
-                    name="material-symbols:settings-outline"
-                    class="default"
-                />
-            </nuxt-link>
+
             <nuxt-link class="menu" to="/mobile-menu">
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
-            <nuxt-link class="login" to="/profile" v-if="userData">
+            <nuxt-link class="login" to="/profile/edit" v-if="userData">
                 <img
                     :src="userData.image"
                     alt="avatar"

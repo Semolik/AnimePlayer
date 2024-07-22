@@ -1,15 +1,6 @@
 <template>
-    <selection-page>
+    <selection-page :links="asideLinks" indexPath="/profile">
         <template #aside>
-            <selection-link to="/profile" icon="material-symbols:person">
-                Информация
-            </selection-link>
-            <selection-link
-                to="/profile/integrations"
-                icon="carbon:ibm-cloud-direct-link-1-connect"
-            >
-                Интеграции
-            </selection-link>
             <selection-link
                 icon="material-symbols:logout"
                 @click="logout"
@@ -32,14 +23,23 @@ const logout = async () => {
 definePageMeta({
     middleware: ["auth"],
 });
+const asideLinks = [
+    {
+        title: "Информация",
+        icon: "material-symbols:person",
+        to: "/profile/edit",
+    },
+    {
+        title: "Интеграции",
+        icon: "carbon:ibm-cloud-direct-link-1-connect",
+        to: "/profile/integrations",
+    },
+];
 </script>
 <style scoped lang="scss">
 .logout {
     @include md {
         margin-top: auto;
-    }
-    @include md(true) {
-        margin-left: auto;
     }
 }
 </style>
