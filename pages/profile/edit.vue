@@ -115,6 +115,7 @@ const handleSave = async () => {
 
         .avatar-container {
             @include flex-center;
+            min-width: 150px;
         }
         .description {
             font-size: 14px;

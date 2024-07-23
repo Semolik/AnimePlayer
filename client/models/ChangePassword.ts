@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ChangePassword = {
-    password: string;
     new_password: string;
 };
 
