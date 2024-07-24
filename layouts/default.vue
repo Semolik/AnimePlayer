@@ -3,8 +3,11 @@
     <div class="default-layout">
         <aside>
             <nuxt-link to="/" class="mobile">
-                <Icon name="material-symbols:home" class="active" />
-                <Icon name="material-symbols:home-outline" class="default" />
+                <Icon name="material-symbols:home-rounded" class="active" />
+                <Icon
+                    name="material-symbols:home-outline-rounded"
+                    class="default"
+                />
             </nuxt-link>
             <nuxt-link to="/search" class="mobile">
                 <Icon name="material-symbols:search" />

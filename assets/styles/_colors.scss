@@ -1,11 +1,11 @@
-$primary-bg: rgb(29, 32, 36);
-$secondary-bg: rgb(33, 36, 40);
-$tertiary-bg: rgb(37, 40, 44);
-$quaternary-bg: rgb(42, 45, 49);
-$quinary-bg: rgb(54, 57, 62);
-$senary-bg: rgb(64, 68, 75);
-$septenary-bg: rgb(82, 87, 94);
-$octonary-bg: rgb(97, 103, 112);
+$primary-bg: darken(rgb(29, 32, 36), 5%);
+$secondary-bg: darken(rgb(33, 36, 40), 5%);
+$tertiary-bg: darken(rgb(37, 40, 44), 5%);
+$quaternary-bg: darken(rgb(42, 45, 49), 5%);
+$quinary-bg: darken(rgb(54, 57, 62), 5%);
+$senary-bg: darken(rgb(64, 68, 75), 5%);
+$septenary-bg: darken(rgb(82, 87, 94), 5%);
+$octonary-bg: darken(rgb(97, 103, 112), 5%);
 
 $primary-text: rgb(255, 255, 255);
 $secondary-text: rgb(179, 179, 179);
@@ -18,4 +18,4 @@ $accent-warning: hsl(40, 100%, 43%);
 $accent-success: hsl(120, 100%, 43%);
 $accent: hsl(39, 100%, 50%);
 
-$accent-hover: hsl(39, 100%, 60%);
+$accent-hover: hsl(39, 100%, 40%);
