@@ -21,6 +21,7 @@
         "axios": "^1.7.2",
         "check-password-strength": "^2.0.10",
         "nuxt": "^3.12.3",
+        "nuxt-og-image": "^3.0.0-rc.64",
         "nuxt-viewport": "^2.1.5",
         "openapi-typescript-codegen": "^0.29.0",
         "pinia": "^2.1.7",

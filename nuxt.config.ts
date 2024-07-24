@@ -6,8 +6,14 @@ export default defineNuxtConfig({
         primary: "amber",
         gray: "slate",
     },
+    ogImage: {
+        fonts: ["Montserrat:400", "Montserrat:600"],
+    },
     fonts: {
         families: [{ name: "Open Sans", provider: "google" }],
+    },
+    site: {
+        url: "https://anime.semolik.ru",
     },
     nitro: {
         devProxy: {
@@ -19,9 +25,7 @@ export default defineNuxtConfig({
             },
         },
     },
-    icon: {
-        componentName: "NuxtIcon",
-    },
+
     modules: [
         "@pinia/nuxt",
         "nuxt-headlessui",
@@ -30,6 +34,7 @@ export default defineNuxtConfig({
         "@nuxt/ui",
         "@vueuse/nuxt",
         "nuxt-viewport",
+        "nuxt-og-image",
     ],
     css: ["@/assets/styles/global.scss"],
     vite: {

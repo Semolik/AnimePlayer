@@ -25,6 +25,7 @@ const parsers = await ParsersService.getParsersApiV1ParsersGet();
         display: flex;
         flex-direction: column;
         gap: 8px;
+
         @include sm(true) {
             gap: 0;
         }

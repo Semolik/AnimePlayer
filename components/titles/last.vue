@@ -1,5 +1,9 @@
 <template>
-    <titles :titles="titlesData" card-class="title-card" class="main-titles" />
+    <titles
+        :titles="titlesData"
+        card-class="title-card"
+        :class="['main-titles', { loaded: !loading }]"
+    />
 </template>
 <script setup>
 import { ParsersService } from "~/client";
@@ -34,9 +38,16 @@ onMounted(async () => {
         display: flex;
         overflow-x: auto;
         min-height: 290px;
+        scroll-snap-type: x mandatory;
+        scroll-padding: 0 10px;
+        padding: 0 10px;
+
         .title-card {
             display: flex !important;
+            scroll-snap-align: start;
             flex: 0 0 170px;
+        }
+        &.loaded .title-card {
             &:first-child {
                 margin-left: 10px;
             }
