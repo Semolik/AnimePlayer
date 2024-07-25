@@ -13,6 +13,10 @@
 <script setup lang="ts">
 import { ParsersService } from "~/client";
 const parsers = await ParsersService.getParsersApiV1ParsersGet();
+useSeoMeta({
+    title: "Главная",
+    description: "Главная страница",
+});
 </script>
 
 <style lang="scss">

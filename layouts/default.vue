@@ -23,7 +23,7 @@
             <nuxt-link class="menu" to="/mobile-menu">
                 <Icon name="material-symbols:menu" />
             </nuxt-link>
-            <nuxt-link class="login" to="/profile/edit" v-if="userData">
+            <nuxt-link class="login" to="/profile/edit" v-if="logined">
                 <img
                     :src="userData.image"
                     alt="avatar"
@@ -42,7 +42,12 @@
             </nuxt-link>
         </aside>
         <div class="app-content">
-            <slot></slot>
+            <NuxtErrorBoundary @error="handleError">
+                <slot></slot>
+                <template #error="{ error }">
+                    <AppError :error="error" @clearError="fixIssue(error)" />
+                </template>
+            </NuxtErrorBoundary>
         </div>
     </div>
 </template>
@@ -51,6 +56,12 @@ import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 const authStore = useAuthStore();
 const { logined, userData } = storeToRefs(authStore);
+const fixIssue = (error) => {
+    error.value = null;
+};
+const handleError = (error) => {
+    console.error(error);
+};
 </script>
 <style lang="scss">
 .default-layout {
