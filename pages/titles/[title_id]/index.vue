@@ -1,7 +1,12 @@
 <template>
     <div class="title-page">
-        <div class="picture">
-            <img :src="title.image_url" :alt="title.name" />
+        <div :class="['picture', { loaded: image_loaded }]">
+            <img
+                :src="title.image_url"
+                :alt="title.name"
+                v-show="image_loaded"
+            />
+            <div class="placeholder animate-pulse bg-cool-700"></div>
         </div>
         <div class="page-content">
             <div class="names">
@@ -107,19 +112,13 @@
                     <Icon name="i-heroicons-chevron-left" />
                 </div>
                 <div class="episodes-list" ref="episodesList">
-                    <div class="episode-item" v-for="episode in title.episodes">
-                        <div
-                            class="episode-picture"
-                            :style="{ '--progress': episode.progress + '%' }"
-                        >
-                            <img :src="episode.image_url || title.image_url" />
-                        </div>
-                        <div class="episode-name">
-                            <div class="dot" v-if="episode.progress == 0"></div>
-
-                            {{ episode.name }}
-                        </div>
-                    </div>
+                    <episode-card
+                        v-for="episode in title.episodes"
+                        :key="episode.id"
+                        :episode="episode"
+                        :title="title"
+                        class="episode-item"
+                    />
                 </div>
                 <div
                     :class="[
@@ -152,9 +151,17 @@ defineOgImageComponent("title", {
     link: new URL(siteConfig.url).host,
 });
 const mounted = ref(false);
+const image_loaded = ref(false);
 onMounted(() => {
     mounted.value = true;
+    image_loaded.value = false;
+    var image = new Image();
+    image.src = title.image_url;
+    image.onload = () => {
+        image_loaded.value = true;
+    };
 });
+
 const episodesList = ref(null);
 const { x, y } = useScroll(episodesList, { behavior: "smooth" });
 const scrollLeftActive = computed(() => x.value > 0);
@@ -182,7 +189,18 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
     }
     .picture {
         overflow: hidden;
-
+        min-height: 350px;
+        width: 100%;
+        position: relative;
+        &.loaded {
+            .placeholder {
+                display: none;
+            }
+        }
+        .placeholder {
+            position: absolute;
+            inset: 0;
+        }
         @include lg(true) {
             max-height: 450px;
         }
@@ -417,60 +435,11 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
                     padding-right: 10px;
                 }
                 .episode-item {
-                    min-width: 200px;
-                    height: min-content;
                     scroll-snap-align: start;
 
-                    @include md {
-                        min-width: 280px;
-                    }
                     @include md(true) {
                         &:first-child {
                             margin-left: 10px;
-                        }
-                    }
-                    .episode-picture {
-                        user-select: none;
-                        height: 110px;
-                        @include md {
-                            height: 157px;
-                        }
-                        border-radius: 10px;
-                        position: relative;
-                        overflow: hidden;
-                        &::after {
-                            content: "";
-                            position: absolute;
-                            bottom: 0;
-                            left: 0;
-                            width: var(--progress);
-                            height: 5px;
-                            background-color: $accent;
-                        }
-
-                        img {
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
-                        }
-                    }
-
-                    .episode-name {
-                        color: $primary-text;
-                        font-size: 1rem;
-                        margin-top: 5px;
-                        display: flex;
-                        align-items: center;
-                        margin-left: 5px;
-                        position: relative;
-
-                        .dot {
-                            width: 8px;
-                            height: 8px;
-                            border-radius: 50%;
-                            background-color: $accent;
-                            display: inline-block;
-                            margin-right: 5px;
                         }
                     }
                 }
@@ -484,6 +453,7 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
                 padding: 0 5px;
                 border-radius: 10px;
                 opacity: 1;
+                transition: opacity 0.3s;
                 &.hide {
                     cursor: default;
                 }
