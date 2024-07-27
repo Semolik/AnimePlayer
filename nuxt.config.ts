@@ -2,15 +2,15 @@
 export default defineNuxtConfig({
     compatibilityDate: "2024-04-03",
     devtools: { enabled: true },
-    ui: {
-        primary: "amber",
-        gray: "slate",
-    },
+
     ogImage: {
         fonts: ["Montserrat:400", "Montserrat:600"],
     },
-    fonts: {
-        families: [{ name: "Open Sans", provider: "google" }],
+    googleFonts: {
+        families: {
+            Roboto: true,
+        },
+        download: true,
     },
     site: {
         url: "https://anime.semolik.ru",
@@ -29,11 +29,12 @@ export default defineNuxtConfig({
         "@pinia/nuxt",
         "nuxt-headlessui",
         "@formkit/nuxt",
-        "@nuxt/fonts",
+        "@nuxtjs/google-fonts",
         "@nuxt/ui",
         "@vueuse/nuxt",
         "nuxt-viewport",
         "nuxt-og-image",
+        "@formkit/auto-animate/nuxt",
     ],
     css: ["@/assets/styles/global.scss"],
     vite: {

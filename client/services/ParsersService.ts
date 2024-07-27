@@ -49,7 +49,7 @@ export class ParsersService {
      * @throws ApiError
      */
     public static getTitlesApiV1ParsersParserIdTitlesGet(
-        parserId: 'anidub' | 'animevost',
+        parserId: 'animevost' | 'anidub',
         page: number = 1,
     ): CancelablePromise<TitlesPage> {
         return __request(OpenAPI, {
@@ -73,7 +73,7 @@ export class ParsersService {
      * @throws ApiError
      */
     public static getMainTitlesApiV1ParsersParserIdTitlesMainGet(
-        parserId: 'anidub' | 'animevost',
+        parserId: 'animevost' | 'anidub',
     ): CancelablePromise<MainPage> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -93,7 +93,7 @@ export class ParsersService {
      * @throws ApiError
      */
     public static getGenresApiV1ParsersParserIdGenresGet(
-        parserId: 'anidub' | 'animevost',
+        parserId: 'animevost' | 'anidub',
     ): CancelablePromise<Array<Genre>> {
         return __request(OpenAPI, {
             method: 'GET',

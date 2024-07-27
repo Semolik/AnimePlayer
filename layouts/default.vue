@@ -75,7 +75,7 @@ const handleError = (error) => {
         height: 100%;
         padding: 20px;
         gap: 15px;
-        z-index: 100;
+        z-index: 5;
         @include sm {
             flex-direction: column;
             width: 85px;

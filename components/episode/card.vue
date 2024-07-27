@@ -41,6 +41,7 @@ onMounted(() => {
     @include md {
         min-width: 280px;
     }
+
     .episode-picture {
         user-select: none;
         aspect-ratio: 16 / 9;

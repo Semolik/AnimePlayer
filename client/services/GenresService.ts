@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Genre } from '../models/Genre';
 import type { TitlesPage } from '../models/TitlesPage';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -10,17 +11,37 @@ export class GenresService {
     /**
      * Get Genre
      * @param genreId
+     * @returns Genre Successful Response
+     * @throws ApiError
+     */
+    public static getGenreApiV1GenresGenresGenreIdGet(
+        genreId: string,
+    ): CancelablePromise<Genre> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/genres/genres/{genre_id}',
+            path: {
+                'genre_id': genreId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Genre Titles
+     * @param genreId
      * @param page
      * @returns TitlesPage Successful Response
      * @throws ApiError
      */
-    public static getGenreApiV1GenresGenresGenreIdGet(
+    public static getGenreTitlesApiV1GenresGenresGenreIdTitlesGet(
         genreId: string,
         page: number = 1,
     ): CancelablePromise<TitlesPage> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/genres/genres/{genre_id}',
+            url: '/api/v1/genres/genres/{genre_id}/titles',
             path: {
                 'genre_id': genreId,
             },

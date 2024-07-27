@@ -32,10 +32,11 @@ onMounted(() => {
     watch(
         () => props.title,
         () => {
+            image_loaded.value = false;
             if (!props.title) {
                 return;
             }
-            image_loaded.value = false;
+
             var image = new Image();
             image.src = props.title.image_url;
             image.onload = () => {

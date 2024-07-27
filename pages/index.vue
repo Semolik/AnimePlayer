@@ -1,7 +1,10 @@
 <template>
     <div class="index-page">
         <div class="parser" v-for="parser in parsers">
-            <nuxt-link class="parser-name" :to="`/${parser.id}`">
+            <nuxt-link
+                class="parser-name"
+                :to="{ name: 'parser', query: { parser_id: parser.id } }"
+            >
                 {{ parser.name }}
                 <Icon name="material-symbols:arrow-forward-ios-rounded" />
             </nuxt-link>
@@ -10,7 +13,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ParsersService } from "~/client";
 const parsers = await ParsersService.getParsersApiV1ParsersGet();
 useSeoMeta({

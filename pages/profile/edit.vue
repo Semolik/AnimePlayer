@@ -27,7 +27,6 @@
                 block
                 size="lg"
                 class="mt-auto"
-                color="amber"
                 :disabled="!buttonActive"
                 @click="handleSave"
                 :loading="loading"

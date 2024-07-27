@@ -18,7 +18,6 @@
             block
             size="lg"
             class="mt-auto"
-            color="amber"
             :disabled="!buttonActive"
             @click="handleChangePassword"
         >

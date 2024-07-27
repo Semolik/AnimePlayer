@@ -1,6 +1,13 @@
 <template>
     <div class="title-page">
+        <UBreadcrumb :links="links" class="breadcrumb" />
         <div :class="['picture', { loaded: image_loaded }]">
+            <nuxt-link
+                class="back"
+                :to="`/parser?parser_id=${title.parser_id}`"
+            >
+                <Icon name="i-heroicons-arrow-left" />
+            </nuxt-link>
             <img
                 :src="title.image_url"
                 :alt="title.name"
@@ -21,7 +28,6 @@
                 <UButton
                     block
                     size="xl"
-                    color="amber"
                     :ui="{ rounded: 'rounded-lg' }"
                     icon="i-heroicons-play"
                     class="lg:px-6"
@@ -83,7 +89,7 @@
                 <nuxt-link
                     v-for="genre in title.genres"
                     :key="genre.id"
-                    :to="`/genres/${genre.id}`"
+                    :to="`/parser?genre_id=${genre.id}`"
                     class="genre"
                 >
                     {{ genre.name }}
@@ -140,6 +146,11 @@ const siteConfig = useSiteConfig();
 const { title_id } = route.params;
 const title = await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id);
 const smallTitle = title.name.length < 40;
+const parser = getParser(title.parser_id);
+const links = [
+    { label: parser.name, to: `/${parser.id}` },
+    { label: title.name },
+];
 useSeoMeta({
     title: title.name,
     description: title.description,
@@ -186,6 +197,14 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
     }
     @include md {
         padding: 20px;
+        padding-top: 0px;
+    }
+    .breadcrumb {
+        grid-column: 1 / -1;
+
+        @include md(true) {
+            display: none;
+        }
     }
     .picture {
         overflow: hidden;
@@ -201,10 +220,14 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
             position: absolute;
             inset: 0;
         }
+
         @include lg(true) {
-            max-height: 450px;
+            @include md {
+                max-height: 450px;
+            }
         }
         @include sm(true) {
+            height: 60vh;
             position: relative;
             isolation: isolate;
             &::before {
@@ -233,6 +256,30 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .back {
+            position: absolute;
+            border-radius: 10px;
+            width: 45px;
+            height: 45px;
+            aspect-ratio: 1;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+            @include flex-center;
+            background-color: rgba($primary-bg, 0.7);
+            backdrop-filter: blur(10px);
+
+            @include sm {
+                display: none;
+            }
+
+            svg {
+                width: 20px;
+                height: 20px;
+                color: $primary-text;
+            }
         }
     }
     .page-content {
