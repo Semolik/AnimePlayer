@@ -25,7 +25,7 @@ defineProps({
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 
     @include md {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 }
 </style>

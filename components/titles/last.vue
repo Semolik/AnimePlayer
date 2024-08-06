@@ -15,7 +15,7 @@ const { parserId } = defineProps({
 });
 
 const loading = ref(true);
-const titlesData = ref(markRaw(Array.from({ length: 20 }, (_, i) => null)));
+const titlesData = ref(markRaw(Array.from({ length: 16 }, (_, i) => null)));
 
 onMounted(async () => {
     const page =

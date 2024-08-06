@@ -1,5 +1,6 @@
 <template>
     <NuxtLoadingIndicator />
+    <player />
     <div class="default-layout">
         <aside>
             <nuxt-link to="/" class="mobile">

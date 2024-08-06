@@ -35,7 +35,9 @@ export default defineNuxtConfig({
         "nuxt-viewport",
         "nuxt-og-image",
         "@formkit/auto-animate/nuxt",
+        "@vite-pwa/nuxt",
     ],
+    pwa: {},
     css: ["@/assets/styles/global.scss"],
     vite: {
         css: {

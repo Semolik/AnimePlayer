@@ -119,12 +119,23 @@
                 </div>
                 <div class="episodes-list" ref="episodesList">
                     <episode-card
-                        v-for="episode in title.episodes"
+                        v-for="episode in episodes"
                         :key="episode.id"
                         :episode="episode"
                         :title="title"
                         class="episode-item"
                     />
+                    <nuxt-link
+                        v-if="title.episodes.length > 10"
+                        :to="`/titles/${title.id}/episodes`"
+                        class="more-episode"
+                    >
+                        <div class="dots-container">
+                            <div class="dots">
+                                <Icon name="material-symbols:more-horiz" />
+                            </div>
+                        </div>
+                    </nuxt-link>
                 </div>
                 <div
                     :class="[
@@ -148,13 +159,14 @@ const title = await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id);
 const smallTitle = title.name.length < 40;
 const parser = getParser(title.parser_id);
 const links = [
-    { label: parser.name, to: `/${parser.id}` },
+    { label: parser.name, to: `/parser?parser_id=${title.parser_id}` },
     { label: title.name },
 ];
 useSeoMeta({
     title: title.name,
     description: title.description,
 });
+const episodes = title.episodes.slice(0, 10);
 defineOgImageComponent("title", {
     title: title.name,
     image: title.image_url,
@@ -487,6 +499,36 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
                     @include md(true) {
                         &:first-child {
                             margin-left: 10px;
+                        }
+                    }
+                }
+                .more-episode {
+                    min-width: 200px;
+
+                    @include md {
+                        min-width: 280px;
+
+                        &:hover .dots-container {
+                            background: $quaternary-bg;
+                        }
+                    }
+
+                    .dots-container {
+                        background-color: $tertiary-bg;
+                        border-radius: 10px;
+                        @include flex-center;
+                        width: 100%;
+                        aspect-ratio: 16 / 9;
+                        .dots {
+                            border-radius: 50%;
+                            width: 70px;
+                            height: 70px;
+                            @include flex-center;
+                            background-color: $quinary-bg;
+                            svg {
+                                width: 25px;
+                                height: 25px;
+                            }
                         }
                     }
                 }

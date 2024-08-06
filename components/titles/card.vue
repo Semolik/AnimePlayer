@@ -119,6 +119,10 @@ onMounted(() => {
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        @include sm {
+            font-size: 1.1rem;
+        }
     }
 }
 </style>

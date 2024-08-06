@@ -25,7 +25,10 @@ const links = computed(() => {
         { label: "Серии" },
     ];
     if ($viewport.isGreaterOrEquals("tablet")) {
-        arr.unshift({ label: parser.name, to: `/${parser.id}` });
+        arr.unshift({
+            label: parser.name,
+            to: `/parser?parser_id=${title.parser_id}`,
+        });
         arr.unshift({ label: "Главная", to: "/" });
     }
     return arr;

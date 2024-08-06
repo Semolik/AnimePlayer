@@ -1,11 +1,17 @@
 <template>
-    <div class="episode-card">
+    <div
+        :class="['episode-card', { loading }]"
+        @click="playerStore.playEpisode(episode)"
+    >
         <div
             :class="['episode-picture', { loaded: image_loaded }]"
             :style="{ '--progress': episode.progress + '%' }"
         >
             <img :src="imageUrl" v-show="image_loaded" />
             <div class="placeholder animate-pulse bg-cool-700"></div>
+            <div class="loading-placeholder">
+                <Icon name="svg-spinners:180-ring-with-bg" />
+            </div>
         </div>
         <div class="episode-name">
             <div class="dot" v-if="episode.progress == 0"></div>
@@ -15,12 +21,21 @@
     </div>
 </template>
 <script setup>
+import { usePlayerStore } from "~/stores/player";
+const playerStore = usePlayerStore();
+const { currentEpisode, isOpen } = storeToRefs(playerStore);
 const { episode, title } = defineProps({
     episode: Object,
     title: Object,
 });
 const imageUrl = episode.image_url || title.image_url;
 const image_loaded = ref(false);
+const loading = computed(
+    () =>
+        currentEpisode.value &&
+        currentEpisode.value.id === episode.id &&
+        !isOpen.value
+);
 onMounted(() => {
     if (!imageUrl) {
         return;
@@ -37,9 +52,13 @@ onMounted(() => {
 .episode-card {
     height: min-content;
     min-width: 200px;
+    cursor: pointer;
 
     @include md {
         min-width: 280px;
+    }
+    &.loading .episode-picture .loading-placeholder {
+        opacity: 1;
     }
 
     .episode-picture {
@@ -71,6 +90,20 @@ onMounted(() => {
         .placeholder {
             position: absolute;
             inset: 0;
+        }
+
+        .loading-placeholder {
+            position: absolute;
+            inset: 0;
+            @include flex-center;
+            color: $primary-text;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+            svg {
+                width: 35px;
+                height: 35px;
+            }
         }
     }
 
