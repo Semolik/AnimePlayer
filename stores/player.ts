@@ -10,6 +10,7 @@ export const usePlayerStore = defineStore({
         isOpen: false,
         currentEpisode: null as Episode | null,
         enterFullscreen: null as (() => void) | null,
+        hsl: null as HLS | null,
     }),
     actions: {
         setPlayer(player: Plyr): void {
@@ -24,6 +25,13 @@ export const usePlayerStore = defineStore({
             });
             this.player.on("loadeddata", (e) => {
                 this.enterFullscreen?.();
+            });
+            this.player.on("pause", () => {
+                if (!this.isOpen) {
+                    this.isOpen = false;
+                    player.stop();
+                    this.currentEpisode = null;
+                }
             });
             if (this.player?.fullscreen.enter) {
                 this.enterFullscreen = this.player?.fullscreen.enter;
@@ -43,7 +51,9 @@ export const usePlayerStore = defineStore({
                     console.error("Video element is not set");
                     return;
                 }
-                var defaultOptions = {} as Plyr.Options;
+                var defaultOptions = {
+                    fullscreen: { iosNative: true },
+                } as Plyr.Options;
                 if (!HLS.isSupported()) {
                     console.log("HLS is not supported");
                     return;
@@ -79,9 +89,12 @@ export const usePlayerStore = defineStore({
                             0: "Auto",
                         },
                     };
-                    this.setPlayer(new Plyr(this.video, defaultOptions));
+
+                    this.setPlayer(
+                        new Plyr(this.video as HTMLVideoElement, defaultOptions)
+                    );
                     hls.startLoad();
-                    this.player.play();
+                    this.player?.play();
                 });
 
                 hls.on(HLS.Events.LEVEL_SWITCHED, function (event, data) {
