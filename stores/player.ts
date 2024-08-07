@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { type Episode } from "~/client";
 import Plyr from "plyr";
 import HLS from "hls.js";
+import { useDebounceFn } from "@vueuse/core";
 const i18n = {
     restart: "Перезапуск",
     rewind: "Перемотать назад на {seektime}с",
@@ -51,64 +52,69 @@ export const usePlayerStore = defineStore({
     id: "player",
     state: () => ({
         player: null as Plyr | null,
-        video: null as HTMLVideoElement | null,
         isOpen: false,
         currentEpisode: null as Episode | null,
-        enterFullscreen: null as (() => void) | null,
-        hsl: null as HLS | null,
     }),
+
     actions: {
         setPlayer(player: Plyr): void {
+            if (this.player) {
+                this.player.destroy();
+            }
             this.player = player;
             this.player.on("enterfullscreen", (e) => {
                 this.isOpen = true;
             });
-
-            this.player.on("exitfullscreen", (e) => {
+            const stop = () => {
                 this.isOpen = false;
-                player.stop();
                 this.currentEpisode = null;
+                player.destroy();
+                this.player = null;
+            };
+            this.player.on("exitfullscreen", (e) => {
+                stop();
             });
             this.player.on("loadeddata", (e) => {
-                this.enterFullscreen?.();
+                this.player?.fullscreen.enter();
             });
             this.player.on("pause", () => {
-                if (!this.isOpen) {
-                    this.isOpen = false;
-                    player.stop();
-                    this.currentEpisode = null;
-                }
+                if (!this.isOpen) stop();
             });
-            if (this.player.fullscreen.enter) {
-                this.enterFullscreen = this.player.fullscreen.enter;
-            }
+            var oldProgress = 0;
+            const updateProgress = useDebounceFn(
+                () => {
+                    if (!this.player) return;
+                    var progress = Math.floor(
+                        (this.player.currentTime / this.player.duration) * 100
+                    );
+                    if (isNaN(progress)) progress = 0;
+                    if (progress !== oldProgress) {
+                        oldProgress = progress;
+                        console.log("Progress", progress);
+                    }
+                },
+                1000,
+                { maxWait: 5000 }
+            );
+            this.player.on("timeupdate", updateProgress);
         },
         playEpisode(episode: Episode): void {
-            if (!this.video) {
-                console.error("Video element is not set");
-                return;
-            }
-            if (this.player) {
-                this.player.stop();
-            }
+            const video = document.getElementById(
+                "plyr-player"
+            ) as HTMLVideoElement;
             this.currentEpisode = episode;
             var defaultOptions = {
                 fullscreen: { iosNative: true },
                 i18n,
             } as Plyr.Options;
             if (episode.is_m3u8) {
-                if (!this.video) {
-                    console.error("Video element is not set");
-                    return;
-                }
-
                 if (!HLS.isSupported()) {
                     console.log("HLS is not supported");
                     return;
                 }
                 var hls = new HLS();
                 hls.loadSource(episode.links[0].link);
-                hls.attachMedia(this.video);
+                hls.attachMedia(video);
                 hls.on(HLS.Events.MANIFEST_PARSED, () => {
                     const availableQualities = hls.levels.map((l) => l.height);
                     availableQualities.unshift(0);
@@ -140,9 +146,7 @@ export const usePlayerStore = defineStore({
                         },
                     };
 
-                    this.setPlayer(
-                        new Plyr(this.video as HTMLVideoElement, defaultOptions)
-                    );
+                    this.setPlayer(new Plyr(video, defaultOptions));
                     hls.startLoad();
                     // @ts-ignore
                     this.player.play();
@@ -153,21 +157,16 @@ export const usePlayerStore = defineStore({
                         ".plyr__menu__container [data-plyr='quality'][value='0'] span"
                     ) as HTMLElement;
                     if (hls.autoLevelEnabled) {
-                        span.innerHTML = `AUTO (${
+                        span.innerHTML = `Авто (${
                             hls.levels[data.level].height
                         }p)`;
                     } else {
-                        span.innerHTML = `AUTO`;
+                        span.innerHTML = `Авто`;
                     }
                 });
             } else {
-                if (!this.player) {
-                    this.setPlayer(
-                        new Plyr(this.video as HTMLVideoElement, defaultOptions)
-                    );
-                }
-                // @ts-ignore
-                this.player.source = {
+                var player = new Plyr(video, defaultOptions);
+                player.source = {
                     type: "video",
                     sources: episode.links.map((link) => ({
                         src: link.link,
@@ -175,6 +174,7 @@ export const usePlayerStore = defineStore({
                         size: link.quality as number,
                     })),
                 };
+                this.setPlayer(player);
                 // @ts-ignore
                 this.player.play();
             }

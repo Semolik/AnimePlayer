@@ -99,13 +99,13 @@
         <div class="desctiption">
             {{ title.description }}
         </div>
-        <UAlert
-            color="primary"
-            variant="subtle"
-            class="desctiption"
-            :description="title.episodes_message"
-            v-if="title.episodes_message"
-        />
+        <div class="alert" v-if="title.episodes_message">
+            <UAlert
+                color="primary"
+                variant="subtle"
+                :description="title.episodes_message"
+            />
+        </div>
         <div class="episodes" v-if="title.episodes.length">
             <div class="headline">
                 <span> Серии </span>
@@ -426,15 +426,18 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
             }
         }
     }
+    .alert,
     .desctiption,
     .episodes {
         grid-column: 1 / -1;
     }
+    .alert,
     .desctiption {
         @include md(true) {
             padding: 0px 10px;
         }
     }
+
     .episodes {
         display: flex;
         flex-direction: column;
