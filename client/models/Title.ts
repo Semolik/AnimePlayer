@@ -24,5 +24,6 @@ export type Title = {
     recommended?: Array<TitleShort>;
     shikimori?: (ShikimoriTitle | null);
     duration?: (string | null);
+    episodes_message?: (string | null);
 };
 

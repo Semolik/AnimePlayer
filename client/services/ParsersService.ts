@@ -13,12 +13,12 @@ export class ParsersService {
     /**
      * Get Episode
      * @param linkHash
-     * @returns string Successful Response
+     * @returns any Successful Response
      * @throws ApiError
      */
     public static getEpisodeApiV1ParsersAnidubEpisodeGet(
         linkHash: string,
-    ): CancelablePromise<string> {
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/parsers/anidub/episode',

@@ -2,6 +2,51 @@ import { defineStore } from "pinia";
 import { type Episode } from "~/client";
 import Plyr from "plyr";
 import HLS from "hls.js";
+const i18n = {
+    restart: "Перезапуск",
+    rewind: "Перемотать назад на {seektime}с",
+    play: "Воспроизвести",
+    pause: "Пауза",
+    fastForward: "Перемотать вперед на {seektime}с",
+    seek: "Поиск",
+    seekLabel: "{currentTime} из {duration}",
+    played: "Проиграно",
+    buffered: "Буферизировано",
+    currentTime: "Текущее время",
+    duration: "Длительность",
+    volume: "Громкость",
+    mute: "Отключить звук",
+    unmute: "Включить звук",
+    enableCaptions: "Включить субтитры",
+    disableCaptions: "Отключить субтитры",
+    download: "Скачать",
+    enterFullscreen: "Войти в полноэкранный режим",
+    exitFullscreen: "Выйти из полноэкранного режима",
+    frameTitle: "Плеер для {title}",
+    captions: "Субтитры",
+    settings: "Настройки",
+    pip: "Картинка в картинке",
+    menuBack: "Вернуться в предыдущее меню",
+    speed: "Скорость",
+    normal: "Обычная",
+    quality: "Качество",
+    loop: "Повтор",
+    start: "Начать",
+    end: "Конец",
+    all: "Все",
+    reset: "Сброс",
+    disabled: "Отключено",
+    enabled: "Включено",
+    advertisement: "Реклама",
+    qualityBadge: {
+        2160: "4K",
+        1440: "HD",
+        1080: "HD",
+        720: "HD",
+        576: "SD",
+        480: "SD",
+    },
+};
 export const usePlayerStore = defineStore({
     id: "player",
     state: () => ({
@@ -18,6 +63,7 @@ export const usePlayerStore = defineStore({
             this.player.on("enterfullscreen", (e) => {
                 this.isOpen = true;
             });
+
             this.player.on("exitfullscreen", (e) => {
                 this.isOpen = false;
                 player.stop();
@@ -33,8 +79,8 @@ export const usePlayerStore = defineStore({
                     this.currentEpisode = null;
                 }
             });
-            if (this.player?.fullscreen.enter) {
-                this.enterFullscreen = this.player?.fullscreen.enter;
+            if (this.player.fullscreen.enter) {
+                this.enterFullscreen = this.player.fullscreen.enter;
             }
         },
         playEpisode(episode: Episode): void {
@@ -46,14 +92,16 @@ export const usePlayerStore = defineStore({
                 this.player.stop();
             }
             this.currentEpisode = episode;
+            var defaultOptions = {
+                fullscreen: { iosNative: true },
+                i18n,
+            } as Plyr.Options;
             if (episode.is_m3u8) {
                 if (!this.video) {
                     console.error("Video element is not set");
                     return;
                 }
-                var defaultOptions = {
-                    fullscreen: { iosNative: true },
-                } as Plyr.Options;
+
                 if (!HLS.isSupported()) {
                     console.log("HLS is not supported");
                     return;
@@ -84,7 +132,9 @@ export const usePlayerStore = defineStore({
                             }
                         },
                     };
+
                     defaultOptions.i18n = {
+                        ...i18n,
                         qualityLabel: {
                             0: "Auto",
                         },
@@ -94,7 +144,8 @@ export const usePlayerStore = defineStore({
                         new Plyr(this.video as HTMLVideoElement, defaultOptions)
                     );
                     hls.startLoad();
-                    this.player?.play();
+                    // @ts-ignore
+                    this.player.play();
                 });
 
                 hls.on(HLS.Events.LEVEL_SWITCHED, function (event, data) {
@@ -110,16 +161,22 @@ export const usePlayerStore = defineStore({
                     }
                 });
             } else {
-                this.isOpen = true;
+                if (!this.player) {
+                    this.setPlayer(
+                        new Plyr(this.video as HTMLVideoElement, defaultOptions)
+                    );
+                }
+                // @ts-ignore
                 this.player.source = {
                     type: "video",
                     sources: episode.links.map((link) => ({
                         src: link.link,
                         type: "video/mp4",
-                        size: parseInt(link.name),
+                        size: link.quality as number,
                     })),
                 };
-                this.player?.play();
+                // @ts-ignore
+                this.player.play();
             }
         },
     },

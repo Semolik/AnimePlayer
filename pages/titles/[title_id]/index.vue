@@ -99,7 +99,14 @@
         <div class="desctiption">
             {{ title.description }}
         </div>
-        <div class="episodes">
+        <UAlert
+            color="primary"
+            variant="subtle"
+            class="desctiption"
+            :description="title.episodes_message"
+            v-if="title.episodes_message"
+        />
+        <div class="episodes" v-if="title.episodes.length">
             <div class="headline">
                 <span> Серии </span>
                 <nuxt-link :to="`/titles/${title.id}/episodes`" class="more">

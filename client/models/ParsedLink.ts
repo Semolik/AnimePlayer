@@ -5,5 +5,6 @@
 export type ParsedLink = {
     name: string;
     link: string;
+    quality?: (number | null);
 };
 
