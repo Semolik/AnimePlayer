@@ -31,12 +31,14 @@ export class EpisodesService {
      * Set Episode Progress
      * @param episodeId
      * @param progress
+     * @param time
      * @returns void
      * @throws ApiError
      */
     public static setEpisodeProgressApiV1EpisodesEpisodeIdProgressPost(
         episodeId: string,
         progress: number,
+        time: number,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -46,6 +48,7 @@ export class EpisodesService {
             },
             query: {
                 'progress': progress,
+                'time': time,
             },
             errors: {
                 422: `Validation Error`,

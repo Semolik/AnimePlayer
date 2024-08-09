@@ -9,6 +9,5 @@
 <script setup>
 import "plyr/dist/plyr.css";
 import { usePlayerStore } from "~/stores/player";
-const playerStore = usePlayerStore();
-const { isOpen } = storeToRefs(playerStore);
+const { isOpen } = storeToRefs(usePlayerStore());
 </script>

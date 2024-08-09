@@ -32,19 +32,37 @@
                     icon="i-heroicons-play"
                     class="lg:px-6"
                     trailing
+                    @click="
+                        playerStore.playEpisode(
+                            title.current_episode || title.episodes[0]
+                        )
+                    "
+                    v-if="title.episodes.length"
                 >
-                    Смотреть
+                    {{
+                        title.current_episode
+                            ? title.current_episode.name
+                            : "Смотреть"
+                    }}
                 </UButton>
                 <Button
-                    class="lg:w-min lg:px-6 whitespace-nowrap flex items-center justify-center gap-2"
+                    class="lg:w-min lg:px-6 whitespace-nowrap flex items-center justify-center gap-2 favorite-button"
                     active
                     highlightActive
                     :border-radius="10"
+                    @clicked="addToFavorite"
                 >
                     <span class="lg:hidden"> В избранное </span>
                     <Icon
-                        name="i-heroicons-bookmark"
-                        class="w-[20px] h-[20px]"
+                        :name="
+                            !title.liked
+                                ? 'i-heroicons-bookmark'
+                                : 'heroicons:bookmark-20-solid'
+                        "
+                        :class="[
+                            'w-[20px] h-[20px]',
+                            { favorite: title.liked },
+                        ]"
                     />
                 </Button>
             </div>
@@ -155,29 +173,52 @@
                 </div>
             </div>
         </div>
+        <login-modal v-model:active="loginModalActive" />
     </div>
 </template>
 <script setup>
 import { TitlesService } from "~/client";
+import { useAuthStore } from "~/stores/auth";
+import { usePlayerStore } from "~/stores/player";
 const route = useRoute();
 const siteConfig = useSiteConfig();
+const authStore = useAuthStore();
+const playerStore = usePlayerStore();
+const { logined } = storeToRefs(authStore);
 const { title_id } = route.params;
-const title = await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id);
-const smallTitle = title.name.length < 40;
-const parser = getParser(title.parser_id);
+const title = ref(await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id));
+
+watch(logined, async (value) => {
+    if (value) {
+        title.value = await TitlesService.getTitleApiV1TitlesTitleIdGet(
+            title_id
+        );
+    }
+});
+const smallTitle = title.value.name.length < 40;
+const loginModalActive = ref(false);
+const parser = getParser(title.value.parser_id);
 const links = [
-    { label: parser.name, to: `/parser?parser_id=${title.parser_id}` },
-    { label: title.name },
+    { label: parser.name, to: `/parser?parser_id=${title.value.parser_id}` },
+    { label: title.value.name },
 ];
 useSeoMeta({
-    title: title.name,
-    description: title.description,
+    title: title.value.name,
+    description: title.value.description,
 });
-const episodes = title.episodes.slice(0, 10);
+const episodes = ref(title.value.episodes.slice(0, 10));
+const updateEpisodeBus = useEventBus("update-episode");
+updateEpisodeBus.on((episode) => {
+    title.value.current_episode = episode;
+    const index = episodes.value.findIndex((e) => e.id === episode.id);
+    if (index !== -1) {
+        episodes.value[index] = episode;
+    }
+});
 defineOgImageComponent("title", {
-    title: title.name,
-    image: title.image_url,
-    description: title.description,
+    title: title.value.name,
+    image: title.value.image_url,
+    description: title.value.description,
     link: new URL(siteConfig.url).host,
 });
 const mounted = ref(false);
@@ -186,7 +227,7 @@ onMounted(() => {
     mounted.value = true;
     image_loaded.value = false;
     var image = new Image();
-    image.src = title.image_url;
+    image.src = title.value.image_url;
     image.onload = () => {
         image_loaded.value = true;
     };
@@ -202,6 +243,14 @@ const scrollRightActive = computed(
             episodesList.value.scrollWidth - episodesList.value.clientWidth
 );
 const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
+const addToFavorite = async () => {
+    if (!logined.value) {
+        loginModalActive.value = true;
+        return;
+    }
+    await TitlesService.favoriteTitleApiV1TitlesFavoritesTitleIdPost(title_id);
+    title.value.liked = !title.value.liked;
+};
 </script>
 <style scoped lang="scss">
 .title-page {
@@ -224,6 +273,9 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
         @include md(true) {
             display: none;
         }
+    }
+    .favorite-button .favorite {
+        color: $accent;
     }
     .picture {
         overflow: hidden;
@@ -555,6 +607,7 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
                 transition: opacity 0.3s;
                 &.hide {
                     cursor: default;
+                    opacity: 0;
                 }
                 @include rwd(1300, true) {
                     background-color: $tertiary-bg;
@@ -564,9 +617,10 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
                         }
                     }
                 }
-                @include rwd(1300) {
+
+                @include rwd(1300, true) {
                     &.hide {
-                        opacity: 0;
+                        display: none;
                     }
                 }
                 @include md(true) {

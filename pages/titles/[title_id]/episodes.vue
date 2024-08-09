@@ -4,7 +4,7 @@
         <div class="episodes">
             <episode-card
                 class="episode-card"
-                v-for="episode in title.episodes"
+                v-for="episode in episodes"
                 :key="episode.id"
                 :episode="episode"
                 :title="title"
@@ -17,6 +17,14 @@ import { TitlesService } from "~/client";
 const route = useRoute();
 const { title_id } = route.params;
 const title = await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id);
+const episodes = ref(title.episodes);
+const updateEpisodeBus = useEventBus("update-episode");
+updateEpisodeBus.on((episode) => {
+    const index = episodes.value.findIndex((e) => e.id === episode.id);
+    if (index !== -1) {
+        episodes.value[index] = episode;
+    }
+});
 const parser = getParser(title.parser_id);
 const { $viewport } = useNuxtApp();
 const links = computed(() => {

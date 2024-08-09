@@ -18,6 +18,7 @@ export type Title = {
     series_info?: (string | null);
     year?: (string | null);
     liked?: boolean;
+    current_episode?: (Episode | null);
     genres?: Array<Genre>;
     episodes?: Array<Episode>;
     related?: Array<TitleLink>;

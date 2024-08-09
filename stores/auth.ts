@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
-import { AuthService, UsersService, OpenAPI, type UserRead } from "@/client";
-import axios from "axios";
-
+import { AuthService, UsersService, type UserRead } from "@/client";
 export const useAuthStore = defineStore({
     id: "auth",
     state: () => ({
@@ -26,21 +24,7 @@ export const useAuthStore = defineStore({
         },
         async getUserData(): Promise<void> {
             try {
-                if (import.meta.server) {
-                    const token = useCookie("fastapiusersauth");
-                    const request = await axios.get(
-                        `${OpenAPI.BASE}/api/v1/users/me`,
-                        {
-                            withCredentials: true,
-                            headers: {
-                                Cookie: `fastapiusersauth=${token.value}`,
-                            },
-                        }
-                    );
-                    this.userData = request.data;
-                } else {
-                    this.userData = await UsersService.getMeApiV1UsersMeGet();
-                }
+                this.userData = await UsersService.getMeApiV1UsersMeGet();
                 this.logined = true;
             } catch (error) {
                 this.resetSavedData();

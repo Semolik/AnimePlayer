@@ -7,10 +7,13 @@ export type TitleEpisode = {
     id: string;
     name: string;
     progress?: number;
+    seconds?: number;
     number: number;
     links: Array<ParsedLink>;
     is_m3u8?: boolean;
     image_url: string;
+    duration?: (number | null);
+    duration_label?: (string | null);
     title_id: string;
 };
 

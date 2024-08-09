@@ -174,11 +174,11 @@ watch(
     }
 
     .modal {
-        background-color: $secondary-bg;
+        background-color: $primary-bg;
         max-width: v-bind(width);
         max-height: v-bind(height);
         width: 100%;
-        border-radius: 20px;
+        border-radius: 10px;
         display: flex;
         flex-direction: column;
         padding: v-bind(paddingString);
@@ -218,9 +218,6 @@ watch(
         .description {
             font-size: 0.875rem;
             color: $secondary-text;
-        }
-
-        .modal-content {
         }
 
         .modal-buttons {

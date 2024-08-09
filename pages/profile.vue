@@ -17,8 +17,9 @@ import { useAuthStore } from "~~/stores/auth";
 const authStore = useAuthStore();
 const router = useRouter();
 const logout = async () => {
-    await authStore.logout();
-    router.push("/login");
+    router.push("/login").then(async () => {
+        await authStore.logout();
+    });
 };
 definePageMeta({
     middleware: ["auth"],

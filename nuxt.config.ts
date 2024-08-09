@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     },
     nitro: {
         devProxy: {
-            "/api": {
+            "/backend/api": {
                 target: "http://localhost:8000/api",
                 changeOrigin: true,
                 prependPath: true,
@@ -52,7 +52,9 @@ export default defineNuxtConfig({
             },
         },
     },
-
+    icon: {
+        mode: "svg",
+    },
     formkit: {
         autoImport: true,
     },
