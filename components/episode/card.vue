@@ -20,10 +20,12 @@
             <div class="loading-placeholder">
                 <Icon name="svg-spinners:180-ring-with-bg" />
             </div>
+            <div class="hover-placeholder">
+                <Icon name="i-heroicons:play" />
+            </div>
         </div>
         <div class="episode-name">
             <div class="dot" v-if="episode.progress == 0 && logined"></div>
-
             {{ episode.name }}
         </div>
     </div>
@@ -82,7 +84,11 @@ onMounted(() => {
     &.loading .episode-picture .loading-placeholder {
         opacity: 1;
     }
-
+    @include md {
+        &:not(.loading) .episode-picture:hover .hover-placeholder {
+            opacity: 1;
+        }
+    }
     .episode-picture {
         user-select: none;
         aspect-ratio: 16 / 9;
@@ -136,6 +142,20 @@ onMounted(() => {
         .placeholder {
             position: absolute;
             inset: 0;
+        }
+
+        .hover-placeholder {
+            position: absolute;
+            inset: 0;
+            @include flex-center;
+            color: $primary-text;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+            svg {
+                width: 35px;
+                height: 35px;
+            }
         }
 
         .loading-placeholder {
