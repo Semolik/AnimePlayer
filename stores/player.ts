@@ -93,6 +93,7 @@ export const usePlayerStore = defineStore("player", () => {
                 Math.floor(player.value.currentTime)
             );
             currentEpisode.value.progress = progress;
+            currentEpisode.value.seconds = Math.floor(player.value.currentTime);
             updateEpisodeBus.emit(currentEpisode.value);
         };
         const updateProgressDebounce = useDebounceFn(updateProgress, 1000, {

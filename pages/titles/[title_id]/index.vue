@@ -132,46 +132,19 @@
                 </nuxt-link>
             </div>
 
-            <div class="episodes-list-wrapper">
-                <div
-                    :class="[
-                        'scroll-button scroll-button-left',
-                        { hide: !scrollLeftActive },
-                    ]"
-                    @click="x -= scrollStep"
+            <episode-scroll :episodes="episodes" :title="title">
+                <nuxt-link
+                    v-if="title.episodes.length > 10"
+                    :to="`/titles/${title.id}/episodes`"
+                    class="more-episode"
                 >
-                    <Icon name="i-heroicons-chevron-left" />
-                </div>
-                <div class="episodes-list" ref="episodesList">
-                    <episode-card
-                        v-for="episode in episodes"
-                        :key="episode.id"
-                        :episode="episode"
-                        :title="title"
-                        class="episode-item"
-                    />
-                    <nuxt-link
-                        v-if="title.episodes.length > 10"
-                        :to="`/titles/${title.id}/episodes`"
-                        class="more-episode"
-                    >
-                        <div class="dots-container">
-                            <div class="dots">
-                                <Icon name="material-symbols:more-horiz" />
-                            </div>
+                    <div class="dots-container">
+                        <div class="dots">
+                            <Icon name="material-symbols:more-horiz" />
                         </div>
-                    </nuxt-link>
-                </div>
-                <div
-                    :class="[
-                        'scroll-button scroll-button-right',
-                        { hide: !scrollRightActive },
-                    ]"
-                    @click="x += scrollStep"
-                >
-                    <Icon name="i-heroicons-chevron-right" />
-                </div>
-            </div>
+                    </div>
+                </nuxt-link>
+            </episode-scroll>
         </div>
         <login-modal v-model:active="loginModalActive" />
     </div>
@@ -233,16 +206,6 @@ onMounted(() => {
     };
 });
 
-const episodesList = ref(null);
-const { x, y } = useScroll(episodesList, { behavior: "smooth" });
-const scrollLeftActive = computed(() => x.value > 0);
-const scrollRightActive = computed(
-    () =>
-        mounted.value &&
-        x.value <
-            episodesList.value.scrollWidth - episodesList.value.clientWidth
-);
-const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
 const addToFavorite = async () => {
     if (!logined.value) {
         loginModalActive.value = true;
@@ -528,127 +491,34 @@ const addToFavorite = async () => {
                     text-decoration: underline;
                 }
             }
-        }
+            .more-episode {
+                min-width: 200px;
 
-        .episodes-list-wrapper {
-            display: flex;
-            gap: 10px;
-            position: relative;
-            max-width: 100vw;
-            @include md {
-                @include lg(true) {
-                    overflow: hidden;
-                }
-            }
-            .episodes-list {
-                display: flex;
-                gap: 10px;
-                height: min-content;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                scroll-padding: 0 10px;
-                position: relative;
-
-                &::-webkit-scrollbar {
-                    display: none;
-                }
-                @include md(true) {
-                    padding-right: 10px;
-                }
-                .episode-item {
-                    scroll-snap-align: start;
-
-                    @include md(true) {
-                        &:first-child {
-                            margin-left: 10px;
-                        }
-                    }
-                }
-                .more-episode {
-                    min-width: 200px;
-
-                    @include md {
-                        min-width: 280px;
-
-                        &:hover .dots-container {
-                            background: $quaternary-bg;
-                        }
-                    }
-
-                    .dots-container {
-                        background-color: $tertiary-bg;
-                        border-radius: 10px;
-                        @include flex-center;
-                        width: 100%;
-                        aspect-ratio: 16 / 9;
-                        .dots {
-                            border-radius: 50%;
-                            width: 70px;
-                            height: 70px;
-                            @include flex-center;
-                            background-color: $quinary-bg;
-                            svg {
-                                width: 25px;
-                                height: 25px;
-                            }
-                        }
-                    }
-                }
-            }
-            .scroll-button {
-                position: absolute;
-                background-color: $primary-bg;
-                @include flex-center;
-                cursor: pointer;
-                height: 110px;
-                padding: 0 5px;
-                border-radius: 10px;
-                opacity: 1;
-                transition: opacity 0.3s;
-                &.hide {
-                    cursor: default;
-                    opacity: 0;
-                }
-                @include rwd(1300, true) {
-                    background-color: $tertiary-bg;
-                    &.hide {
-                        svg {
-                            color: darken($accent, 10%);
-                        }
-                    }
-                }
-
-                @include rwd(1300, true) {
-                    &.hide {
-                        display: none;
-                    }
-                }
-                @include md(true) {
-                    display: none;
-                }
                 @include md {
-                    height: 157px;
-                    @include rwd(1300, true) {
-                        position: inherit;
-                    }
-                }
-                @include rwd(1300) {
-                    &-right {
-                        left: calc(100% + 10px);
-                    }
+                    min-width: 280px;
 
-                    &-left {
-                        right: calc(100% + 10px);
+                    &:hover .dots-container {
+                        background: $quaternary-bg;
                     }
-                }
-                svg {
-                    width: 30px;
-                    height: 30px;
-                    color: $accent;
                 }
 
-                &:hover {
+                .dots-container {
                     background-color: $tertiary-bg;
+                    border-radius: 10px;
+                    @include flex-center;
+                    width: 100%;
+                    aspect-ratio: 16 / 9;
+                    .dots {
+                        border-radius: 50%;
+                        width: 70px;
+                        height: 70px;
+                        @include flex-center;
+                        background-color: $quinary-bg;
+                        svg {
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
                 }
             }
         }

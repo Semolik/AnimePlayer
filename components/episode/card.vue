@@ -1,6 +1,6 @@
 <template>
     <div
-        :class="['episode-card', { loading }]"
+        :class="['episode-card', { loading }, { 'more-info': moreInfo }]"
         @click="playerStore.playEpisode(episode)"
     >
         <div
@@ -11,7 +11,7 @@
             ]"
             :style="{ '--progress': episode.progress + '%' }"
         >
-            <div class="shadow"></div>
+            <div class="card-shadow"></div>
             <img :src="imageUrl" v-show="image_loaded" />
             <div class="duration" v-if="episode.duration_label && image_loaded">
                 {{ episode.duration_label }}
@@ -23,6 +23,16 @@
             <div class="hover-placeholder">
                 <Icon name="i-heroicons:play" />
             </div>
+            <div
+                class="close-button"
+                v-if="closeButton"
+                @click.stop="emit('close')"
+            >
+                <Icon name="material-symbols:close-rounded" />
+            </div>
+        </div>
+        <div class="title-name" v-if="titleName">
+            {{ titleName }}
         </div>
         <div class="episode-name">
             <div class="dot" v-if="episode.progress == 0 && logined"></div>
@@ -33,24 +43,44 @@
 <script setup lang="ts">
 import { usePlayerStore } from "~/stores/player";
 import { useAuthStore } from "~/stores/auth";
-import type { Episode, TitleShort, Title } from "~/client";
+import type { Episode, TitleEpisode, TitleShort, Title } from "~/client";
 const playerStore = usePlayerStore();
 const authStore = useAuthStore();
 const { logined } = storeToRefs(authStore);
 const { currentEpisode, isOpen } = storeToRefs(playerStore);
-const { episode, title } = defineProps({
+const emit = defineEmits(["close"]);
+const { episode, title, moreInfo, closeButton } = defineProps({
     episode: {
-        type: Object as PropType<Episode>,
+        type: Object as PropType<Episode | TitleEpisode>,
         required: true,
     },
     title: {
         type: Object as PropType<Title | TitleShort>,
         required: false,
     },
+    moreInfo: {
+        type: Boolean,
+        default: false,
+    },
+    closeButton: {
+        type: Boolean,
+        default: false,
+    },
 }) as {
-    episode: Episode;
+    episode: Episode | TitleEpisode;
     title?: Title | TitleShort;
+    moreInfo: boolean;
+    closeButton: boolean;
 };
+const titleName = computed(() => {
+    if (!moreInfo) {
+        return;
+    }
+    if ("title" in episode && episode.title) {
+        return episode.title.name;
+    }
+    return title?.name;
+});
 
 const imageUrl = episode.image_url || (title && title.image_url);
 const image_loaded = ref(false);
@@ -95,7 +125,33 @@ onMounted(() => {
         border-radius: 10px;
         position: relative;
         overflow: hidden;
+        isolation: isolate;
+        &:hover {
+            .close-button {
+                opacity: 1;
+            }
+        }
+        .close-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 5px;
+            background-color: black;
+            border-radius: 50%;
+            z-index: 3;
+            color: $primary-text;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s, background-color 0.3s;
+            svg {
+                width: 17px;
+                height: 17px;
+            }
 
+            &:hover {
+                background-color: $tertiary-bg;
+            }
+        }
         &.has-progress::after {
             min-width: 10px;
         }
@@ -107,18 +163,17 @@ onMounted(() => {
             width: var(--progress);
             height: 5px;
             background-color: $accent;
+            z-index: 1;
         }
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: 1;
         }
         &.loaded {
-            .placeholder {
-                display: none;
-            }
-            .shadow {
+            .card-shadow {
                 position: absolute;
                 inset: 0;
                 background: linear-gradient(
@@ -142,9 +197,11 @@ onMounted(() => {
         .placeholder {
             position: absolute;
             inset: 0;
+            z-index: -1;
         }
 
         .hover-placeholder {
+            z-index: 2;
             position: absolute;
             inset: 0;
             @include flex-center;
@@ -178,6 +235,22 @@ onMounted(() => {
             right: 10px;
             font-size: 0.8rem;
             color: $primary-text;
+        }
+    }
+    &.more-info {
+        .episode-name {
+            padding-left: 0;
+            color: $secondary-text;
+            font-size: 14px;
+            margin-top: 0;
+            margin-left: 5px;
+        }
+        .title-name {
+            color: $primary-text;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-left: 5px;
+            @include cut-text(1);
         }
     }
 

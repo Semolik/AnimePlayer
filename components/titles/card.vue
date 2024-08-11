@@ -3,7 +3,7 @@
         class="small-card"
         :to="title ? `/titles/${title.id}` : undefined"
     >
-        <div :class="['picture', { loaded: image_loaded }]">
+        <div class="picture">
             <img :src="title.image_url" v-show="image_loaded" v-if="title" />
             <div class="placeholder animate-pulse bg-cool-700"></div>
             <div class="series-info" v-if="title">
@@ -89,12 +89,9 @@ onMounted(() => {
         .placeholder {
             position: absolute;
             inset: 0;
+            z-index: -1;
         }
-        &.loaded {
-            .placeholder {
-                opacity: 0 !important;
-            }
-        }
+
         .series-info {
             position: absolute;
             top: 1rem;
@@ -114,15 +111,16 @@ onMounted(() => {
     .title {
         text-align: center;
         color: $secondary-text;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include cut-text(2);
 
         @include sm {
             font-size: 1.1rem;
         }
+    }
+    .title-name {
+        font-size: 14px;
+        color: $secondary-text;
+        margin-top: 5px;
     }
 }
 </style>

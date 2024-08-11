@@ -1,21 +1,53 @@
 <template>
     <div class="index-page">
-        <div class="parser" v-for="parser in parsers">
+        <section v-if="logined && lastEpisodes.length" v-auto-animate>
+            <div class="section-name">Продолжить просмотр</div>
+            <episode-scroll
+                :episodes="lastEpisodes"
+                show-title-name
+                show-close-button
+                @close="removeEpisode"
+            />
+        </section>
+        <section v-for="parser in parsers">
             <nuxt-link
-                class="parser-name"
+                class="section-name"
                 :to="{ name: 'parser', query: { parser_id: parser.id } }"
             >
                 {{ parser.name }}
                 <Icon name="material-symbols:arrow-forward-ios-rounded" />
             </nuxt-link>
             <titles-last :parserId="parser.id" />
-        </div>
+        </section>
     </div>
 </template>
 
 <script setup>
-import { ParsersService } from "~/client";
+import { ParsersService, EpisodesService } from "~/client";
+import { useAuthStore } from "~/stores/auth";
+const { logined } = storeToRefs(useAuthStore());
 const parsers = await ParsersService.getParsersApiV1ParsersGet();
+const lastEpisodes = ref([]);
+const removeEpisode = async (episode) => {
+    await EpisodesService.unsetEpisodeProgressApiV1EpisodesEpisodeIdProgressDelete(
+        episode.id
+    );
+    const index = lastEpisodes.value.findIndex((e) => e.id === episode.id);
+    if (index !== -1) {
+        lastEpisodes.value.splice(index, 1);
+    }
+};
+watch(
+    () => logined.value,
+    async (value) => {
+        if (!value) {
+            return;
+        }
+        lastEpisodes.value =
+            await EpisodesService.getEpisodesApiV1EpisodesGet();
+    },
+    { immediate: true }
+);
 useSeoMeta({
     title: "Главная",
     description: "Главная страница",
@@ -28,7 +60,7 @@ useSeoMeta({
     flex-direction: column;
     gap: 16px;
 
-    .parser {
+    section {
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -36,7 +68,7 @@ useSeoMeta({
         @include sm(true) {
             gap: 0;
         }
-        .parser-name {
+        .section-name {
             font-size: 24px;
             line-height: 32px;
             font-weight: 600;

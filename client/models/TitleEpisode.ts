@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ParsedLink } from './ParsedLink';
+import type { TitleShort } from './TitleShort';
 export type TitleEpisode = {
     id: string;
     name: string;
@@ -15,5 +16,6 @@ export type TitleEpisode = {
     duration?: (number | null);
     duration_label?: (string | null);
     title_id: string;
+    title: TitleShort;
 };
 
