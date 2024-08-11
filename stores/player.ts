@@ -109,6 +109,15 @@ export const usePlayerStore = defineStore("player", () => {
             }
         });
         player.value.on("timeupdate", updateProgressDebounce);
+        player.value.on("seeked", async () => {
+            if (!currentEpisode.value || !player.value) return;
+            if (
+                currentEpisode.value.seconds ===
+                Math.floor(player.value.currentTime)
+            )
+                return;
+            await updateProgress();
+        });
     };
 
     const playEpisode = (episode: Episode) => {
