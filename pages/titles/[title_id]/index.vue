@@ -1,6 +1,24 @@
 <template>
     <div class="title-page">
-        <UBreadcrumb :links="links" class="breadcrumb" />
+        <div class="head">
+            <UBreadcrumb :links="links" />
+            <USelectMenu
+                v-model="selectedParser"
+                :options="otherParsers"
+                option-attribute="parser_name"
+                class="min-w-[120px]"
+                :ui="{
+                    rounded: 'rounded-lg',
+                    option: {
+                        rounded: 'rounded-lg',
+                    },
+                }"
+            >
+                <template #option="{ option }">
+                    <span>{{ option.parser_name }}</span>
+                </template>
+            </USelectMenu>
+        </div>
         <div :class="['picture', { loaded: image_loaded }]">
             <nuxt-link
                 class="back"
@@ -230,6 +248,34 @@ const addToFavorite = async () => {
     await TitlesService.favoriteTitleApiV1TitlesFavoritesTitleIdPost(title_id);
     title.value.liked = !title.value.liked;
 };
+
+const otherParsers = computed(() => {
+    const parsers = title.value.on_other_parsers.map((link) => ({
+        ...link,
+        parser_name: getParser(link.parser_id).name,
+    }));
+    parsers.unshift({
+        parser_id: title.value.parser_id,
+        parser_name: getParser(title.value.parser_id).name,
+    });
+    return parsers;
+});
+const router = useRouter();
+const selectedParser = computed({
+    get: () =>
+        otherParsers.value.find(
+            (parser) => parser.parser_id === title.value.parser_id
+        ),
+    set: (value) => {
+        if (value.parser_id === title.value.parser_id) {
+            return;
+        }
+        router.push({
+            name: "titles-title_id",
+            params: { title_id: value.id },
+        });
+    },
+});
 </script>
 <style scoped lang="scss">
 .title-page {
@@ -246,13 +292,17 @@ const addToFavorite = async () => {
         padding: 20px;
         padding-top: 0px;
     }
-    .breadcrumb {
+    .head {
         grid-column: 1 / -1;
 
         @include md(true) {
             display: none;
         }
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
     }
+
     .favorite-button .favorite {
         color: $accent;
     }

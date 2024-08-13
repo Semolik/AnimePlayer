@@ -27,5 +27,6 @@ export type Title = {
     shikimori_failed?: boolean;
     duration?: (string | null);
     episodes_message?: (string | null);
+    on_other_parsers?: Array<TitleLink>;
 };
 
