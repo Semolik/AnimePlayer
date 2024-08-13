@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Genre } from '../models/Genre';
 import type { TitlesPage } from '../models/TitlesPage';
+import type { UniqueGenre } from '../models/UniqueGenre';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -51,6 +52,17 @@ export class GenresService {
             errors: {
                 422: `Validation Error`,
             },
+        });
+    }
+    /**
+     * Get Genres
+     * @returns UniqueGenre Successful Response
+     * @throws ApiError
+     */
+    public static getGenresApiV1GenresGenresGet(): CancelablePromise<Array<UniqueGenre>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/genres/genres',
         });
     }
 }

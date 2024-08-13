@@ -1,5 +1,25 @@
 <template>
     <div class="index-page">
+        <div class="messages" v-if="filteredMessages.length">
+            <UAlert
+                :color="message.color || 'primary'"
+                variant="subtle"
+                class="message"
+                :description="message.content"
+                v-for="message in filteredMessages"
+                :close-button="{
+                    icon: 'i-heroicons-x-mark-20-solid',
+                    color: 'gray',
+                    variant: 'link',
+                    padded: false,
+                }"
+                @close="hideMessage(message)"
+            >
+                <template #description="{ description }">
+                    <span v-html="description" />
+                </template>
+            </UAlert>
+        </div>
         <section v-if="logined && lastEpisodes.length" v-auto-animate>
             <div class="section-name">Продолжить просмотр</div>
             <episode-scroll
@@ -23,8 +43,12 @@
 </template>
 
 <script setup>
-import { ParsersService, EpisodesService } from "~/client";
+import { ParsersService, EpisodesService, MessagesService } from "~/client";
 import { useAuthStore } from "~/stores/auth";
+useSeoMeta({
+    title: "Главная",
+    description: "Главная страница",
+});
 const { logined } = storeToRefs(useAuthStore());
 const parsers = await ParsersService.getParsersApiV1ParsersGet();
 const lastEpisodes = ref([]);
@@ -48,10 +72,21 @@ watch(
     },
     { immediate: true }
 );
-useSeoMeta({
-    title: "Главная",
-    description: "Главная страница",
+
+const messages = await MessagesService.getMessagesApiV1MessagesGet();
+const hidedMessages = useLocalStorage("hidedMessages", []);
+const filteredMessages = ref([]);
+onMounted(() => {
+    filteredMessages.value = messages.filter(
+        (message) => !hidedMessages.value.includes(message.id)
+    );
 });
+const hideMessage = (message) => {
+    hidedMessages.value.push(message.id);
+    filteredMessages.value = messages.filter(
+        (message) => !hidedMessages.value.includes(message.id)
+    );
+};
 </script>
 
 <style lang="scss">
@@ -59,7 +94,14 @@ useSeoMeta({
     display: flex;
     flex-direction: column;
     gap: 16px;
-
+    .messages {
+        @include md(true) {
+            padding: 10px;
+        }
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
     section {
         display: flex;
         flex-direction: column;

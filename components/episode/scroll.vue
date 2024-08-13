@@ -72,14 +72,17 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
 <style scoped lang="scss">
 .episodes-list-wrapper {
     display: grid;
-    gap: 10px;
+    grid-template-columns: auto 1fr auto;
+
     position: relative;
     max-width: 100vw;
-    overflow-x: hidden;
     @include md {
         @include lg(true) {
             overflow: hidden;
         }
+    }
+    @include rwd(1300, true) {
+        gap: 10px;
     }
     .episodes-list {
         display: flex;
@@ -115,7 +118,7 @@ const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
         padding: 0 5px;
         border-radius: 10px;
         opacity: 1;
-        transition: opacity 0.3s;
+        transition: opacity 0.3s, background-color 0.3s;
         &.hide {
             cursor: default;
             opacity: 0;

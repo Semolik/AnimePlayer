@@ -16,8 +16,9 @@
 import { TitlesService } from "~/client";
 const route = useRoute();
 const { title_id } = route.params;
-const title = await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id);
-const episodes = ref(title.episodes);
+const titleEpisodesInfo =
+    await TitlesService.getEpisodesApiV1TitlesTitleIdEpisodesGet(title_id);
+const episodes = ref(titleEpisodesInfo.episodes);
 const updateEpisodeBus = useEventBus("update-episode");
 updateEpisodeBus.on((episode) => {
     const index = episodes.value.findIndex((e) => e.id === episode.id);
@@ -25,17 +26,20 @@ updateEpisodeBus.on((episode) => {
         episodes.value[index] = episode;
     }
 });
-const parser = getParser(title.parser_id);
+const parser = getParser(titleEpisodesInfo.title.parser_id);
 const { $viewport } = useNuxtApp();
 const links = computed(() => {
     var arr = [
-        { label: title.name, to: `/titles/${title.id}` },
+        {
+            label: titleEpisodesInfo.title.name,
+            to: `/titles/${titleEpisodesInfo.title.id}`,
+        },
         { label: "Серии" },
     ];
     if ($viewport.isGreaterOrEquals("tablet")) {
         arr.unshift({
             label: parser.name,
-            to: `/parser?parser_id=${title.parser_id}`,
+            to: `/parser?parser_id=${titleEpisodesInfo.title.parser_id}`,
         });
         arr.unshift({ label: "Главная", to: "/" });
     }

@@ -74,15 +74,14 @@ const modelValue = computed({
         .formkit-inner {
             .formkit-input {
                 border-radius: 5px;
-
                 border: 1px solid #363636;
-                height: 40px;
+                min-height: 45px;
                 padding: 6px 12px;
                 transition: border-color 0.15s ease-in-out,
                     box-shadow 0.15s ease-in-out;
                 width: 100%;
                 color: $primary-text;
-                font-size: 14px;
+                font-size: 16px;
                 &.wrong {
                     border-color: $accent-error;
                     box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%),

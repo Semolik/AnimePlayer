@@ -2,9 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Genre = {
+export type GenreBase = {
     id: string;
     parser_id: string;
-    name: string;
 };
 

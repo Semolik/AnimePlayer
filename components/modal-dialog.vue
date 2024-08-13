@@ -148,6 +148,7 @@ watch(
     z-index: 99;
     opacity: 0;
     transition: opacity v-bind(transitionString) ease-in-out;
+    backdrop-filter: blur(5px);
     &.open {
         animation: open v-bind(transitionString) ease-in-out;
         opacity: 1;
@@ -183,6 +184,7 @@ watch(
         flex-direction: column;
         padding: v-bind(paddingString);
         gap: v-bind(gapString);
+        border: 1px solid $quaternary-bg;
         .headline {
             @include flex-center;
 

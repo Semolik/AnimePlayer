@@ -92,13 +92,13 @@
                     class="item shikimori"
                     :href="title.shikimori.data.url"
                     target="_blank"
-                    v-if="title.shikimori && title.shikimori.data.score"
+                    v-if="title.shikimori"
                 >
                     <Icon name="simple-icons:shikimori" />
                     <div class="item-col">
                         <span class="label">Shikimori</span>
                         <span class="value">
-                            {{ title.shikimori.data.score }}
+                            {{ title.shikimori.data.score || "0.0" }}
                         </span>
                     </div>
                 </a>
@@ -124,12 +124,27 @@
                 :description="title.episodes_message"
             />
         </div>
+        <div class="alert" v-if="title.shikimori_failed">
+            <UAlert
+                color="red"
+                variant="subtle"
+                description="Не удалось загрузить данные с Shikimori"
+            />
+        </div>
         <div class="episodes" v-if="title.episodes.length">
             <div class="headline">
-                <span> Серии </span>
-                <nuxt-link :to="`/titles/${title.id}/episodes`" class="more">
-                    Все
-                </nuxt-link>
+                <div class="title">
+                    <span class="title"> Серии </span>
+                    <nuxt-link
+                        :to="`/titles/${title.id}/episodes`"
+                        class="more"
+                    >
+                        Все
+                    </nuxt-link>
+                </div>
+                <span class="subtitle" v-if="!logined">
+                    Войдите в аккаунт, чтобы сохранять просмотренные серии
+                </span>
             </div>
 
             <episode-scroll :episodes="episodes" :title="title">
@@ -146,6 +161,7 @@
                 </nuxt-link>
             </episode-scroll>
         </div>
+
         <login-modal v-model:active="loginModalActive" />
     </div>
 </template>
@@ -352,10 +368,10 @@ const addToFavorite = async () => {
         .names {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             @include md {
                 margin-top: 10px;
-
+                margin-bottom: 10px;
                 @include lg(true) {
                     margin-bottom: 20px;
                 }
@@ -369,7 +385,6 @@ const addToFavorite = async () => {
                 padding: 10px;
                 padding-top: 0px;
                 text-align: center;
-                gap: 10px;
                 .name {
                     font-size: 1.5rem;
                     line-height: 30px;
@@ -386,6 +401,7 @@ const addToFavorite = async () => {
 
             .en_title {
                 color: $secondary-text;
+                font-weight: 300;
             }
         }
 
@@ -469,55 +485,61 @@ const addToFavorite = async () => {
             @include md(true) {
                 padding: 0px 10px;
             }
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
 
-            span {
+            display: flex;
+            flex-direction: column;
+            .title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
                 font-size: 1.5rem;
                 font-weight: 600;
                 color: $primary-text;
             }
+            .subtitle {
+                font-size: 0.8rem;
+                color: $secondary-text;
+                font-weight: lighter;
+            }
+        }
+        .more {
+            color: $accent;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 5px 10px;
 
-            .more {
-                color: $accent;
-                font-size: 1rem;
-                font-weight: 600;
-                text-decoration: none;
-                padding: 5px 10px;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        .more-episode {
+            min-width: 200px;
+            scroll-snap-align: end;
 
-                &:hover {
-                    text-decoration: underline;
+            @include md {
+                min-width: 280px;
+
+                &:hover .dots-container {
+                    background: $quaternary-bg;
                 }
             }
-            .more-episode {
-                min-width: 200px;
 
-                @include md {
-                    min-width: 280px;
-
-                    &:hover .dots-container {
-                        background: $quaternary-bg;
-                    }
-                }
-
-                .dots-container {
-                    background-color: $tertiary-bg;
-                    border-radius: 10px;
+            .dots-container {
+                background-color: $tertiary-bg;
+                border-radius: 10px;
+                @include flex-center;
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                .dots {
+                    border-radius: 50%;
+                    width: 70px;
+                    height: 70px;
                     @include flex-center;
-                    width: 100%;
-                    aspect-ratio: 16 / 9;
-                    .dots {
-                        border-radius: 50%;
-                        width: 70px;
-                        height: 70px;
-                        @include flex-center;
-                        background-color: $quinary-bg;
-                        svg {
-                            width: 25px;
-                            height: 25px;
-                        }
+                    background-color: $quinary-bg;
+                    svg {
+                        width: 25px;
+                        height: 25px;
                     }
                 }
             }

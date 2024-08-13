@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { FavoriteTitle } from '../models/FavoriteTitle';
 import type { Title } from '../models/Title';
+import type { TitleEpisodes } from '../models/TitleEpisodes';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -80,6 +81,26 @@ export class TitlesService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/titles/{title_id}',
+            path: {
+                'title_id': titleId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Episodes
+     * @param titleId
+     * @returns TitleEpisodes Successful Response
+     * @throws ApiError
+     */
+    public static getEpisodesApiV1TitlesTitleIdEpisodesGet(
+        titleId: string,
+    ): CancelablePromise<TitleEpisodes> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/titles/{title_id}/episodes',
             path: {
                 'title_id': titleId,
             },

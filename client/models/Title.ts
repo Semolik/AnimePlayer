@@ -24,6 +24,7 @@ export type Title = {
     related?: Array<TitleLink>;
     recommended?: Array<TitleShort>;
     shikimori?: (ShikimoriTitle | null);
+    shikimori_failed?: boolean;
     duration?: (string | null);
     episodes_message?: (string | null);
 };
