@@ -57,7 +57,7 @@ export const usePlayerStore = defineStore("player", () => {
     const currentEpisode: Ref<Episode | null> = ref(null);
     const updateEpisodeBus = useEventBus("update-episode");
 
-    const setPlayer = (new_player: Plyr) => {
+    const setPlayer = (new_player: Plyr, playOnLoad = false) => {
         if (player.value) {
             player.value.destroy();
         }
@@ -118,6 +118,11 @@ export const usePlayerStore = defineStore("player", () => {
                 return;
             await updateProgress();
         });
+        if (playOnLoad) {
+            player.value.on("canplay", () => {
+                player.value?.play();
+            });
+        }
     };
 
     const playEpisode = (episode: Episode) => {
@@ -126,7 +131,7 @@ export const usePlayerStore = defineStore("player", () => {
         ) as HTMLVideoElement;
         currentEpisode.value = episode;
         var defaultOptions: Plyr.Options = {
-            fullscreen: { iosNative: true },
+            fullscreen: { iosNative: true, fallback: true },
             i18n,
         };
         if (episode.is_m3u8) {
@@ -192,8 +197,7 @@ export const usePlayerStore = defineStore("player", () => {
                     size: link.quality as number,
                 })),
             };
-            setPlayer(new_player);
-            new_player.play();
+            setPlayer(new_player, true);
         }
     };
     return { player, isOpen, currentEpisode, playEpisode };

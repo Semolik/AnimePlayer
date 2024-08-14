@@ -2,22 +2,42 @@
     <div class="title-page">
         <div class="head">
             <UBreadcrumb :links="links" />
-            <USelectMenu
-                v-model="selectedParser"
-                :options="otherParsers"
-                option-attribute="parser_name"
-                class="min-w-[120px]"
-                :ui="{
-                    rounded: 'rounded-lg',
-                    option: {
+            <template v-if="otherParsers.length">
+                <USelectMenu
+                    :model-value="selectedParser"
+                    @update:model-value="goToTitle"
+                    :options="otherParsers"
+                    option-attribute="parser_name"
+                    class="min-w-[120px]"
+                    :ui="{
                         rounded: 'rounded-lg',
-                    },
-                }"
-            >
-                <template #option="{ option }">
-                    <span>{{ option.parser_name }}</span>
-                </template>
-            </USelectMenu>
+                        option: {
+                            rounded: 'rounded-lg',
+                        },
+                    }"
+                    v-if="otherParsers.length > 1"
+                >
+                    <template #option="{ option }">
+                        <span>{{ option.parser_name }}</span>
+                    </template>
+                </USelectMenu>
+                <ClientOnly v-else>
+                    <Teleport
+                        to="#go-to-other-parser"
+                        :disabled="teleportButtonDisabled"
+                    >
+                        <UButton
+                            variant="outline"
+                            :size="teleportButtonDisabled ? 'sm' : 'xl'"
+                            :ui="{ rounded: 'rounded-lg' }"
+                            @click="goToTitle(otherParsers[0])"
+                            :block="!teleportButtonDisabled"
+                        >
+                            Открыть на {{ otherParsers[0].parser_name }}
+                        </UButton>
+                    </Teleport>
+                </ClientOnly>
+            </template>
         </div>
         <div :class="['picture', { loaded: image_loaded }]">
             <nuxt-link
@@ -43,6 +63,7 @@
                 </div>
             </div>
             <div class="flex gap-[10px] lg:w-min lg:flex-row flex-col mb-auto">
+                <div id="go-to-other-parser" class="empty:hidden"></div>
                 <UButton
                     block
                     size="xl"
@@ -184,6 +205,7 @@
     </div>
 </template>
 <script setup>
+import { Teleport } from "vue";
 import { TitlesService } from "~/client";
 import { useAuthStore } from "~/stores/auth";
 import { usePlayerStore } from "~/stores/player";
@@ -254,28 +276,32 @@ const otherParsers = computed(() => {
         ...link,
         parser_name: getParser(link.parser_id).name,
     }));
-    parsers.unshift({
-        parser_id: title.value.parser_id,
-        parser_name: getParser(title.value.parser_id).name,
-    });
+    if (parsers.length > 1) {
+        parsers.unshift({
+            parser_id: title.value.parser_id,
+            parser_name: getParser(title.value.parser_id).name,
+        });
+    }
+
     return parsers;
 });
 const router = useRouter();
-const selectedParser = computed({
-    get: () =>
-        otherParsers.value.find(
-            (parser) => parser.parser_id === title.value.parser_id
-        ),
-    set: (value) => {
-        if (value.parser_id === title.value.parser_id) {
-            return;
-        }
-        router.push({
-            name: "titles-title_id",
-            params: { title_id: value.id },
-        });
-    },
-});
+const selectedParser = computed(() =>
+    otherParsers.value.find(
+        (parser) => parser.parser_id === title.value.parser_id
+    )
+);
+const goToTitle = (selected_title) => {
+    if (selected_title.parser_id === title.value.parser_id) {
+        return;
+    }
+    router.push({
+        name: "titles-title_id",
+        params: { title_id: selected_title.id },
+    });
+};
+const viewport = useViewport();
+const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
 </script>
 <style scoped lang="scss">
 .title-page {

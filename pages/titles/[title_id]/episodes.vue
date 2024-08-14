@@ -7,7 +7,7 @@
                 v-for="episode in episodes"
                 :key="episode.id"
                 :episode="episode"
-                :title="title"
+                :title="titleEpisodesInfo.title"
             />
         </div>
     </div>
