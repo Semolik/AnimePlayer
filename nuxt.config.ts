@@ -58,4 +58,10 @@ export default defineNuxtConfig({
     formkit: {
         autoImport: true,
     },
+    runtimeConfig: {
+        apiLocalUrl: "",
+        public: {
+            apiUrl: "",
+        },
+    },
 });
