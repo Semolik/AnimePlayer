@@ -251,6 +251,108 @@ export class AuthService {
         });
     }
     /**
+     * Oauth:Github.Jwt.Authorize
+     * @param scopes
+     * @returns OAuth2AuthorizeResponse Successful Response
+     * @throws ApiError
+     */
+    public static oauthGithubJwtAuthorizeApiV1AuthGithubAuthorizeGet(
+        scopes?: Array<string>,
+    ): CancelablePromise<OAuth2AuthorizeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/auth/github/authorize',
+            query: {
+                'scopes': scopes,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Oauth:Github.Jwt.Callback
+     * The response varies based on the authentication backend used.
+     * @param code
+     * @param codeVerifier
+     * @param state
+     * @param error
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static oauthGithubJwtCallbackApiV1AuthGithubCallbackGet(
+        code?: (string | null),
+        codeVerifier?: (string | null),
+        state?: (string | null),
+        error?: (string | null),
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/auth/github/callback',
+            query: {
+                'code': code,
+                'code_verifier': codeVerifier,
+                'state': state,
+                'error': error,
+            },
+            errors: {
+                400: `Bad Request`,
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Oauth-Associate:Github.Authorize
+     * @param scopes
+     * @returns OAuth2AuthorizeResponse Successful Response
+     * @throws ApiError
+     */
+    public static oauthAssociateGithubAuthorizeApiV1AuthAssociateGithubAuthorizeGet(
+        scopes?: Array<string>,
+    ): CancelablePromise<OAuth2AuthorizeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/auth/associate/github/authorize',
+            query: {
+                'scopes': scopes,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Oauth-Associate:Github.Callback
+     * The response varies based on the authentication backend used.
+     * @param code
+     * @param codeVerifier
+     * @param state
+     * @param error
+     * @returns UserRead Successful Response
+     * @throws ApiError
+     */
+    public static oauthAssociateGithubCallbackApiV1AuthAssociateGithubCallbackGet(
+        code?: (string | null),
+        codeVerifier?: (string | null),
+        state?: (string | null),
+        error?: (string | null),
+    ): CancelablePromise<UserRead> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/auth/associate/github/callback',
+            query: {
+                'code': code,
+                'code_verifier': codeVerifier,
+                'state': state,
+                'error': error,
+            },
+            errors: {
+                400: `Bad Request`,
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
      * Change Password
      * Изменение пароля пользователя
      * @param requestBody

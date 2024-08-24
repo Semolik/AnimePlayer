@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserReadAfterRegister = {
-    name: string;
+    name?: (string | null);
     id: string;
     email: string;
     is_active?: boolean;

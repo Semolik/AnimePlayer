@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserCreate = {
-    name: string;
+    name?: (string | null);
     email: string;
     password: string;
     is_active?: (boolean | null);

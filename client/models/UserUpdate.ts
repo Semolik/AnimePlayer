@@ -4,6 +4,6 @@
 /* eslint-disable */
 export type UserUpdate = {
     email: string;
-    name: string;
+    name?: (string | null);
 };
 

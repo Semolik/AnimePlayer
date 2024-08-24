@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserRead = {
-    name: string;
+    name?: (string | null);
     id: string;
     email: string;
     is_active?: boolean;

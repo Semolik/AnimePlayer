@@ -4,8 +4,8 @@
             <Icon name="logos:discord-icon" />
             <span>Discord</span>
         </div>
-        <div class="provider-button" @click="">
-            <Icon name="logos:github-icon" />
+        <div class="provider-button" @click="onGithubClick">
+            <Icon name="carbon:logo-github" />
             <span>Github</span>
         </div>
         <div class="provider-button" @click="">
@@ -14,7 +14,16 @@
         </div>
     </div>
 </template>
-<script setup></script>
+<script setup>
+import { AuthService } from "@/client";
+const url = ref("");
+const onGithubClick = async () => {
+    const { authorization_url } =
+        await AuthService.oauthGithubJwtAuthorizeApiV1AuthGithubAuthorizeGet();
+
+    await navigateTo(authorization_url, { external: true, target: "_blank" });
+};
+</script>
 <style lang="scss">
 .providers-buttons {
     display: flex;
@@ -34,6 +43,11 @@
         }
         span {
             margin-left: 10px;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
         }
     }
 }
