@@ -60,6 +60,7 @@ export default defineNuxtConfig({
         autoImport: true,
     },
     runtimeConfig: {
+        authCookieName: "fastapiusersauth",
         apiLocalUrl: "",
         public: {
             apiUrl: "",
