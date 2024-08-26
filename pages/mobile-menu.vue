@@ -12,7 +12,7 @@
                 </div>
             </template>
             <div class="info">
-                {{ userData.name || userData }}
+                {{ userData.name }}
             </div>
             <Icon name="material-symbols:chevron-right" class="chevron" />
         </nuxt-link>
