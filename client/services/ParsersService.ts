@@ -90,6 +90,31 @@ export class ParsersService {
         });
     }
     /**
+     * Resolve Old Id
+     * @param parserId
+     * @param genreName
+     * @returns string Successful Response
+     * @throws ApiError
+     */
+    public static resolveOldIdApiV1ParsersParserIdResolveOldGenreGet(
+        parserId: 'animevost' | 'anidub',
+        genreName: string,
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/parsers/{parser_id}/resolve-old-genre',
+            path: {
+                'parser_id': parserId,
+            },
+            query: {
+                'genre_name': genreName,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
      * Get Main Titles
      * @param parserId
      * @returns MainPage Successful Response
