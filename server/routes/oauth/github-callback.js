@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export default defineEventHandler(async (event) => {
     const runtimeConfig = useRuntimeConfig();
     const query = getQuery(event);
@@ -14,7 +13,8 @@ export default defineEventHandler(async (event) => {
         setCookie(
             event,
             runtimeConfig.authCookieName,
-            cookies[0].split(";")[0].split("=")[1]
+            cookies[0].split(";")[0].split("=")[1],
+            { domain: runtimeConfig.public.apiUrl }
         );
     }
     await sendRedirect(event, "/");
