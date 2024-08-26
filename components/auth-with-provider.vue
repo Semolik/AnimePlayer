@@ -4,7 +4,7 @@
             <Icon name="logos:discord-icon" />
             <span>Discord</span>
         </div>
-        <a href="/oauth/github" class="provider-button">
+        <a :href="authorization_url" class="provider-button">
             <Icon name="carbon:logo-github" />
             <span>Github</span>
         </a>
@@ -16,7 +16,8 @@
 </template>
 <script setup>
 import { AuthService } from "@/client";
-
+const { authorization_url } =
+    await AuthService.oauthGithubJwtAuthorizeApiV1AuthGithubAuthorizeGet();
 import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 </script>
