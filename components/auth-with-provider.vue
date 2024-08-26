@@ -4,7 +4,7 @@
             <Icon name="logos:discord-icon" />
             <span>Discord</span>
         </div>
-        <a href="/oauth/github" class="provider-button" target="_blank">
+        <a href="/oauth/github" class="provider-button">
             <Icon name="carbon:logo-github" />
             <span>Github</span>
         </a>
