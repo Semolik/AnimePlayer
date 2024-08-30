@@ -5,28 +5,30 @@
         placeholder="Введите название тайтла или жанра"
         @update:model-value="onSelect"
         :autoselect="false"
+        :autoclear="false"
         :loading="loading"
+        :model-value="[]"
+        multiple
         :ui="{
             wrapper:
                 'flex flex-col flex-1 min-h-0 divide-y divide-gray-100 dark:divide-gray-800 sm:min-h-[50vh] sm:max-h-[50vh]',
 
-            height: '',
             group: {
                 command: {
                     base: 'flex justify-between select-none items-center rounded-md px-2.5 py-2.5 gap-2 relative',
                     inactive: 'text-gray-500',
                 },
             },
-            default: {
-                emptyState: {
-                    icon: 'i-heroicons-magnifying-glass-20-solid',
-                    label: 'Мы не смогли найти ничего по этому запросу. Пожалуйста, попробуйте еще раз.',
-                    queryLabel:
-                        'Попробуйте изменить запрос или выбрать один из предложенных вариантов.',
-                },
-            },
         }"
     >
+        <template #empty-state>
+            <div
+                class="flex flex-col items-center justify-center py-6 gap-3 sm:h-[40vh]"
+            >
+                <span class="text-md">Ничего не найдено</span>
+            </div>
+        </template>
+
         <template #titles-command="{ command }">
             <span class="title-name">{{ command.label }}</span>
             <Icon name="material-symbols:arrow-forward-ios-rounded" />
@@ -59,9 +61,11 @@ const onSelectParser = (parserOption) => {
     selectParserActive.value = false;
     router.push(parserOption.link);
 };
-const onSelect = (option) => {
+const onSelect = (options) => {
+    let option = options[0];
     if (option.group === "titles") {
         if (option.title.on_other_parsers.length === 1) {
+            emit("close");
             router.push(`/titles/${option.title.on_other_parsers[0].id}`);
             return;
         }
