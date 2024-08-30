@@ -6,6 +6,7 @@
                 { hide: !scrollLeftActive },
             ]"
             @click="x -= scrollStep"
+            v-if="!hideControls"
         >
             <Icon name="i-heroicons-chevron-left" />
         </div>
@@ -24,6 +25,7 @@
             <slot />
         </div>
         <div
+            v-if="!hideControls"
             :class="[
                 'scroll-button scroll-button-right',
                 { hide: !scrollRightActive },
@@ -35,24 +37,29 @@
     </div>
 </template>
 <script setup>
-const { episodes, title, showTitleName, showCloseButton } = defineProps({
-    episodes: {
-        type: Array,
-        required: true,
-    },
-    title: {
-        type: Object,
-        required: false,
-    },
-    showTitleName: {
-        type: Boolean,
-        default: false,
-    },
-    showCloseButton: {
-        type: Boolean,
-        default: false,
-    },
-});
+const { episodes, title, showTitleName, showCloseButton, hideControls } =
+    defineProps({
+        episodes: {
+            type: Array,
+            required: true,
+        },
+        title: {
+            type: Object,
+            required: false,
+        },
+        showTitleName: {
+            type: Boolean,
+            default: false,
+        },
+        showCloseButton: {
+            type: Boolean,
+            default: false,
+        },
+        hideControls: {
+            type: Boolean,
+            default: false,
+        },
+    });
 const emit = defineEmits(["close"]);
 const episodesList = ref(null);
 const { x, y } = useScroll(episodesList, { behavior: "smooth" });
@@ -68,6 +75,18 @@ const scrollRightActive = computed(
             episodesList.value.scrollWidth - episodesList.value.clientWidth
 );
 const scrollStep = computed(() => episodesList.value.clientWidth * 0.7);
+const scrollRight = () => {
+    x.value += scrollStep.value;
+};
+const scrollLeft = () => {
+    x.value -= scrollStep.value;
+};
+defineExpose({
+    scrollRight,
+    scrollLeft,
+    scrollRightActive,
+    scrollLeftActive,
+});
 </script>
 <style scoped lang="scss">
 .episodes-list-wrapper {

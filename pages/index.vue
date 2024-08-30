@@ -21,12 +21,36 @@
             </UAlert>
         </div>
         <section v-if="logined && lastEpisodes.length" v-auto-animate>
-            <div class="section-name">Продолжить просмотр</div>
+            <div class="section-head">
+                <div class="section-name">Продолжить просмотр</div>
+                <div class="scroll-buttons" v-if="showScrollButtons">
+                    <div
+                        :class="[
+                            'scroll-button scroll-button-left',
+                            { active: episodesList?.scrollLeftActive },
+                        ]"
+                        @click="episodesList.scrollLeft"
+                    >
+                        <Icon name="material-symbols:arrow-back-ios" />
+                    </div>
+                    <div
+                        :class="[
+                            'scroll-button scroll-button-right',
+                            { active: episodesList?.scrollRightActive },
+                        ]"
+                        @click="episodesList.scrollRight"
+                    >
+                        <Icon name="material-symbols:arrow-forward-ios" />
+                    </div>
+                </div>
+            </div>
             <episode-scroll
                 :episodes="lastEpisodes"
                 show-title-name
                 show-close-button
                 @close="removeEpisode"
+                hide-controls
+                ref="episodesList"
             />
         </section>
         <section v-for="parser in parsers">
@@ -73,7 +97,7 @@ watch(
     },
     { immediate: true }
 );
-
+const episodesList = ref(null);
 const messages = await MessagesService.getMessagesApiV1MessagesGet();
 const hidedMessages = useLocalStorage("hidedMessages", []);
 const filteredMessages = ref([]);
@@ -88,6 +112,14 @@ const hideMessage = (message) => {
         (message) => !hidedMessages.value.includes(message.id)
     );
 };
+const { $viewport } = useNuxtApp();
+const showScrollButtons = computed(
+    () =>
+        episodesList.value &&
+        (episodesList.value.scrollLeftActive ||
+            episodesList.value.scrollRightActive) &&
+        $viewport.isGreaterThan("tablet")
+);
 </script>
 
 <style lang="scss">
@@ -110,6 +142,43 @@ const hideMessage = (message) => {
 
         @include sm(true) {
             gap: 0;
+        }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            .scroll-buttons {
+                display: flex;
+                gap: 8px;
+                .scroll-button {
+                    @include flex-center;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background-color: $tertiary-bg;
+
+                    transition: background-color 0.3s ease;
+                    &.active {
+                        background-color: $senary-bg;
+                        cursor: pointer;
+                        &:hover {
+                            background-color: $septenary-bg;
+                        }
+                    }
+                    &.scroll-button-left svg {
+                        margin-left: 5px;
+                    }
+
+                    svg {
+                        width: 15px;
+                        height: 15px;
+
+                        fill: $primary-text;
+                    }
+                }
+            }
         }
         .section-name {
             font-size: 24px;
