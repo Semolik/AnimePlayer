@@ -1,4 +1,4 @@
-import { OpenAPI, ParsersService } from "@/client";
+import { OpenAPI, ParsersService, GenresService } from "@/client";
 export default defineNuxtPlugin(async (nuxtApp) => {
     const runtimeConfig = useRuntimeConfig();
     OpenAPI.BASE = import.meta.server
@@ -12,5 +12,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         };
     }
     const parsers = await ParsersService.getParsersApiV1ParsersGet();
+    const genres = await GenresService.getGenresApiV1GenresGenresGet();
+    nuxtApp.provide("genres", genres);
     nuxtApp.provide("parsers", parsers);
 });

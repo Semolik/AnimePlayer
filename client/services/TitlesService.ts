@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { FavoriteTitle } from '../models/FavoriteTitle';
+import type { SearchTitle } from '../models/SearchTitle';
 import type { Title } from '../models/Title';
 import type { TitleEpisodes } from '../models/TitleEpisodes';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -67,6 +68,37 @@ export class TitlesService {
             errors: {
                 422: `Validation Error`,
             },
+        });
+    }
+    /**
+     * Search Titles
+     * @param query
+     * @returns SearchTitle Successful Response
+     * @throws ApiError
+     */
+    public static searchTitlesApiV1TitlesSearchGet(
+        query: string,
+    ): CancelablePromise<Array<SearchTitle>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/titles/search',
+            query: {
+                'query': query,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Titles Stats
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static getTitlesStatsApiV1TitlesStatsGet(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/titles/stats',
         });
     }
     /**

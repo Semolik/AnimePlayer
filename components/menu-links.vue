@@ -6,11 +6,8 @@
             :to="link.to"
             class="link"
         >
-            <div class="link-content">
-                <Icon :name="link.icon" />
-                <span>{{ link.title }}</span>
-            </div>
-            <Icon name="material-symbols:chevron-right" />
+            <Icon :name="link.icon" />
+            <span>{{ link.title }}</span>
         </nuxt-link>
     </div>
 </template>
@@ -36,24 +33,15 @@ defineProps({
     gap: 10px;
     .link {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 5px;
         align-items: center;
         padding: 20px;
-        padding-right: 5px;
+        font-size: 17px;
         border-radius: 10px;
         background-color: $tertiary-bg;
         color: $secondary-text;
-        .link-content {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-
-            svg {
-                width: 30px;
-
-                height: 30px;
-            }
-        }
 
         svg {
             width: 30px;

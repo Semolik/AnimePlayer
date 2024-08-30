@@ -154,4 +154,24 @@ export class ParsersService {
             },
         });
     }
+    /**
+     * Prepare All Titles
+     * @param parserId
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static prepareAllTitlesApiV1ParsersParserIdPrepareAllTitlesPost(
+        parserId: 'animevost' | 'anidub',
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/parsers/{parser_id}/prepare-all-titles',
+            path: {
+                'parser_id': parserId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
 }

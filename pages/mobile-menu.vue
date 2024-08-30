@@ -12,7 +12,7 @@
                 </div>
             </template>
             <div class="info">
-                {{ userData.name }}
+                {{ userData.name || userData.email }}
             </div>
             <Icon name="material-symbols:chevron-right" class="chevron" />
         </nuxt-link>
@@ -36,6 +36,11 @@ const links = [
     { title: "Избранное", icon: "ph:heart-fill", to: "/favorites" },
     { title: "История", icon: "material-symbols:history", to: "/history" },
 ];
+const logout = async () => {
+    router.push("/login").then(async () => {
+        await authStore.logout();
+    });
+};
 </script>
 <style lang="scss" scoped>
 .mobile-menu {
@@ -43,6 +48,7 @@ const links = [
     flex-direction: column;
     gap: 10px;
     padding: 10px;
+    padding-bottom: 0px;
     height: 100%;
     .profile {
         @include flex-center;
@@ -76,9 +82,9 @@ const links = [
         }
 
         .chevron {
-            width: 30px;
+            width: 25px;
             color: $secondary-text;
-            height: 30px;
+            height: 25px;
         }
     }
 
@@ -86,7 +92,7 @@ const links = [
         background-color: $tertiary-bg;
         color: $secondary-text;
         padding: 10px;
-        border-radius: 15px;
+        border-radius: 10px;
         gap: 5px;
         @include flex-center;
         span {

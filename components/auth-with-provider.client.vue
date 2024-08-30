@@ -18,8 +18,6 @@
 import { AuthService } from "@/client";
 const { authorization_url } =
     await AuthService.oauthGithubJwtAuthorizeApiV1AuthGithubAuthorizeGet();
-import { useAuthStore } from "@/stores/auth";
-const authStore = useAuthStore();
 </script>
 <style lang="scss">
 .providers-buttons {

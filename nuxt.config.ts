@@ -25,6 +25,17 @@ export default defineNuxtConfig({
             },
         },
     },
+    routeRules: {
+        "/profile/**": { robots: false },
+        "/": { sitemap: { changefreq: "daily" } },
+    },
+    sitemap: {
+        sitemaps: {
+            titles: {
+                sources: ["/api/__sitemap__/urls"],
+            },
+        },
+    },
     modules: [
         "@pinia/nuxt",
         "nuxt-headlessui",
@@ -36,6 +47,8 @@ export default defineNuxtConfig({
         "nuxt-og-image",
         "@formkit/auto-animate/nuxt",
         "@vite-pwa/nuxt",
+        "@nuxtjs/robots",
+        "@nuxtjs/sitemap",
     ],
     pwa: {},
     css: ["@/assets/styles/global.scss"],

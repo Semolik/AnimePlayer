@@ -1,10 +1,18 @@
 <template>
-    <FormInput v-model="email" label="Почта" placeholder="Введите e-mail" />
+    <FormInput
+        v-model="email"
+        label="Почта"
+        placeholder="Введите e-mail"
+        id="email"
+        name="email"
+    />
     <FormInput
         v-model="password"
         label="Пароль"
         placeholder="Введите пароль"
         type="password"
+        name="password"
+        id="password"
     />
     <Button @click="handleLogin" :active="formIsValid" highlight-active>
         Войти
@@ -14,10 +22,7 @@
 import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 const { $toast } = useNuxtApp();
-definePageMeta({
-    title: "Вход",
-    description: "Вход в систему",
-});
+
 const submited = ref(false);
 const email = ref("");
 const password = ref("");

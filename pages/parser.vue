@@ -85,8 +85,7 @@ const loaded = ref(false);
 const hideLoadMore = ref(false);
 const genresMenuOpen = ref(false);
 const genresLoaded = ref(false);
-const fetchMore = async (skipIfNotLoaded = true) => {
-    if (skipIfNotLoaded && !loaded.value) return;
+const fetchMore = async () => {
     loaded.value = false;
     page.value++;
     var isMain = false;
@@ -121,6 +120,29 @@ const fetchMore = async (skipIfNotLoaded = true) => {
     loaded.value = true;
 };
 const router = useRouter();
+watch(router.currentRoute, async (route, oldRoute) => {
+    const { parser_id, genre_id } = route.query;
+    let old_parser_id = oldRoute.query.parser_id || parser.value?.id;
+    if (parser_id) {
+        parser.value = getParser(parser_id);
+        selectedGenre.value = { id: null, name: "Все" };
+    }
+    if (genre_id) {
+        selectedGenre.value =
+            await GenresService.getGenreApiV1GenresGenresGenreIdGet(genre_id);
+        parser.value = getParser(selectedGenre.value.parser_id);
+    }
+    if (old_parser_id != parser.value.id) {
+        parserGenres.value =
+            await ParsersService.getGenresApiV1ParsersParserIdGenresGet(
+                parser.value.id
+            );
+    }
+    page.value = 0;
+    hideLoadMore.value = false;
+    titlesData.value = markRaw(placeholderTitles);
+    await fetchMore();
+});
 onMounted(async () => {
     if (!parser.value) {
         const genre = await GenresService.getGenreApiV1GenresGenresGenreIdGet(
@@ -129,7 +151,7 @@ onMounted(async () => {
         selectedGenre.value = genre;
         parser.value = getParser(genre.parser_id);
     }
-    await fetchMore(false);
+    await fetchMore();
     genresLoaded.value = false;
     const genres = await ParsersService.getGenresApiV1ParsersParserIdGenresGet(
         parser.value.id
@@ -142,10 +164,6 @@ onMounted(async () => {
         } else {
             router.replace({ query: { parser_id: parser.value.id } });
         }
-        page.value = 0;
-        hideLoadMore.value = false;
-        titlesData.value = markRaw(placeholderTitles);
-        await fetchMore();
     });
 });
 </script>

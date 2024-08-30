@@ -9,11 +9,11 @@ import type { TitleLink } from './TitleLink';
 import type { TitleShort } from './TitleShort';
 export type Title = {
     id: string;
-    name: string;
     parser_id: string;
+    name: string;
+    en_name?: (string | null);
     image_url: string;
     additional_info?: string;
-    en_name?: (string | null);
     description?: (string | null);
     series_info?: (string | null);
     year?: (string | null);

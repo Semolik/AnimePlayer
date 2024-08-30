@@ -43,14 +43,15 @@
 </template>
 
 <script setup>
-import { ParsersService, EpisodesService, MessagesService } from "~/client";
+import { EpisodesService, MessagesService } from "~/client";
 import { useAuthStore } from "~/stores/auth";
+import { useAppDataStore } from "~/stores/data";
 useSeoMeta({
     title: "Главная",
     description: "Главная страница",
 });
 const { logined } = storeToRefs(useAuthStore());
-const parsers = await ParsersService.getParsersApiV1ParsersGet();
+const { parsers } = storeToRefs(useAppDataStore());
 const lastEpisodes = ref([]);
 const removeEpisode = async (episode) => {
     await EpisodesService.unsetEpisodeProgressApiV1EpisodesEpisodeIdProgressDelete(

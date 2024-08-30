@@ -2,10 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TitleLink = {
+export type TitleShortLink = {
     id: string;
     parser_id: string;
-    name: string;
-    en_name?: (string | null);
 };
 

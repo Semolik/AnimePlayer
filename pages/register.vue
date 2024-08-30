@@ -33,8 +33,8 @@
 import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 definePageMeta({
-    title: "Вход",
-    description: "Вход в систему",
+    title: "Регистрация",
+    description: "Регистрация в системе",
 });
 
 const name = ref("");

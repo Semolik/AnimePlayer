@@ -302,6 +302,20 @@ export class AuthService {
         });
     }
     /**
+     * Github Callback Redirection
+     * @returns void
+     * @throws ApiError
+     */
+    public static githubCallbackRedirectionApiV1AuthGithubCallbackRedirectGet(): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/auth/github/callback/redirect',
+            errors: {
+                307: `Successful Response`,
+            },
+        });
+    }
+    /**
      * Oauth-Associate:Github.Authorize
      * @param scopes
      * @returns OAuth2AuthorizeResponse Successful Response

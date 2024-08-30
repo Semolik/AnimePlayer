@@ -10,9 +10,25 @@
                     class="default"
                 />
             </nuxt-link>
-            <nuxt-link to="/search" class="mobile">
+            <nuxt-link to="/search" class="mobile mobile-only">
                 <Icon name="material-symbols:search" />
             </nuxt-link>
+            <div class="item" @click="isOpen = true">
+                <Icon name="material-symbols:search" />
+            </div>
+            <UModal
+                v-model="isOpen"
+                :ui="{
+                    overlay: {
+                        background:
+                            'bg-black/50 dark:bg-black/50 backdrop-blur',
+                        container:
+                            'flex min-h-full items-end sm:items-center justify-center text-center max-h-[50vh] min-h-[50vh]',
+                    },
+                }"
+            >
+                <Search @close="isOpen = false" />
+            </UModal>
             <nuxt-link to="/favorites">
                 <Icon name="ph:heart-fill" class="active" />
                 <Icon name="ph:heart" class="default" />
@@ -55,6 +71,7 @@
 <script setup>
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
+
 const authStore = useAuthStore();
 const { logined, userData } = storeToRefs(authStore);
 const fixIssue = (error) => {
@@ -63,6 +80,15 @@ const fixIssue = (error) => {
 const handleError = (error) => {
     console.error(error);
 };
+const isOpen = ref(false);
+defineShortcuts({
+    meta_k: {
+        usingInput: true,
+        handler: () => {
+            isOpen.value = !isOpen.value;
+        },
+    },
+});
 </script>
 <style lang="scss">
 .default-layout {
@@ -99,6 +125,7 @@ const handleError = (error) => {
         }
         .menu,
         .login,
+        .item,
         a {
             @include flex-center;
             width: 45px;
@@ -112,6 +139,13 @@ const handleError = (error) => {
                     display: none;
                 }
                 &.menu {
+                    display: flex;
+                }
+            }
+
+            &.mobile-only {
+                display: none;
+                @include sm(true) {
                     display: flex;
                 }
             }

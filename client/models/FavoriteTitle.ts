@@ -4,8 +4,9 @@
 /* eslint-disable */
 export type FavoriteTitle = {
     id: string;
-    name: string;
     parser_id: string;
+    name: string;
+    en_name?: (string | null);
     image_url: string;
 };
 
