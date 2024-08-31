@@ -1,8 +1,5 @@
 <template>
-    <div
-        :class="['episode-card', { loading }, { 'more-info': moreInfo }]"
-        @click="playerStore.playEpisode(episode)"
-    >
+    <div :class="['episode-card', { loading }, { 'more-info': moreInfo }]">
         <div
             :class="[
                 'episode-picture',
@@ -10,6 +7,7 @@
                 { 'has-progress': episode.progress && episode.progress > 0 },
             ]"
             :style="{ '--progress': episode.progress + '%' }"
+            @click="playerStore.playEpisode(episode)"
         >
             <div class="card-shadow"></div>
             <img :src="imageUrl" v-show="image_loaded" />
@@ -32,13 +30,45 @@
             </div>
         </div>
         <div class="title-name" v-if="titleName">
-            {{ titleName }}
+            <span>
+                {{ titleName }}
+            </span>
+            <div class="more-menu" v-if="moreInfo" @click="menuOpen = true">
+                <Icon name="material-symbols:more-horiz" />
+            </div>
         </div>
         <div class="episode-name">
             <div class="dot" v-if="episode.progress == 0 && logined"></div>
             {{ episode.name }}
         </div>
     </div>
+    <USlideover
+        v-model="menuOpen"
+        side="bottom"
+        :ui="{ height: '' }"
+        v-if="moreInfo"
+    >
+        <div class="menu">
+            <div class="head">
+                <span> Меню </span>
+                <div class="close" @click="menuOpen = false">
+                    <Icon name="material-symbols:close-rounded" />
+                </div>
+            </div>
+            <nuxt-link class="menu-item" :to="titleLink">
+                <Icon name="material-symbols:info" />
+                <span>Подробнее</span>
+            </nuxt-link>
+            <nuxt-link class="menu-item" :to="`${titleLink}/episodes`">
+                <Icon name="system-uicons:episodes" />
+                <span>Список серий</span>
+            </nuxt-link>
+            <div class="menu-item" @click="emit('close')">
+                <Icon name="material-symbols:close-rounded" />
+                <span>Скрыть из подборки</span>
+            </div>
+        </div>
+    </USlideover>
 </template>
 <script setup lang="ts">
 import { usePlayerStore } from "~/stores/player";
@@ -49,6 +79,7 @@ const authStore = useAuthStore();
 const { logined } = storeToRefs(authStore);
 const { currentEpisode, isOpen } = storeToRefs(playerStore);
 const emit = defineEmits(["close"]);
+const menuOpen = ref(false);
 const { episode, title, moreInfo, closeButton } = defineProps({
     episode: {
         type: Object as PropType<Episode | TitleEpisode>,
@@ -81,7 +112,15 @@ const titleName = computed(() => {
     }
     return title?.name;
 });
-
+const titleLink = computed(() => {
+    if (!moreInfo) {
+        return;
+    }
+    if ("title" in episode && episode.title) {
+        return `/titles/${episode.title.id}`;
+    }
+    return `/titles/${title?.id}`;
+});
 const imageUrl = episode.image_url || (title && title.image_url);
 const image_loaded = ref(false);
 const loading = computed(
@@ -119,6 +158,7 @@ onMounted(() => {
             opacity: 1;
         }
     }
+
     .episode-picture {
         user-select: none;
         aspect-ratio: 16 / 9;
@@ -238,6 +278,9 @@ onMounted(() => {
         }
     }
     &.more-info {
+        .episode-picture {
+            min-width: 260px;
+        }
         .episode-name {
             padding-left: 0;
             color: $secondary-text;
@@ -251,6 +294,19 @@ onMounted(() => {
             margin-top: 5px;
             margin-left: 5px;
             @include cut-text(1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+            .more-menu {
+                @include sm {
+                    display: none;
+                }
+                svg {
+                    width: 23px;
+                    height: 23px;
+                }
+            }
         }
     }
 
@@ -273,6 +329,59 @@ onMounted(() => {
             background-color: $accent;
             display: inline-block;
             margin-right: 5px;
+        }
+    }
+}
+.menu {
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: column;
+    padding-right: 0px;
+
+    .head {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+
+        span {
+            font-size: 20px;
+            color: $primary-text;
+            font-weight: 600;
+        }
+
+        .close {
+            cursor: pointer;
+            background-color: $quaternary-bg;
+            color: $secondary-text;
+            padding: 5px;
+            border-radius: 50%;
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+        text-decoration: none;
+        &:focus-visible {
+            outline: none;
+        }
+
+        cursor: pointer;
+        svg {
+            width: 25px;
+            height: 25px;
+        }
+        span {
+            font-size: 16px;
+            color: $primary-text;
+        }
+        &:not(:last-child) {
+            border-bottom: 1px solid $senary-bg;
         }
     }
 }

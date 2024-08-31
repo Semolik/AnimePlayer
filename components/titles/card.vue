@@ -1,6 +1,6 @@
 <template>
     <nuxt-link
-        class="small-card"
+        :class="['small-card', { mini }]"
         :to="title ? `/titles/${title.id}` : undefined"
     >
         <div class="picture">
@@ -23,6 +23,10 @@ const props = defineProps({
     title: {
         type: Object as PropType<TitleShort | null>,
         default: null,
+    },
+    mini: {
+        type: Boolean,
+        default: false,
     },
 });
 
@@ -58,14 +62,20 @@ onMounted(() => {
     @include sm {
         &:hover {
             .picture {
-                transform: translateY(-2%);
+                transform: translateY(-8px);
             }
             .title {
                 color: $primary-text;
             }
         }
     }
+    &.mini {
+        width: 200px;
 
+        .title {
+            font-size: 0.95rem;
+        }
+    }
     .picture {
         transition: transform 0.2s;
         aspect-ratio: 2 / 3;

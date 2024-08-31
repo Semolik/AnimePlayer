@@ -170,7 +170,7 @@
                 description="Не удалось загрузить данные с Shikimori"
             />
         </div>
-        <div class="episodes" v-if="title.episodes.length">
+        <section v-if="title.episodes.length" class="disable-padding">
             <div class="headline">
                 <div class="title">
                     <span class="title"> Серии </span>
@@ -199,7 +199,24 @@
                     </div>
                 </nuxt-link>
             </episode-scroll>
-        </div>
+        </section>
+        <template v-for="block in additionalTitlesBlocks">
+            <section v-if="block.titles.length">
+                <div class="headline">
+                    <div class="title">
+                        <span class="title"> {{ block.title }} </span>
+                    </div>
+                </div>
+                <scroll padded buttonHeight="200px" buttonHeightBig="300px">
+                    <titles-card
+                        :title="title"
+                        v-for="title in block.titles"
+                        :key="title.id"
+                        mini
+                    />
+                </scroll>
+            </section>
+        </template>
 
         <login-modal v-model:active="loginModalActive" />
     </div>
@@ -216,7 +233,16 @@ const playerStore = usePlayerStore();
 const { logined } = storeToRefs(authStore);
 const { title_id } = route.params;
 const title = ref(await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id));
-
+const additionalTitlesBlocks = computed(() => [
+    {
+        title: "Рекомендации",
+        titles: title.value.recommended,
+    },
+    {
+        title: "Связанные тайтлы",
+        titles: title.value.related,
+    },
+]);
 watch(logined, async (value) => {
     if (value) {
         title.value = await TitlesService.getTitleApiV1TitlesTitleIdGet(
@@ -535,7 +561,7 @@ const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
     }
     .alert,
     .desctiption,
-    .episodes {
+    section {
         grid-column: 1 / -1;
     }
     .alert,
@@ -545,7 +571,7 @@ const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
         }
     }
 
-    .episodes {
+    section {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -555,13 +581,19 @@ const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
         }
         @include md(true) {
             max-width: 100vw;
+            &:not(.disable-padding) {
+                padding: 0px 10px;
+            }
+            &.disable-padding {
+                .headline {
+                    @include md(true) {
+                        padding: 0px 10px;
+                    }
+                }
+            }
         }
 
         .headline {
-            @include md(true) {
-                padding: 0px 10px;
-            }
-
             display: flex;
             flex-direction: column;
             .title {
@@ -618,6 +650,21 @@ const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
                         height: 25px;
                     }
                 }
+            }
+        }
+    }
+    .related-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-left: 10px;
+        .related-link {
+            color: $accent;
+            li {
+                font-size: 16px;
+            }
+            &:hover {
+                text-decoration: underline;
             }
         }
     }

@@ -21,7 +21,7 @@ export type Title = {
     current_episode?: (Episode | null);
     genres?: Array<Genre>;
     episodes?: Array<Episode>;
-    related?: Array<TitleLink>;
+    related?: Array<TitleShort>;
     recommended?: Array<TitleShort>;
     shikimori?: (ShikimoriTitle | null);
     shikimori_failed?: boolean;
