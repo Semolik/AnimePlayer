@@ -52,7 +52,7 @@ const links = computed(() => {
     flex-direction: column;
     gap: 20px;
 
-    @include md(true) {
+    @include sm(true) {
         padding: 10px;
     }
     .episodes {

@@ -201,7 +201,7 @@
             </episode-scroll>
         </section>
         <template v-for="block in additionalTitlesBlocks">
-            <section v-if="block.titles.length">
+            <section v-if="block.titles.length" class="disable-padding">
                 <div class="headline">
                     <div class="title">
                         <span class="title"> {{ block.title }} </span>

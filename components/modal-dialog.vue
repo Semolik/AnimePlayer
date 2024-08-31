@@ -55,10 +55,6 @@ const props = defineProps({
     yesLoading: Boolean,
     noButton: Boolean,
     description: String,
-    maxWidth: {
-        type: Number,
-        default: 400,
-    },
     transition: {
         type: Number,
         default: 250,

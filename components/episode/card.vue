@@ -144,11 +144,11 @@ onMounted(() => {
 <style scoped lang="scss">
 .episode-card {
     height: min-content;
-    min-width: 200px;
+    min-width: 190px;
     cursor: pointer;
     width: min-content;
     @include md {
-        min-width: 280px;
+        min-width: 290px;
     }
     &.loading .episode-picture .loading-placeholder {
         opacity: 1;
@@ -278,9 +278,8 @@ onMounted(() => {
         }
     }
     &.more-info {
-        .episode-picture {
-            min-width: 260px;
-        }
+        min-width: 260px !important;
+
         .episode-name {
             padding-left: 0;
             color: $secondary-text;
