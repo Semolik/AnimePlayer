@@ -28,6 +28,26 @@ export class EpisodesService {
         });
     }
     /**
+     * Get Next Episode
+     * @param episodeId
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static getNextEpisodeApiV1EpisodesEpisodeIdNextGet(
+        episodeId: string,
+    ): CancelablePromise<(TitleEpisode | null)> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/episodes/{episode_id}/next',
+            path: {
+                'episode_id': episodeId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
      * Set Episode Progress
      * @param episodeId
      * @param progress

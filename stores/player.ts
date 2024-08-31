@@ -52,11 +52,29 @@ const i18n = {
 };
 export const usePlayerStore = defineStore("player", () => {
     const authStore = useAuthStore();
+    const { logined } = storeToRefs(authStore);
     const player: Ref<Plyr | null> = ref(null);
     const isOpen = ref(false);
     const currentEpisode: Ref<Episode | null> = ref(null);
-    const updateEpisodeBus = useEventBus("update-episode");
-
+    const currentEpisodes = ref<Episode[]>([]);
+    watch(
+        logined,
+        async (value) => {
+            if (value) {
+                currentEpisodes.value =
+                    await EpisodesService.getEpisodesApiV1EpisodesGet();
+            }
+        },
+        { immediate: true }
+    );
+    const removeEpisode = async (episode: Episode) => {
+        currentEpisodes.value = currentEpisodes.value.filter(
+            (e) => e.id !== episode.id
+        );
+        await EpisodesService.unsetEpisodeProgressApiV1EpisodesEpisodeIdProgressDelete(
+            episode.id
+        );
+    };
     const setPlayer = (new_player: Plyr, playOnLoad = false) => {
         if (player.value) {
             player.value.destroy();
@@ -64,6 +82,26 @@ export const usePlayerStore = defineStore("player", () => {
         player.value = new_player;
         player.value.on("enterfullscreen", (e) => {
             isOpen.value = true;
+        });
+        player.value.on("ended", async () => {
+            if (!currentEpisode.value) return;
+            const nextEpisode =
+                await EpisodesService.getNextEpisodeApiV1EpisodesEpisodeIdNextGet(
+                    currentEpisode.value.id
+                );
+
+            if (nextEpisode) {
+                currentEpisodes.value = currentEpisodes.value.map((e) => {
+                    // @ts-ignore
+                    if (e.id === currentEpisode.value.id) {
+                        return nextEpisode;
+                    }
+                    return e;
+                });
+                playEpisode(nextEpisode, true);
+            } else {
+                stop();
+            }
         });
         const stop = () => {
             isOpen.value = false;
@@ -94,7 +132,14 @@ export const usePlayerStore = defineStore("player", () => {
             );
             currentEpisode.value.progress = progress;
             currentEpisode.value.seconds = Math.floor(player.value.currentTime);
-            updateEpisodeBus.emit(currentEpisode.value);
+            // @ts-ignore
+            currentEpisodes.value = currentEpisodes.value.map((e) => {
+                // @ts-ignore
+                if (e.id === currentEpisode.value.id) {
+                    return currentEpisode.value;
+                }
+                return e;
+            });
         };
         const updateProgressDebounce = useDebounceFn(updateProgress, 1000, {
             maxWait: 5000,
@@ -107,8 +152,9 @@ export const usePlayerStore = defineStore("player", () => {
             } else {
                 await updateProgress();
             }
+            player.value.on("timeupdate", updateProgressDebounce);
         });
-        player.value.on("timeupdate", updateProgressDebounce);
+
         player.value.on("seeked", async () => {
             if (!currentEpisode.value || !player.value) return;
             if (
@@ -125,20 +171,66 @@ export const usePlayerStore = defineStore("player", () => {
         }
     };
 
-    const playEpisode = (episode: Episode) => {
+    const playEpisode = (episode: Episode, update_source = false) => {
         const video: HTMLVideoElement = document.getElementById(
             "plyr-player"
         ) as HTMLVideoElement;
+
         currentEpisode.value = episode;
+
+        if (update_source && player.value) {
+            if (episode.is_m3u8) {
+                if (!HLS.isSupported()) {
+                    console.log("HLS is not supported");
+                    return;
+                }
+
+                var hls = new HLS();
+                hls.loadSource(episode.links[0].link);
+                hls.attachMedia(video);
+                hls.on(HLS.Events.MANIFEST_PARSED, () => {
+                    hls.startLoad(episode.seconds);
+                    player.value?.play();
+                });
+
+                hls.on(HLS.Events.LEVEL_SWITCHED, function (event, data) {
+                    var span = document.querySelector(
+                        ".plyr__menu__container [data-plyr='quality'][value='0'] span"
+                    ) as HTMLElement;
+                    if (hls.autoLevelEnabled) {
+                        span.innerHTML = `Авто (${
+                            hls.levels[data.level].height
+                        }p)`;
+                    } else {
+                        span.innerHTML = `Авто`;
+                    }
+                });
+            } else {
+                player.value.source = {
+                    type: "video",
+                    sources: episode.links.map((link) => ({
+                        src: link.link,
+                        type: "video/mp4",
+                        size: link.quality as number,
+                    })),
+                };
+                player.value.currentTime = currentEpisode.value.seconds || 0;
+                player.value.play();
+            }
+            return;
+        }
+
         var defaultOptions: Plyr.Options = {
             fullscreen: { iosNative: true, fallback: true },
             i18n,
         };
+
         if (episode.is_m3u8) {
             if (!HLS.isSupported()) {
                 console.log("HLS is not supported");
                 return;
             }
+
             var hls = new HLS();
             hls.loadSource(episode.links[0].link);
             hls.attachMedia(video);
@@ -173,8 +265,7 @@ export const usePlayerStore = defineStore("player", () => {
                 };
                 setPlayer(new Plyr(video, defaultOptions));
                 hls.startLoad(episode.seconds);
-                // @ts-ignore
-                player.value.play();
+                player.value?.play();
             });
 
             hls.on(HLS.Events.LEVEL_SWITCHED, function (event, data) {
@@ -197,8 +288,17 @@ export const usePlayerStore = defineStore("player", () => {
                     size: link.quality as number,
                 })),
             };
+            new_player.currentTime = currentEpisode.value.seconds || 0;
             setPlayer(new_player, true);
         }
     };
-    return { player, isOpen, currentEpisode, playEpisode };
+
+    return {
+        player,
+        isOpen,
+        currentEpisode,
+        playEpisode,
+        removeEpisode,
+        currentEpisodes,
+    };
 });

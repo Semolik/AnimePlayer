@@ -20,7 +20,7 @@
                 </template>
             </UAlert>
         </div>
-        <section v-if="logined && lastEpisodes.length" v-auto-animate>
+        <section v-if="logined && currentEpisodes.length" v-auto-animate>
             <div class="section-head">
                 <div class="section-name">Продолжить просмотр</div>
                 <div class="scroll-buttons" v-if="showScrollButtons">
@@ -45,10 +45,10 @@
                 </div>
             </div>
             <episode-scroll
-                :episodes="lastEpisodes"
+                :episodes="currentEpisodes"
                 show-title-name
                 show-close-button
-                @close="removeEpisode"
+                @close="(episode) => playerStore.removeEpisode(episode)"
                 hide-controls
                 ref="episodesList"
             />
@@ -67,36 +67,20 @@
 </template>
 
 <script setup>
-import { EpisodesService, MessagesService } from "~/client";
+import { MessagesService } from "~/client";
 import { useAuthStore } from "~/stores/auth";
 import { useAppDataStore } from "~/stores/data";
+import { usePlayerStore } from "~/stores/player";
 useSeoMeta({
     title: "Главная",
     description: "Главная страница",
 });
 const { logined } = storeToRefs(useAuthStore());
 const { parsers } = storeToRefs(useAppDataStore());
-const lastEpisodes = ref([]);
-const removeEpisode = async (episode) => {
-    await EpisodesService.unsetEpisodeProgressApiV1EpisodesEpisodeIdProgressDelete(
-        episode.id
-    );
-    const index = lastEpisodes.value.findIndex((e) => e.id === episode.id);
-    if (index !== -1) {
-        lastEpisodes.value.splice(index, 1);
-    }
-};
-watch(
-    () => logined.value,
-    async (value) => {
-        if (!value) {
-            return;
-        }
-        lastEpisodes.value =
-            await EpisodesService.getEpisodesApiV1EpisodesGet();
-    },
-    { immediate: true }
-);
+
+const playerStore = usePlayerStore();
+const { currentEpisodes, isOpen } = storeToRefs(playerStore);
+
 const episodesList = ref(null);
 const messages = await MessagesService.getMessagesApiV1MessagesGet();
 const hidedMessages = useLocalStorage("hidedMessages", []);
