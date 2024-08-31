@@ -1,75 +1,75 @@
-# Nuxt 3 Minimal Starter
+# AnimePlayer
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+[Russian readme](README-ru.md)
 
-## Setup
+AnimePlayer is a modern web platform for streaming anime, built on Nuxt 3. The project requires [AnimePlayerApi](https://github.com/Semolik/AnimePlayerApi) to function.
 
-Make sure to install the dependencies:
+## Functionality
+
+-   **Anime catalog**: Browse a collection of anime from AnimeVost and Anidub parsers.
+-   **Shikimori integration**: View additional information, display related anime.
+-   **Search**: Quickly search for your favorite anime.
+-   **User authentication**: Registration, login, profile management, password recovery, login via Google, GitHub, and Discord services.
+-   **Detailed information**: View episodes, ratings, and descriptions.
+-   **Streaming**: Watch anime directly on the platform.
+-   **Recently viewed**: Track viewing progress.
+-   **Responsive design**: Optimized for desktop and mobile devices.
+-   **Favorites**: Add anime to your watchlist.
+
+## Requirements
+
+-   Make sure [AnimePlayerApi](https://github.com/Semolik/AnimePlayerApi) is installed and running.
+
+## Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/Semolik/AnimePlayer.git
+    cd AnimePlayer
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Configure environment variables for connecting to the API. Rename the `.env.example` file to `.env` and specify the local and public API addresses:
+
+    ```bash
+    NUXT_API_LOCAL_URL=http://localhost:8001
+    NUXT_PUBLIC_API_URL=http://example.com:8001
+    ```
+
+## Development
+
+To start the development server:
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
+To generate the API client, use the following command (the API must be running):
 
 ```bash
-# npm
+npm run generate-client
+```
+
+## Build
+
+To build the project:
+
+```bash
 npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+For running the built project, it is recommended to use [PM2](https://pm2.keymetrics.io/):
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+pm2 start ecosystem.config.cjs
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## License
+
+AnimePlayer is distributed under the MIT License.
