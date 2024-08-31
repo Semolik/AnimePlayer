@@ -4,21 +4,10 @@
 
 AnimePlayer is a modern web platform for streaming anime, built on Nuxt 3. The project requires [AnimePlayerApi](https://github.com/Semolik/AnimePlayerApi) to function.
 
-## Functionality
-
--   **Anime catalog**: Browse a collection of anime from AnimeVost and Anidub parsers.
--   **Shikimori integration**: View additional information, display related anime.
--   **Search**: Quickly search for your favorite anime.
--   **User authentication**: Registration, login, profile management, password recovery, login via Google, GitHub, and Discord services.
--   **Detailed information**: View episodes, ratings, and descriptions.
--   **Streaming**: Watch anime directly on the platform.
--   **Recently viewed**: Track viewing progress.
--   **Responsive design**: Optimized for desktop and mobile devices.
--   **Favorites**: Add anime to your watchlist.
-
 ## Main page
-    
+
 ![Main page](https://github.com/user-attachments/assets/025aac00-1fe2-498d-b262-310b9a4add14)
+
 <details><summary>More screenshots</summary>
     
 ## Search
@@ -37,8 +26,19 @@ AnimePlayer is a modern web platform for streaming anime, built on Nuxt 3. The p
 
 ![Profile](https://github.com/user-attachments/assets/bec6bfc2-e319-4919-9558-772edc78a878)
 
-
 </details>
+
+## Functionality
+
+-   **Anime catalog**: Browse a collection of anime from AnimeVost and Anidub parsers.
+-   **Shikimori integration**: View additional information, display related anime.
+-   **Search**: Quickly search for your favorite anime.
+-   **User authentication**: Registration, login, profile management, password recovery, login via Google, GitHub, and Discord services.
+-   **Detailed information**: View episodes, ratings, and descriptions.
+-   **Streaming**: Watch anime directly on the platform.
+-   **Recently viewed**: Track viewing progress.
+-   **Responsive design**: Optimized for desktop and mobile devices.
+-   **Favorites**: Add anime to your watchlist.
 
 ## Requirements
 
