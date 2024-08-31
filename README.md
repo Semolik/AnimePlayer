@@ -4,6 +4,8 @@
 
 AnimePlayer is a modern web platform for streaming anime, built on Nuxt 3. The project requires [AnimePlayerApi](https://github.com/Semolik/AnimePlayerApi) to function.
 
+![Main page](https://github.com/user-attachments/assets/025aac00-1fe2-498d-b262-310b9a4add14)
+
 ## Functionality
 
 -   **Anime catalog**: Browse a collection of anime from AnimeVost and Anidub parsers.
