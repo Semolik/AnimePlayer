@@ -70,7 +70,10 @@ onMounted(() => {
         }
     }
     &.mini {
-        width: 200px;
+        min-width: 150px;
+        @include md {
+            min-width: 200px;
+        }
 
         .title {
             font-size: 0.95rem;
