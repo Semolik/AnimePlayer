@@ -4,7 +4,31 @@
 
 AnimePlayer — это современная веб-платформа для стриминга аниме, созданная на основе Nuxt 3. Проект требует наличия [AnimePlayerApi](https://github.com/Semolik/AnimePlayerApi) для работы.
 
+## Главная страница
+
 ![Main page](https://github.com/user-attachments/assets/025aac00-1fe2-498d-b262-310b9a4add14)
+
+<details><summary>Еще скриншоты</summary>
+    
+## Поиск
+
+![Search](https://github.com/user-attachments/assets/ace033fe-60c6-40a9-8d05-9be77637a2cd)
+
+## Жанры
+
+![Genres](https://github.com/user-attachments/assets/6801b331-c886-4cb7-b42e-67b602b7e6fa)
+
+## Страница тайтла
+
+![Title page](https://github.com/user-attachments/assets/6c206112-d736-4b3f-9e42-9d01f3e8a032)
+
+## Профиль
+
+![Profile](https://github.com/user-attachments/assets/bec6bfc2-e319-4919-9558-772edc78a878)
+
+
+</details>
+
 
 ## Функциональность
 
