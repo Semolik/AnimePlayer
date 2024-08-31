@@ -30,11 +30,7 @@ export default defineNuxtConfig({
         "/": { sitemap: { changefreq: "daily" } },
     },
     sitemap: {
-        sitemaps: {
-            titles: {
-                sources: ["/api/__sitemap__/urls"],
-            },
-        },
+        sources: ["/api/__sitemap__/urls"],
     },
     modules: [
         "@pinia/nuxt",
