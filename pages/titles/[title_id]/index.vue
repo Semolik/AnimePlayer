@@ -89,7 +89,7 @@
                     active
                     highlightActive
                     :border-radius="10"
-                    @clicked="addToFavorite"
+                    @clicked="toggleFavorite"
                 >
                     <span class="lg:hidden"> В избранное </span>
                     <Icon
@@ -230,6 +230,7 @@ const route = useRoute();
 const siteConfig = useSiteConfig();
 const authStore = useAuthStore();
 const playerStore = usePlayerStore();
+const { currentEpisodes } = storeToRefs(playerStore);
 const { logined } = storeToRefs(authStore);
 const { title_id } = route.params;
 const title = ref(await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id));
@@ -262,13 +263,13 @@ useSeoMeta({
     description: title.value.description,
 });
 const episodes = ref(title.value.episodes.slice(0, 10));
-const updateEpisodeBus = useEventBus("update-episode");
-updateEpisodeBus.on((episode) => {
-    title.value.current_episode = episode;
-    const index = episodes.value.findIndex((e) => e.id === episode.id);
-    if (index !== -1) {
-        episodes.value[index] = episode;
-    }
+watch(currentEpisodes, (value) => {
+    value.map((episode) => {
+        const index = episodes.value.findIndex((e) => e.id === episode.id);
+        if (index !== -1) {
+            episodes.value[index] = episode;
+        }
+    });
 });
 defineOgImageComponent("title", {
     title: title.value.name,
@@ -288,12 +289,20 @@ onMounted(() => {
     };
 });
 
-const addToFavorite = async () => {
+const toggleFavorite = async () => {
     if (!logined.value) {
         loginModalActive.value = true;
         return;
     }
-    await TitlesService.favoriteTitleApiV1TitlesFavoritesTitleIdPost(title_id);
+    if (title.value.liked) {
+        await TitlesService.unfavoriteTitleApiV1TitlesFavoritesTitleIdDelete(
+            title_id
+        );
+    } else {
+        await TitlesService.favoriteTitleApiV1TitlesFavoritesTitleIdPost(
+            title_id
+        );
+    }
     title.value.liked = !title.value.liked;
 };
 

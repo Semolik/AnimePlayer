@@ -13,18 +13,22 @@
     </div>
 </template>
 <script setup>
+import { usePlayerStore } from "~/stores/player";
 import { TitlesService } from "~/client";
 const route = useRoute();
 const { title_id } = route.params;
 const titleEpisodesInfo =
     await TitlesService.getEpisodesApiV1TitlesTitleIdEpisodesGet(title_id);
+const playerStore = usePlayerStore();
+const { currentEpisodes } = storeToRefs(playerStore);
 const episodes = ref(titleEpisodesInfo.episodes);
-const updateEpisodeBus = useEventBus("update-episode");
-updateEpisodeBus.on((episode) => {
-    const index = episodes.value.findIndex((e) => e.id === episode.id);
-    if (index !== -1) {
-        episodes.value[index] = episode;
-    }
+watch(currentEpisodes, (value) => {
+    value.map((episode) => {
+        const index = episodes.value.findIndex((e) => e.id === episode.id);
+        if (index !== -1) {
+            episodes.value[index] = episode;
+        }
+    });
 });
 const parser = getParser(titleEpisodesInfo.title.parser_id);
 const { $viewport } = useNuxtApp();

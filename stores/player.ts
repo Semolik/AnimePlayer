@@ -116,7 +116,37 @@ export const usePlayerStore = defineStore("player", () => {
         player.value.on("pause", () => {
             if (!isOpen.value) stop();
         });
+        const nextButtonCreated = ref(false);
+        const createNextEpisodeButton = async () => {
+            if (nextButtonCreated.value) return;
+            if (!currentEpisode.value || !authStore.logined || !player.value)
+                return;
+            const nextEpisode =
+                await EpisodesService.getNextEpisodeApiV1EpisodesEpisodeIdNextGet(
+                    currentEpisode.value.id
+                );
+            if (!nextEpisode) return;
+            const nextEpisodeButton = document.createElement("button");
+            nextEpisodeButton.innerHTML = `Следующая серия`;
+            nextEpisodeButton.className =
+                "fixed right-4 px-2.5 py-1.5 bg-white/10 rounded-md text-gray-500 hover:bg-white/20 hover:text-gray-600 z-50";
+            nextEpisodeButton.style.bottom = "50px";
+            nextEpisodeButton.addEventListener("click", async () => {
+                currentEpisodes.value = currentEpisodes.value.map((e) => {
+                    // @ts-ignore
+                    if (e.id === currentEpisode.value.id) {
+                        return nextEpisode;
+                    }
+                    return e;
+                });
+                playEpisode(nextEpisode, true);
+            });
+            console.log(player.value.elements.container);
+            player.value.elements.wrapper?.appendChild(nextEpisodeButton);
+            nextButtonCreated.value = true;
+        };
         const updateProgress = async () => {
+            console.log(player.value);
             if (!player.value || !currentEpisode.value || !authStore.logined) {
                 return;
             }
@@ -131,6 +161,9 @@ export const usePlayerStore = defineStore("player", () => {
                 Math.floor(player.value.currentTime)
             );
             currentEpisode.value.progress = progress;
+            if (progress >= 97) {
+                createNextEpisodeButton();
+            }
             currentEpisode.value.seconds = Math.floor(player.value.currentTime);
             // @ts-ignore
             currentEpisodes.value = currentEpisodes.value.map((e) => {
