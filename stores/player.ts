@@ -75,6 +75,28 @@ export const usePlayerStore = defineStore("player", () => {
             episode.id
         );
     };
+    const playNextEpisode = async () => {
+        if (!currentEpisode.value) return;
+        const nextEpisode =
+            await EpisodesService.getNextEpisodeApiV1EpisodesEpisodeIdNextGet(
+                currentEpisode.value.id
+            );
+        if (nextEpisode) {
+            currentEpisodes.value = currentEpisodes.value.map((e) => {
+                // @ts-ignore
+                if (e.id === currentEpisode.value.id) {
+                    return nextEpisode;
+                }
+                return e;
+            });
+            playEpisode(nextEpisode, true);
+        } else {
+            currentEpisodes.value = currentEpisodes.value.filter(
+                // @ts-ignore
+                (e) => e.id !== currentEpisode.value.id
+            );
+        }
+    };
     const setPlayer = (new_player: Plyr, playOnLoad = false) => {
         if (player.value) {
             player.value.destroy();
@@ -83,26 +105,7 @@ export const usePlayerStore = defineStore("player", () => {
         player.value.on("enterfullscreen", (e) => {
             isOpen.value = true;
         });
-        player.value.on("ended", async () => {
-            if (!currentEpisode.value) return;
-            const nextEpisode =
-                await EpisodesService.getNextEpisodeApiV1EpisodesEpisodeIdNextGet(
-                    currentEpisode.value.id
-                );
-
-            if (nextEpisode) {
-                currentEpisodes.value = currentEpisodes.value.map((e) => {
-                    // @ts-ignore
-                    if (e.id === currentEpisode.value.id) {
-                        return nextEpisode;
-                    }
-                    return e;
-                });
-                playEpisode(nextEpisode, true);
-            } else {
-                stop();
-            }
-        });
+        player.value.on("ended", playNextEpisode);
         const stop = () => {
             isOpen.value = false;
             currentEpisode.value = null;
@@ -141,7 +144,6 @@ export const usePlayerStore = defineStore("player", () => {
                 });
                 playEpisode(nextEpisode, true);
             });
-            console.log(player.value.elements.container);
             player.value.elements.wrapper?.appendChild(nextEpisodeButton);
             nextButtonCreated.value = true;
         };

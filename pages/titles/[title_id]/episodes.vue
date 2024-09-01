@@ -1,15 +1,7 @@
 <template>
     <div class="episodes-page">
         <UBreadcrumb :links="links" class="breadcrumb" />
-        <div class="episodes">
-            <episode-card
-                class="episode-card"
-                v-for="episode in episodes"
-                :key="episode.id"
-                :episode="episode"
-                :title="titleEpisodesInfo.title"
-            />
-        </div>
+        <episode-list :episodes="episodes" :title="titleEpisodesInfo.title" />
     </div>
 </template>
 <script setup>
@@ -22,6 +14,7 @@ const titleEpisodesInfo =
 const playerStore = usePlayerStore();
 const { currentEpisodes } = storeToRefs(playerStore);
 const episodes = ref(titleEpisodesInfo.episodes);
+
 watch(currentEpisodes, (value) => {
     value.map((episode) => {
         const index = episodes.value.findIndex((e) => e.id === episode.id);
@@ -58,26 +51,6 @@ const links = computed(() => {
 
     @include sm(true) {
         padding: 10px;
-    }
-    .episodes {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
-
-        @include md(true) {
-            gap: 10px;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        }
-
-        @include sm(true) {
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        }
-
-        .episode-card {
-            @include sm(true) {
-                min-width: 180px;
-            }
-        }
     }
 }
 </style>

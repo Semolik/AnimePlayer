@@ -12,7 +12,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         };
     }
     const parsers = await ParsersService.getParsersApiV1ParsersGet();
-    const genres = await GenresService.getGenresApiV1GenresGenresGet();
+    const genres = await GenresService.getGenresApiV1GenresGet();
     nuxtApp.provide("genres", genres);
     nuxtApp.provide("parsers", parsers);
 });

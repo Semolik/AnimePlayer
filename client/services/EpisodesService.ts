@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { HistoryDay } from '../models/HistoryDay';
 import type { TitleEpisode } from '../models/TitleEpisode';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -19,6 +20,26 @@ export class EpisodesService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/episodes',
+            query: {
+                'page': page,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get History
+     * @param page
+     * @returns HistoryDay Successful Response
+     * @throws ApiError
+     */
+    public static getHistoryApiV1EpisodesHistoryGet(
+        page: number = 1,
+    ): CancelablePromise<Array<HistoryDay>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/episodes/history',
             query: {
                 'page': page,
             },

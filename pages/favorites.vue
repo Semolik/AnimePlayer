@@ -49,7 +49,7 @@ const fetchMore = async () => {
         padding: 10px;
     }
     .headline {
-        font-size: 24px;
+        font-size: 30px;
         line-height: 32px;
         font-weight: 600;
         color: rgb(255, 255, 255);

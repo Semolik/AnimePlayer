@@ -16,7 +16,7 @@ export const useAppDataStore = defineStore({
             this.parsers = await ParsersService.getParsersApiV1ParsersGet();
         },
         async getGenres(): Promise<void> {
-            this.genres = await GenresService.getGenresApiV1GenresGenresGet();
+            this.genres = await GenresService.getGenresApiV1GenresGet();
         },
         async fetchData(): Promise<void> {
             await this.getParsers();

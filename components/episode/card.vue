@@ -279,6 +279,9 @@ onMounted(() => {
     }
     &.more-info {
         min-width: 260px !important;
+        @include md(true) {
+            min-width: 200px !important;
+        }
 
         .episode-name {
             padding-left: 0;
@@ -286,6 +289,9 @@ onMounted(() => {
             font-size: 14px;
             margin-top: 0;
             margin-left: 5px;
+            &:has(.dot) {
+                padding-left: 15px;
+            }
         }
         .title-name {
             color: $primary-text;

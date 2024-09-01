@@ -15,12 +15,12 @@ export class GenresService {
      * @returns Genre Successful Response
      * @throws ApiError
      */
-    public static getGenreApiV1GenresGenresGenreIdGet(
+    public static getGenreApiV1GenresGenreIdGet(
         genreId: string,
     ): CancelablePromise<Genre> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/genres/genres/{genre_id}',
+            url: '/api/v1/genres/{genre_id}',
             path: {
                 'genre_id': genreId,
             },
@@ -36,13 +36,13 @@ export class GenresService {
      * @returns TitlesPage Successful Response
      * @throws ApiError
      */
-    public static getGenreTitlesApiV1GenresGenresGenreIdTitlesGet(
+    public static getGenreTitlesApiV1GenresGenreIdTitlesGet(
         genreId: string,
         page: number = 1,
     ): CancelablePromise<TitlesPage> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/genres/genres/{genre_id}/titles',
+            url: '/api/v1/genres/{genre_id}/titles',
             path: {
                 'genre_id': genreId,
             },
@@ -59,10 +59,10 @@ export class GenresService {
      * @returns UniqueGenre Successful Response
      * @throws ApiError
      */
-    public static getGenresApiV1GenresGenresGet(): CancelablePromise<Array<UniqueGenre>> {
+    public static getGenresApiV1GenresGet(): CancelablePromise<Array<UniqueGenre>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/genres/genres',
+            url: '/api/v1/genres',
         });
     }
 }

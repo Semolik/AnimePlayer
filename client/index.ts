@@ -20,6 +20,7 @@ export type { ErrorModel } from './models/ErrorModel';
 export type { FavoriteTitle } from './models/FavoriteTitle';
 export type { Genre } from './models/Genre';
 export type { GenreBase } from './models/GenreBase';
+export type { HistoryDay } from './models/HistoryDay';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { ImageInfo } from './models/ImageInfo';
 export type { MainPage } from './models/MainPage';

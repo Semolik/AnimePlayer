@@ -91,7 +91,7 @@ const fetchMore = async () => {
     var isMain = false;
     if (selectedGenre.value.id) {
         var newPage =
-            await GenresService.getGenreTitlesApiV1GenresGenresGenreIdTitlesGet(
+            await GenresService.getGenreTitlesApiV1GenresGenreIdTitlesGet(
                 selectedGenre.value.id,
                 page.value
             );
@@ -128,8 +128,9 @@ watch(router.currentRoute, async (route, oldRoute) => {
         selectedGenre.value = { id: null, name: "Все" };
     }
     if (genre_id) {
-        selectedGenre.value =
-            await GenresService.getGenreApiV1GenresGenresGenreIdGet(genre_id);
+        selectedGenre.value = await GenresService.getGenreApiV1GenresGenreIdGet(
+            genre_id
+        );
         parser.value = getParser(selectedGenre.value.parser_id);
     }
     if (old_parser_id != parser.value.id) {
@@ -145,7 +146,7 @@ watch(router.currentRoute, async (route, oldRoute) => {
 });
 onMounted(async () => {
     if (!parser.value) {
-        const genre = await GenresService.getGenreApiV1GenresGenresGenreIdGet(
+        const genre = await GenresService.getGenreApiV1GenresGenreIdGet(
             genre_id
         );
         selectedGenre.value = genre;
