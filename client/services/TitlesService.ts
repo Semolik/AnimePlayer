@@ -102,6 +102,17 @@ export class TitlesService {
         });
     }
     /**
+     * Get Popular Titles
+     * @returns SearchTitle Successful Response
+     * @throws ApiError
+     */
+    public static getPopularTitlesApiV1TitlesPopularGet(): CancelablePromise<Array<SearchTitle>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/titles/popular',
+        });
+    }
+    /**
      * Get Title
      * @param titleId
      * @returns Title Successful Response

@@ -5,7 +5,7 @@
 import type { TitleEpisode } from './TitleEpisode';
 export type HistoryDay = {
     date: string;
-    date_label: string;
+    date_label?: (string | null);
     episodes: Array<TitleEpisode>;
 };
 

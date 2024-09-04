@@ -1,6 +1,6 @@
 <template>
     <modal-dialog v-model:active="modalActive" headline="Выберите парсер">
-        <div class="flex mt-3 gap-2 flex-wrap">
+        <div class="grid grid-cols-2 mt-3 gap-2">
             <UButton
                 color="primary"
                 variant="outline"

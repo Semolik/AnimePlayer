@@ -20,6 +20,26 @@
                 </template>
             </UAlert>
         </div>
+        <section>
+            <div class="section-head">
+                <div class="section-name">Популярное</div>
+            </div>
+            <scroll
+                padded
+                buttonHeight="200px"
+                buttonHeightBig="300px"
+                hide-controls
+            >
+                <titles-card
+                    :title="title"
+                    v-for="(title, index) in popularTitles"
+                    :key="index"
+                    small-title
+                    class="min-w-[150px]"
+                    :on-click="() => onPopularTitleClick(title)"
+                />
+            </scroll>
+        </section>
         <section v-if="logined && currentEpisodes.length" v-auto-animate>
             <div class="section-head">
                 <div class="section-name">Продолжить просмотр</div>
@@ -64,10 +84,15 @@
             <titles-last :parserId="parser.id" />
         </section>
     </div>
+    <select-parser
+        v-model:active="selectParserOpen"
+        :variants="variants"
+        @select="onSelectParser"
+    />
 </template>
 
 <script setup>
-import { MessagesService } from "~/client";
+import { MessagesService, TitlesService } from "~/client";
 import { useAuthStore } from "~/stores/auth";
 import { useAppDataStore } from "~/stores/data";
 import { usePlayerStore } from "~/stores/player";
@@ -104,6 +129,23 @@ const showScrollButtons = computed(
             episodesList.value.scrollRightActive) &&
         $viewport.isGreaterThan("tablet")
 );
+const popularTitles =
+    await TitlesService.getPopularTitlesApiV1TitlesPopularGet();
+const router = useRouter();
+const selectParserOpen = ref(false);
+const variants = ref([]);
+const onSelectParser = (title) => {
+    selectParserOpen.value = false;
+    router.push(`/titles/${title.id}`);
+};
+const onPopularTitleClick = (title) => {
+    if (title.on_other_parsers.length === 1) {
+        router.push(`/titles/${title.on_other_parsers[0].id}`);
+    } else {
+        variants.value = title.on_other_parsers;
+        selectParserOpen.value = true;
+    }
+};
 </script>
 
 <style lang="scss">

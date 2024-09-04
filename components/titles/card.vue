@@ -1,7 +1,8 @@
 <template>
     <nuxt-link
-        :class="['small-card', { mini }]"
-        :to="title ? `/titles/${title.id}` : undefined"
+        :class="['small-card', { mini }, { 'small-title': smallTitle }]"
+        :to="title && title.id ? `/titles/${title.id}` : undefined"
+        @click="onClick"
     >
         <div class="picture">
             <img :src="title.image_url" v-show="image_loaded" v-if="title" />
@@ -27,6 +28,14 @@ const props = defineProps({
     mini: {
         type: Boolean,
         default: false,
+    },
+    smallTitle: {
+        type: Boolean,
+        default: false,
+    },
+    onClick: {
+        type: Function as PropType<() => void>,
+        default: null,
     },
 });
 
@@ -74,10 +83,10 @@ onMounted(() => {
         @include md {
             min-width: 200px;
         }
-
-        .title {
-            font-size: 0.95rem;
-        }
+    }
+    &.small-title .title,
+    &.mini .title {
+        font-size: 0.95rem;
     }
     .picture {
         transition: transform 0.2s;
