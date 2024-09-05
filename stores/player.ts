@@ -102,9 +102,6 @@ export const usePlayerStore = defineStore("player", () => {
             player.value.destroy();
         }
         player.value = new_player;
-        player.value.on("enterfullscreen", (e) => {
-            isOpen.value = true;
-        });
         player.value.on("ended", playNextEpisode);
         const stop = () => {
             isOpen.value = false;
@@ -179,16 +176,6 @@ export const usePlayerStore = defineStore("player", () => {
         const updateProgressDebounce = useDebounceFn(updateProgress, 1000, {
             maxWait: 5000,
         });
-        player.value.on("loadeddata", async (e) => {
-            player.value?.fullscreen.enter();
-            if (!currentEpisode.value || !player.value) return;
-            if (currentEpisode.value.seconds) {
-                player.value.currentTime = currentEpisode.value.seconds;
-            } else {
-                await updateProgress();
-            }
-            player.value.on("timeupdate", updateProgressDebounce);
-        });
 
         player.value.on("seeked", async () => {
             if (!currentEpisode.value || !player.value) return;
@@ -200,8 +187,17 @@ export const usePlayerStore = defineStore("player", () => {
             await updateProgress();
         });
         if (playOnLoad) {
-            player.value.on("canplay", () => {
-                player.value?.play();
+            player.value.on("canplay", async () => {
+                isOpen.value = true;
+                if (!currentEpisode.value || !player.value) return;
+                player.value.play();
+                player.value.fullscreen.enter();
+                if (currentEpisode.value.seconds) {
+                    player.value.currentTime = currentEpisode.value.seconds;
+                } else {
+                    await updateProgress();
+                }
+                player.value.on("timeupdate", updateProgressDebounce);
             });
         }
     };
@@ -212,7 +208,7 @@ export const usePlayerStore = defineStore("player", () => {
         ) as HTMLVideoElement;
 
         currentEpisode.value = episode;
-
+        if (!episode.links) return;
         if (update_source && player.value) {
             if (episode.is_m3u8) {
                 if (!HLS.isSupported()) {
@@ -298,9 +294,8 @@ export const usePlayerStore = defineStore("player", () => {
                         0: "Auto",
                     },
                 };
-                setPlayer(new Plyr(video, defaultOptions));
                 hls.startLoad(episode.seconds);
-                player.value?.play();
+                setPlayer(new Plyr(video, defaultOptions), true);
             });
 
             hls.on(HLS.Events.LEVEL_SWITCHED, function (event, data) {
