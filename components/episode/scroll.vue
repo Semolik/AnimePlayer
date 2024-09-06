@@ -9,6 +9,7 @@
             :close-button="showCloseButton"
             @close="emit('close', episode)"
         />
+        <slot></slot>
     </scroll>
 </template>
 <script setup>

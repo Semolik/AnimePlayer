@@ -200,24 +200,73 @@
                 </nuxt-link>
             </episode-scroll>
         </section>
-        <template v-for="block in additionalTitlesBlocks">
-            <section v-if="block.titles.length" class="disable-padding">
-                <div class="headline">
-                    <div class="title">
-                        <span class="title"> {{ block.title }} </span>
+
+        <section
+            v-if="title.related.length"
+            :class="{ 'disable-padding': !relatedModeSwitched }"
+        >
+            <div class="headline">
+                <div class="title">
+                    <span> Связанные тайтлы </span>
+                    <div
+                        class="switch-view"
+                        @click="relatedModeSwitched = !relatedModeSwitched"
+                    >
+                        <Icon
+                            :name="
+                                relatedModeSwitched
+                                    ? 'system-uicons:list'
+                                    : 'system-uicons:card-view'
+                            "
+                        />
                     </div>
                 </div>
-                <scroll padded buttonHeight="200px" buttonHeightBig="300px">
-                    <titles-card
-                        :title="title"
-                        v-for="title in block.titles"
-                        :key="title.id"
-                        mini
-                    />
-                </scroll>
-            </section>
-        </template>
-
+            </div>
+            <scroll
+                padded
+                buttonHeight="200px"
+                buttonHeightBig="300px"
+                v-if="!relatedModeSwitched"
+            >
+                <titles-card
+                    :title="titleItem"
+                    v-for="titleItem in title.related"
+                    :key="titleItem.id"
+                    mini
+                />
+            </scroll>
+            <UAlert v-else color="primary" variant="subtle">
+                <template #description>
+                    <ul class="related-links">
+                        <li
+                            v-for="link in title.related"
+                            :key="link.id"
+                            class="related-link"
+                        >
+                            <nuxt-link
+                                :to="`/titles/${link.id}`"
+                                class="related-link"
+                            >
+                                {{ link.name }}
+                            </nuxt-link>
+                        </li>
+                    </ul>
+                </template>
+            </UAlert>
+        </section>
+        <section v-if="title.recommended.length" class="disable-padding">
+            <div class="headline">
+                <div class="title">Рекомендации</div>
+            </div>
+            <scroll padded buttonHeight="200px" buttonHeightBig="300px">
+                <titles-card
+                    :title="titleItem"
+                    v-for="titleItem in title.recommended"
+                    :key="titleItem.id"
+                    mini
+                />
+            </scroll>
+        </section>
         <login-modal v-model:active="loginModalActive" />
     </div>
 </template>
@@ -234,16 +283,7 @@ const { currentEpisodes } = storeToRefs(playerStore);
 const { logined } = storeToRefs(authStore);
 const { title_id } = route.params;
 const title = ref(await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id));
-const additionalTitlesBlocks = computed(() => [
-    {
-        title: "Рекомендации",
-        titles: title.value.recommended,
-    },
-    {
-        title: "Связанные тайтлы",
-        titles: title.value.related,
-    },
-]);
+const relatedModeSwitched = ref(false);
 watch(logined, async (value) => {
     if (value) {
         title.value = await TitlesService.getTitleApiV1TitlesTitleIdGet(
@@ -618,6 +658,17 @@ const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
                 color: $secondary-text;
                 font-weight: lighter;
             }
+            .switch-view {
+                cursor: pointer;
+                svg {
+                    width: 25px;
+                    height: 25px;
+                    color: $accent;
+                }
+                background-color: $tertiary-bg;
+                padding: 8px;
+                border-radius: 10px;
+            }
         }
         .more {
             color: $accent;
@@ -665,8 +716,10 @@ const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
     .related-links {
         display: flex;
         flex-direction: column;
+        list-style: circle;
         gap: 10px;
-        padding-left: 10px;
+        padding-left: 20px;
+
         .related-link {
             color: $accent;
             li {
