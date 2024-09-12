@@ -11,6 +11,7 @@
         "generate-client": "openapi --input http://localhost:8000/api/v1/openapi.json --output ./client --client axios"
     },
     "dependencies": {
+        "@fancyapps/ui": "^5.0.36",
         "@formkit/auto-animate": "^0.8.2",
         "@formkit/nuxt": "^1.6.5",
         "@nuxt/ui": "^2.17.0",

@@ -20,7 +20,7 @@
                 </template>
             </UAlert>
         </div>
-        <section>
+        <section v-if="popularTitles.length">
             <div class="section-head">
                 <div class="section-name">Популярное</div>
             </div>
@@ -129,8 +129,13 @@ const showScrollButtons = computed(
             episodesList.value.scrollRightActive) &&
         $viewport.isGreaterThan("tablet")
 );
-const popularTitles =
-    await TitlesService.getPopularTitlesApiV1TitlesPopularGet();
+const popularTitles = ref([]);
+try {
+    popularTitles.value =
+        await TitlesService.getPopularTitlesApiV1TitlesPopularGet();
+} catch (e) {
+    console.error(e);
+}
 const router = useRouter();
 const selectParserOpen = ref(false);
 const variants = ref([]);

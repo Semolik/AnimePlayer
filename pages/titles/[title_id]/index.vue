@@ -267,11 +267,42 @@
                 />
             </scroll>
         </section>
+
+        <section>
+            <div class="headline">
+                <div class="title">Скриншоты</div>
+            </div>
+            <Fancybox
+                :options="{
+                    Carousel: {
+                        infinite: false,
+                    },
+                }"
+                class="flex"
+                v-if="title.shikimori.data && title.shikimori.data.screenshots"
+            >
+                <scroll>
+                    <a
+                        data-fancybox="gallery"
+                        :href="screenshot.originalUrl"
+                        v-for="screenshot in title.shikimori.data.screenshots"
+                        class="gallery-item"
+                    >
+                        <img
+                            :src="
+                                screenshot.x332Url ||
+                                screenshot.x166Url ||
+                                screenshot.originalUrl
+                            "
+                        />
+                    </a>
+                </scroll>
+            </Fancybox>
+        </section>
         <login-modal v-model:active="loginModalActive" />
     </div>
 </template>
 <script setup>
-import { Teleport } from "vue";
 import { TitlesService } from "~/client";
 import { useAuthStore } from "~/stores/auth";
 import { usePlayerStore } from "~/stores/player";
@@ -283,7 +314,7 @@ const { currentEpisodes } = storeToRefs(playerStore);
 const { logined } = storeToRefs(authStore);
 const { title_id } = route.params;
 const title = ref(await TitlesService.getTitleApiV1TitlesTitleIdGet(title_id));
-const relatedModeSwitched = ref(false);
+const relatedModeSwitched = ref(true);
 watch(logined, async (value) => {
     if (value) {
         title.value = await TitlesService.getTitleApiV1TitlesTitleIdGet(
@@ -379,6 +410,23 @@ const viewport = useViewport();
 const teleportButtonDisabled = computed(() => viewport.isGreaterThan("tablet"));
 </script>
 <style scoped lang="scss">
+.gallery-item {
+    height: min-content;
+    min-width: 190px;
+    cursor: pointer;
+    width: min-content;
+    @include md {
+        min-width: 290px;
+    }
+
+    img {
+        user-select: none;
+        aspect-ratio: 16 / 9;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+}
 .title-page {
     max-width: 1100px;
     width: 100%;
